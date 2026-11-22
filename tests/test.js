@@ -134,6 +134,19 @@ if (hasGpp) {
       assert.strictEqual(r.stdout, expected, code);
     }
   });
+  test('full-language program converted into every SA language gives identical output', () => {
+    const { convert } = require('../src/translator');
+    const src = fs.readFileSync(path.join(ROOT, 'examples', 'konke.zu.kh'), 'utf8');
+    const expected = fs.readFileSync(path.join(__dirname, 'expected', 'konke.zu.kh.out'), 'utf8');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'khanya-all-'));
+    for (const code of languages) {
+      const f = path.join(dir, `konke.${code}.kh`);
+      fs.writeFileSync(f, convert(src, 'zu', code));
+      const r = run(['run', f]);
+      assert.strictEqual(r.status, 0, `${code}: ${r.stderr}`);
+      assert.strictEqual(r.stdout, expected, code);
+    }
+  });
   test('round trip zu -> af -> zu keeps the program working', () => {
     const { convert } = require('../src/translator');
     const src = fs.readFileSync(path.join(ROOT, 'examples', 'konke.zu.kh'), 'utf8');

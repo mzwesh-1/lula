@@ -1,8 +1,8 @@
 {
   "name": "khanya",
   "displayName": "Khanya - C++ in South African languages",
-  "description": "Write C++ for robots, embedded systems and PCs in isiZulu, Afrikaans and more. Syntax highlighting, error checking, hover translations and one-click run.",
-  "version": "0.2.0",
+  "description": "Write C++ for robots, embedded systems and PCs in all 10 written official South African languages: isiZulu, isiXhosa, siSwati, isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenda, Afrikaans. Syntax highlighting, error checking, hover translations and one-click run.",
+  "version": "0.3.0",
   "publisher": "khanya-lang",
   "license": "MIT",
   "engines": {

@@ -1,6 +1,6 @@
 {
   "name": "khanya",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "C++ in South African languages - for robots, embedded systems and PCs",
   "license": "MIT",
   "bin": { "khanya": "bin/khanya.js" },
@@ -8,7 +8,7 @@
     "test": "node tests/test.js",
     "build-extension": "node scripts/build-extension.js",
     "docs": "node scripts/gen-docs.js",
-    "package-extension": "node scripts/build-extension.js && cd vscode-khanya && npx -y @vscode/vsce@3.2.1 package --allow-missing-repository -o ../khanya-0.2.0.vsix"
+    "package-extension": "node scripts/build-extension.js && cd vscode-khanya && npx -y @vscode/vsce@3.2.1 package --allow-missing-repository -o ../khanya-0.3.0.vsix"
   },
   "engines": { "node": ">=18" }
 }

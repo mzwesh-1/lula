@@ -1,6 +1,6 @@
 # Khanya ✨
 
-**C++ in South African languages.** Write programs for robots, Arduino, embedded systems and PCs in isiZulu, Afrikaans (more coming), with the full speed of C++.
+**C++ in South African languages.** Write programs for robots, Arduino, embedded systems and PCs in **all ten written official South African languages**, with the full speed of C++.
 
 ```
 inombolo okuyinhloko() {                 heelgetal hoof() {
@@ -17,18 +17,28 @@ Khanya translates your program, word for word, into standard C++ and then uses a
 - Normal English C++ still works, so you can mix it in or paste existing code.
 - Compiler errors point to **your `.kh` file and line**, and the code they quote uses **your language's keywords**.
 
-## What's covered: the whole language
+## What's covered: the whole language, in all 10 written official languages
 
-| | isiZulu | Afrikaans |
-|---|---|---|
-| C++ keywords (all 96, up to C++20: `static_cast`, `decltype`, `concept`, `co_await`, ...) | ✅ | ✅ |
-| Preprocessor directives (all 15) | ✅ | ✅ |
-| Header names (`#faka <iqoqo>` = `#include <vector>`) | 39 | 39 |
-| Standard library: I/O, files, containers, algorithms, math, strings, smart pointers, exceptions, threads, fixed-width ints | ✅ | ✅ |
-| Member functions (`v.engeza_ekugcineni()` = `v.push_back()`) | ✅ | ✅ |
-| Arduino / robots (`setha_iphini`, `linda`, `Isiriyeli.bonisa_umugqa`) | ✅ | ✅ |
+| Code | Language | File name | `if` / `return` / print |
+|---|---|---|---|
+| `zu` | isiZulu | `robot.zu.kh` | `uma` / `buyisa` / `bhala` |
+| `xh` | isiXhosa | `robot.xh.kh` | `ukuba` / `buyisa` / `bhala` |
+| `ss` | siSwati | `robot.ss.kh` | `nangabe` / `buyisa` / `bhala` |
+| `nr` | isiNdebele | `robot.nr.kh` | `nangabe` / `buyisa` / `tlola` |
+| `st` | Sesotho | `robot.st.kh` | `haeba` / `kgutlisa` / `ngola` |
+| `tn` | Setswana | `robot.tn.kh` | `fa` / `busa` / `kwala` |
+| `nso` | Sepedi | `robot.nso.kh` | `ge` / `bušetša` / `ngwala` |
+| `ts` | Xitsonga | `robot.ts.kh` | `loko` / `vuyisa` / `tsala` |
+| `ve` | Tshivenḓa | `robot.ve.kh` | `arali` / `vhuisa` / `nwala` |
+| `af` | Afrikaans | `robot.af.kh` | `as` / `terug` / `skryf` |
 
-Full word lists: **[docs/zu.md](docs/zu.md)** and **[docs/af.md](docs/af.md)**, or run `khanya keywords zu`.
+English is C++ itself. Plain C++ keeps working in every language.
+
+Every language covers all **96 C++ keywords** (up to C++20), all **15 preprocessor directives**, **39 header names**, and **188 standard-library, member-function and Arduino names**:
+I/O, files, containers, algorithms, math, strings, smart pointers, exceptions, threads, fixed-width ints, `.push_back()`-style members, and `pinMode`/`digitalWrite`/`Serial`.
+The test suite enforces this: a language that's missing even one word fails.
+
+Full word lists: [docs/zu.md](docs/zu.md), [xh](docs/xh.md), [ss](docs/ss.md), [nr](docs/nr.md), [st](docs/st.md), [tn](docs/tn.md), [nso](docs/nso.md), [ts](docs/ts.md), [ve](docs/ve.md), [af](docs/af.md). Or run `khanya keywords xh`.
 `examples/konke.zu.kh` and `examples/alles.af.kh` use almost every feature of C++ in one program.
 
 Your own variable, function and class names can be in any language (`inombolo amamaki = 85;`).
@@ -65,7 +75,7 @@ node bin/khanya.js build robot.zu.kh --cxx avr-g++ -- -mmcu=atmega328p -Os
 
 ```bash
 npm run package-extension
-code --install-extension khanya-0.2.0.vsix
+code --install-extension khanya-0.3.0.vsix
 ```
 
 The extension provides syntax highlighting, hover translations (hover `uma` → C++ `if`), completion, error checking when you save, a ▶ Run button, a live "Show C++" side view, "Export for Arduino" and "Convert C++ to Khanya".
@@ -78,4 +88,6 @@ Every local word must be **one token** (use `_` instead of spaces) and must not 
 
 ## Status
 
-The keyword tables are **drafts**. They need review by native speakers and educators so the words feel natural and consistent.
+All the word tables are **drafts** that need review by native speakers and educators, so the words feel natural and consistent. Tshivenḓa words are currently written without the ḓ ḽ ṅ ṋ ṱ marks, so they're easier to type on ordinary keyboards.
+
+**South African Sign Language** is a visual language, so it can't be typed as source code. A planned option is a sign-video dictionary in the editor, where hovering a keyword shows the SASL sign.
