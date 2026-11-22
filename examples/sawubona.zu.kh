@@ -1,0 +1,34 @@
+// Uhlelo lokuqala ngesiZulu - first program in isiZulu
+#faka <iostream>
+#faka <string>
+#faka <vector>
+
+isakhiwo Umfundi {
+    umbhalo igama;
+    inombolo amamaki;
+};
+
+// Bala isilinganiso (calculate the average)
+idesimali_kabili isilinganiso(engaguquki iqoqo<Umfundi>& abafundi) {
+    uma (abafundi.empty()) buyisa 0.0;
+    inombolo isamba = 0;
+    jikeleza (engaguquki okuzenzakalelayo& u : abafundi) {
+        isamba += u.amamaki;
+    }
+    buyisa (idesimali_kabili)isamba / abafundi.size();
+}
+
+inombolo okuyinhloko() {
+    bhala << "Sawubona, Mhlaba!" << umugqa;
+
+    iqoqo<Umfundi> abafundi = {{"Thandiwe", 85}, {"Sipho", 72}, {"Lerato", 91}};
+    jikeleza (engaguquki okuzenzakalelayo& u : abafundi) {
+        uma (u.amamaki >= 80) {
+            bhala << u.igama << ": kuhle kakhulu (" << u.amamaki << ")" << umugqa;
+        } kungenjalo {
+            bhala << u.igama << ": qhubeka uzame (" << u.amamaki << ")" << umugqa;
+        }
+    }
+    bhala << "Isilinganiso: " << isilinganiso(abafundi) << umugqa;
+    buyisa 0;
+}

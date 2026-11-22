@@ -1,0 +1,21 @@
+// Eerste program in Afrikaans
+#sluitin <iostream>
+
+klas Robot {
+publiek:
+    Robot(teks n) : naam(n) {}
+    leeg beweeg(heelgetal treë) {
+        vir (heelgetal i = 1; i <= treë; i++) {
+            skryf << naam << " tree " << i << nuwereël;
+        }
+    }
+privaat:
+    teks naam;
+};
+
+heelgetal hoof() {
+    skryf << "Hallo, Wêreld!" << nuwereël;
+    Robot r("Khanya-1");
+    r.beweeg(3);
+    terug 0;
+}

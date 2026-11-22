@@ -1,0 +1,117 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Khanya",
+  "scopeName": "source.khanya",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#preprocessor"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "name": "keyword.control.khanya",
+      "match": "(?<![\\p{L}\\p{N}_])(?:okujwayelekile|kungenjalo|gaanvoort|ngenkathi|continue|jikeleza|default|verstek|probeer|qhubeka|switch|return|anders|terwyl|spring|khetha|buyisa|phonsa|while|break|catch|throw|geval|breek|terug|isimo|yenza|phuma|bamba|else|case|goto|kies|doen|vang|gooi|zama|for|try|vir|uma|eqa|if|do|as)(?![\\p{L}\\p{N}_])"
+    },
+    {
+      "name": "storage.type.khanya",
+      "match": "(?<![\\p{L}\\p{N}_])(?:idesimali_kabili|okuzenzakalelayo|ongenaphawu|heelgetal|dryfgetal|ongeteken|idesimali|unsigned|karakter|inombolo|onophawu|boolees|geteken|uhlamvu|fushane|double|signed|dubbel|ibhuli|float|short|char|bool|void|long|auto|leeg|kort|lank|outo|ende|int|ize)(?![\\p{L}\\p{N}_])"
+    },
+    {
+      "name": "storage.modifier.khanya",
+      "match": "(?<![\\p{L}\\p{N}_])(?:okuguquguqukayo|okwangaphandle|vaskonstant|veranderlik|ngaphambili|okuguqukayo|ngaphakathi|engaguquki|constexpr|volatile|konstant|mutable|staties|ekstern|vlugtig|okumile|static|extern|inline|const|inlyn)(?![\\p{L}\\p{N}_])"
+    },
+    {
+      "name": "keyword.other.khanya",
+      "match": "(?<![\\p{L}\\p{N}_])(?:indawo_yamagama|okubonakalayo|esikhundleni|igama_elisha|isifanekiso|naamruimte|umphakathi|okuvikelwe|okokugcina|protected|namespace|struktuur|opsomming|operateur|inyunyana|sebenzisa|override|operator|template|typename|beskermd|virtueel|oorskryf|verwyder|sjabloon|tipenaam|isakhiwo|private|virtual|typedef|publiek|privaat|hierdie|gebruik|tipedef|isigaba|imfihlo|umngane|struct|public|friend|delete|finaal|vriend|entsha|isenzi|uhlobo|class|union|final|using|lokhu|enum|this|klas|unie|nuut|uhlu|susa|new)(?![\\p{L}\\p{N}_])"
+    },
+    {
+      "name": "constant.language.khanya",
+      "match": "(?<![\\p{L}\\p{N}_])(?:nulwyser|nullptr|iqiniso|amanga|false|lutho|true|waar|vals)(?![\\p{L}\\p{N}_])"
+    },
+    {
+      "name": "keyword.operator.word.khanya",
+      "match": "(?<![\\p{L}\\p{N}_])(?:grootte|usayizi|sizeof|futhi|hhayi|noma|and|not|nie|or|en|of)(?![\\p{L}\\p{N}_])"
+    },
+    {
+      "name": "support.function.khanya",
+      "match": "(?<![\\p{L}\\p{N}_])(?:bhala_idijithali|funda_idijithali|amamilisekhondi|funda_ianalogi|bhala_ianalogi|skryfdigitaal|millisekondes|leesdigitaal|skryfanaloog|phindaphinda|setha_iphini|leesanaloog|okuyinhloko|OKUPHUMAYO|OKUNGENAYO|nuwereël|penmodus|umbhalo|PHEZULU|opstel|UITSET|umugqa|PHANSI|skryf|INSET|bhala|funda|iqoqo|linda|hoof|lees|teks|HOOG|LAAG|qala|lys|lus|wag)(?![\\p{L}\\p{N}_])"
+    },
+    {
+      "name": "constant.numeric.khanya",
+      "match": "\\b(?:0[xX][0-9a-fA-F']+|0[bB][01']+|\\d[\\d']*\\.?[\\d']*(?:[eE][+-]?\\d+)?)[uUlLfF]*\\b"
+    },
+    {
+      "name": "entity.name.function.khanya",
+      "match": "[\\p{L}_][\\p{L}\\p{N}_]*(?=\\s*\\()"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.khanya",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.khanya",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "preprocessor": {
+      "patterns": [
+        {
+          "match": "^\\s*(#\\s*(?:include|import|sluitin|faka))\\s*(<[^>]*>|\"[^\"]*\")",
+          "captures": {
+            "1": {
+              "name": "keyword.control.directive.khanya"
+            },
+            "2": {
+              "name": "string.quoted.other.lt-gt.include.khanya"
+            }
+          }
+        },
+        {
+          "name": "keyword.control.directive.khanya",
+          "match": "^\\s*#\\s*(?:uma_kungachazwanga|asniegedefinieer|kungenjalo_uma|asgedefinieer|uma_kuchaziwe|ondefinieer|kungenjalo|definieer|isiyalezo|andersas|qeda_uma|include|sluitin|eindeas|iphutha|define|ifndef|pragma|anders|undef|ifdef|endif|error|chaza|else|elif|line|fout|faka|sula|uma|if|as)(?![\\p{L}\\p{N}_])"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.raw.khanya",
+          "begin": "(?:u8|u|U|L)?R\"([^()\\\\\\s\"]{0,16})\\(",
+          "end": "\\)\\1\""
+        },
+        {
+          "name": "string.quoted.double.khanya",
+          "begin": "(?:u8|u|U|L)?\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.khanya",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.khanya",
+          "begin": "(?:u8|u|U|L)?'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.khanya",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

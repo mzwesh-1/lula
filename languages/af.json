@@ -1,0 +1,112 @@
+{
+  "code": "af",
+  "name": "Afrikaans",
+  "status": "draft - needs review by Afrikaans speakers",
+  "keywords": {
+    "control": {
+      "as": "if",
+      "anders": "else",
+      "kies": "switch",
+      "geval": "case",
+      "verstek": "default",
+      "terwyl": "while",
+      "doen": "do",
+      "vir": "for",
+      "breek": "break",
+      "gaanvoort": "continue",
+      "terug": "return",
+      "spring": "goto",
+      "probeer": "try",
+      "vang": "catch",
+      "gooi": "throw"
+    },
+    "types": {
+      "heelgetal": "int",
+      "dryfgetal": "float",
+      "dubbel": "double",
+      "karakter": "char",
+      "boolees": "bool",
+      "leeg": "void",
+      "kort": "short",
+      "lank": "long",
+      "geteken": "signed",
+      "ongeteken": "unsigned",
+      "outo": "auto"
+    },
+    "modifiers": {
+      "konstant": "const",
+      "vaskonstant": "constexpr",
+      "staties": "static",
+      "ekstern": "extern",
+      "vlugtig": "volatile",
+      "veranderlik": "mutable",
+      "inlyn": "inline"
+    },
+    "oop": {
+      "klas": "class",
+      "struktuur": "struct",
+      "unie": "union",
+      "opsomming": "enum",
+      "publiek": "public",
+      "privaat": "private",
+      "beskermd": "protected",
+      "virtueel": "virtual",
+      "oorskryf": "override",
+      "finaal": "final",
+      "vriend": "friend",
+      "hierdie": "this",
+      "nuut": "new",
+      "verwyder": "delete",
+      "operateur": "operator",
+      "sjabloon": "template",
+      "tipenaam": "typename",
+      "naamruimte": "namespace",
+      "gebruik": "using",
+      "tipedef": "typedef"
+    },
+    "constants": {
+      "waar": "true",
+      "vals": "false",
+      "nulwyser": "nullptr"
+    },
+    "operators": {
+      "en": "and",
+      "of": "or",
+      "nie": "not",
+      "grootte": "sizeof"
+    }
+  },
+  "directives": {
+    "sluitin": "include",
+    "definieer": "define",
+    "ondefinieer": "undef",
+    "asgedefinieer": "ifdef",
+    "asniegedefinieer": "ifndef",
+    "as": "if",
+    "anders": "else",
+    "andersas": "elif",
+    "eindeas": "endif",
+    "fout": "error"
+  },
+  "library": {
+    "hoof": "main",
+    "skryf": "std::cout",
+    "lees": "std::cin",
+    "nuwereël": "std::endl",
+    "teks": "std::string",
+    "lys": "std::vector",
+    "opstel": "setup",
+    "lus": "loop",
+    "penmodus": "pinMode",
+    "skryfdigitaal": "digitalWrite",
+    "leesdigitaal": "digitalRead",
+    "leesanaloog": "analogRead",
+    "skryfanaloog": "analogWrite",
+    "wag": "delay",
+    "millisekondes": "millis",
+    "HOOG": "HIGH",
+    "LAAG": "LOW",
+    "UITSET": "OUTPUT",
+    "INSET": "INPUT"
+  }
+}

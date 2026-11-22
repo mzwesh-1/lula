@@ -1,0 +1,32 @@
+// Irobhothi elilula: khanyisa i-LED futhi ugweme izithiyo.
+// A simple robot: blink an LED and stop the motor when an obstacle is near.
+// Translate for Arduino:  khanya translate irobhothi.zu.kh -o irobhothi/irobhothi.ino
+// Or build directly:      khanya build irobhothi.zu.kh --cxx avr-g++ -- -mmcu=atmega328p ...
+
+ngaphambili inombolo IPHINI_LED   = 13;
+ngaphambili inombolo IPHINI_MOTHA = 9;
+ngaphambili inombolo IPHINI_SENSA = 0;   // A0: infrared distance sensor
+ngaphambili inombolo UMNCELE      = 400; // obstacle threshold
+
+okuguquguqukayo ibhuli kuyahamba = amanga;
+
+ize qala() {
+    setha_iphini(IPHINI_LED, OKUPHUMAYO);
+    setha_iphini(IPHINI_MOTHA, OKUPHUMAYO);
+}
+
+ize phindaphinda() {
+    inombolo ibanga = funda_ianalogi(IPHINI_SENSA);
+
+    uma (ibanga > UMNCELE) {
+        // Kukhona isithiyo - misa! (obstacle - stop!)
+        bhala_ianalogi(IPHINI_MOTHA, 0);
+        kuyahamba = amanga;
+    } kungenjalo {
+        bhala_ianalogi(IPHINI_MOTHA, 200);
+        kuyahamba = iqiniso;
+    }
+
+    bhala_idijithali(IPHINI_LED, kuyahamba ? PHEZULU : PHANSI);
+    linda(100);
+}

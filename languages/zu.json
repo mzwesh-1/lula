@@ -1,0 +1,113 @@
+{
+  "code": "zu",
+  "name": "isiZulu",
+  "status": "draft - needs review by isiZulu speakers",
+  "keywords": {
+    "control": {
+      "uma": "if",
+      "kungenjalo": "else",
+      "khetha": "switch",
+      "isimo": "case",
+      "okujwayelekile": "default",
+      "ngenkathi": "while",
+      "yenza": "do",
+      "jikeleza": "for",
+      "phuma": "break",
+      "qhubeka": "continue",
+      "buyisa": "return",
+      "eqa": "goto",
+      "zama": "try",
+      "bamba": "catch",
+      "phonsa": "throw"
+    },
+    "types": {
+      "inombolo": "int",
+      "idesimali": "float",
+      "idesimali_kabili": "double",
+      "uhlamvu": "char",
+      "ibhuli": "bool",
+      "ize": "void",
+      "fushane": "short",
+      "ende": "long",
+      "onophawu": "signed",
+      "ongenaphawu": "unsigned",
+      "okuzenzakalelayo": "auto"
+    },
+    "modifiers": {
+      "engaguquki": "const",
+      "ngaphambili": "constexpr",
+      "okumile": "static",
+      "okwangaphandle": "extern",
+      "okuguquguqukayo": "volatile",
+      "okuguqukayo": "mutable",
+      "ngaphakathi": "inline"
+    },
+    "oop": {
+      "isigaba": "class",
+      "isakhiwo": "struct",
+      "inyunyana": "union",
+      "uhlu": "enum",
+      "umphakathi": "public",
+      "imfihlo": "private",
+      "okuvikelwe": "protected",
+      "okubonakalayo": "virtual",
+      "esikhundleni": "override",
+      "okokugcina": "final",
+      "umngane": "friend",
+      "lokhu": "this",
+      "entsha": "new",
+      "susa": "delete",
+      "isenzi": "operator",
+      "isifanekiso": "template",
+      "uhlobo": "typename",
+      "indawo_yamagama": "namespace",
+      "sebenzisa": "using",
+      "igama_elisha": "typedef"
+    },
+    "constants": {
+      "iqiniso": "true",
+      "amanga": "false",
+      "lutho": "nullptr"
+    },
+    "operators": {
+      "futhi": "and",
+      "noma": "or",
+      "hhayi": "not",
+      "usayizi": "sizeof"
+    }
+  },
+  "directives": {
+    "faka": "include",
+    "chaza": "define",
+    "sula": "undef",
+    "uma_kuchaziwe": "ifdef",
+    "uma_kungachazwanga": "ifndef",
+    "uma": "if",
+    "kungenjalo": "else",
+    "kungenjalo_uma": "elif",
+    "qeda_uma": "endif",
+    "iphutha": "error",
+    "isiyalezo": "pragma"
+  },
+  "library": {
+    "okuyinhloko": "main",
+    "bhala": "std::cout",
+    "funda": "std::cin",
+    "umugqa": "std::endl",
+    "umbhalo": "std::string",
+    "iqoqo": "std::vector",
+    "qala": "setup",
+    "phindaphinda": "loop",
+    "setha_iphini": "pinMode",
+    "bhala_idijithali": "digitalWrite",
+    "funda_idijithali": "digitalRead",
+    "funda_ianalogi": "analogRead",
+    "bhala_ianalogi": "analogWrite",
+    "linda": "delay",
+    "amamilisekhondi": "millis",
+    "PHEZULU": "HIGH",
+    "PHANSI": "LOW",
+    "OKUPHUMAYO": "OUTPUT",
+    "OKUNGENAYO": "INPUT"
+  }
+}
