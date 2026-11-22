@@ -28,7 +28,12 @@ test('numbers with separators', () => assert.strictEqual(zu("inombolo x = 1'000'
 test('directives translate', () => assert.strictEqual(zu('#faka <iostream>\n#chaza N 5'), '#include <iostream>\n#define N 5'));
 test('header names untouched', () => assert.strictEqual(zu('#faka <uma>'), '#include <uma>'));
 test('#uma directive', () => assert.strictEqual(zu('#uma 1\n#qeda_uma'), '#if 1\n#endif'));
-test('library names not replaced after ::', () => assert.strictEqual(zu('robot::bhala(); r.bhala; bhala'), 'robot::bhala(); r.bhala; std::cout'));
+test('members after . and ->', () => assert.strictEqual(zu('v.ubukhulu(); p->engeza_ekugcineni(1); v.thola(x); thola(a, b, c);'),
+  'v.size(); p->push_back(1); v.find(x); std::find(a, b, c);'));
+test('isisekelo:: is std::', () => assert.strictEqual(zu('isisekelo::iqoqo<inombolo> v; sebenzisa indawo_yamagama isisekelo;'),
+  'std::vector<int> v; using namespace std;'));
+test('header names translate', () => assert.strictEqual(zu('#faka <iqoqo>\n#faka <konke>\n#faka "iqoqo"\n#faka <vector>'),
+  '#include <vector>\n#include <bits/stdc++.h>\n#include "iqoqo"\n#include <vector>'));
 test('English C++ still works', () => assert.strictEqual(zu('if (true) return 0;'), 'if (true) return 0;'));
 test('identifiers containing keywords untouched', () => assert.strictEqual(zu('umaX ize_y'), 'umaX ize_y'));
 test('unicode identifiers', () => assert.strictEqual(af('heelgetal treë = 1; skryf << nuwereël;'), 'int treë = 1; std::cout << std::endl;'));
@@ -46,15 +51,41 @@ test('error messages localized', () => assert.strictEqual(
   localizeMessage("x.zu.kh:3:5: error: expected ';' before 'return'", 'zu'),
   "x.zu.kh:3:5: error: expected ';' before 'buyisa'"));
 
-console.log('language tables');
-for (const { code } of listLanguages()) {
-  test(`${code}: loads without duplicates`, () => loadLanguage(code));
-  test(`${code}: keywords map to real C++ keywords`, () => {
-    const cppKeywords = new Set(('if else switch case default while do for break continue return goto try catch throw ' +
-      'int float double char bool void short long signed unsigned auto const constexpr static extern volatile mutable inline ' +
-      'class struct union enum public private protected virtual override final friend this new delete operator template ' +
-      'typename namespace using typedef true false nullptr and or not sizeof').split(' '));
-    for (const cpp of loadLanguage(code).keywordMap.values()) assert.ok(cppKeywords.has(cpp), `${cpp} is not a C++ keyword`);
+console.log('language tables (completeness)');
+const ALL_CPP_KEYWORDS = ('alignas alignof and and_eq asm auto bitand bitor bool break case catch char char8_t char16_t ' +
+  'char32_t class compl concept const consteval constexpr constinit const_cast continue co_await co_return co_yield ' +
+  'decltype default delete do double dynamic_cast else enum explicit export extern false float for friend goto if ' +
+  'inline int long mutable namespace new noexcept not not_eq nullptr operator or or_eq private protected public ' +
+  'register reinterpret_cast requires return short signed sizeof static static_assert static_cast struct switch ' +
+  'template this thread_local throw true try typedef typeid typename union unsigned using virtual void volatile ' +
+  'wchar_t while xor xor_eq final override import module').split(' ');
+const ALL_DIRECTIVES = 'include define undef if ifdef ifndef elif elifdef elifndef else endif line error warning pragma'.split(' ');
+const languages = listLanguages().map(l => l.code);
+const reference = loadLanguage('zu');
+const sorted = it => [...new Set(it)].sort();
+for (const code of languages) {
+  const lang = loadLanguage(code);
+  test(`${code}: loads without duplicates`, () => assert.ok(lang));
+  test(`${code}: every C++ keyword (${ALL_CPP_KEYWORDS.length}) has a translation`, () => {
+    const have = new Set(lang.keywordMap.values());
+    const missing = ALL_CPP_KEYWORDS.filter(k => !have.has(k));
+    assert.deepStrictEqual(missing, [], `missing: ${missing.join(', ')}`);
+    const extra = [...have].filter(k => !ALL_CPP_KEYWORDS.includes(k));
+    assert.deepStrictEqual(extra, [], `not C++ keywords: ${extra.join(', ')}`);
+  });
+  test(`${code}: every preprocessor directive has a translation`, () => {
+    const have = new Set(lang.directiveMap.values());
+    assert.deepStrictEqual(ALL_DIRECTIVES.filter(d => !have.has(d)), []);
+  });
+  if (code !== 'zu') {
+    test(`${code}: covers the same library and headers as isiZulu`, () => {
+      assert.deepStrictEqual(sorted(lang.libraryMap.values()), sorted(reference.libraryMap.values()));
+      assert.deepStrictEqual(sorted(lang.headerMap.values()), sorted(reference.headerMap.values()));
+    });
+  }
+  test(`${code}: words are single identifiers`, () => {
+    for (const w of [...lang.keywordMap.keys(), ...lang.libraryMap.keys(), ...lang.directiveMap.keys()])
+      assert.match(w, /^[\p{L}_][\p{L}\p{M}\p{N}_]*$/u, w);
   });
 }
 
@@ -79,6 +110,39 @@ if (hasGpp) {
     assert.strictEqual(r.status, 0, r.stderr);
     assert.strictEqual(r.stdout.trim().split('\n').join('|'),
       'pinMode(13,1)|pinMode(9,1)|analogWrite(9,200)|digitalWrite(13,1)|analogWrite(9,0)|digitalWrite(13,0)');
+  });
+  for (const ex of ['konke.zu.kh', 'alles.af.kh']) {
+    test(`${ex}: full-language program runs (classes, templates, containers, algorithms, exceptions, files...)`, () => {
+      const r = run(['run', path.join(ROOT, 'examples', ex)]);
+      assert.strictEqual(r.status, 0, r.stderr);
+      assert.strictEqual(r.stdout, fs.readFileSync(path.join(__dirname, 'expected', ex + '.out'), 'utf8'));
+    });
+  }
+  test('C++ (GeeksforGeeks style) converted to every language gives the same output', () => {
+    const { convert } = require('../src/translator');
+    const cppFile = path.join(__dirname, 'fixtures', 'gfg_style.cpp');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'khanya-conv-'));
+    const exe = path.join(dir, 'orig');
+    const c = spawnSync('g++', ['-std=c++20', cppFile, '-o', exe], { encoding: 'utf8' });
+    assert.strictEqual(c.status, 0, c.stderr);
+    const expected = spawnSync(exe, [], { encoding: 'utf8' }).stdout;
+    for (const code of languages) {
+      const f = path.join(dir, `gfg.${code}.kh`);
+      fs.writeFileSync(f, convert(fs.readFileSync(cppFile, 'utf8'), 'cpp', code));
+      const r = run(['run', f]);
+      assert.strictEqual(r.status, 0, `${code}: ${r.stderr}`);
+      assert.strictEqual(r.stdout, expected, code);
+    }
+  });
+  test('round trip zu -> af -> zu keeps the program working', () => {
+    const { convert } = require('../src/translator');
+    const src = fs.readFileSync(path.join(ROOT, 'examples', 'konke.zu.kh'), 'utf8');
+    const back = convert(convert(src, 'zu', 'af'), 'af', 'zu');
+    const f = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'khanya-rt-')), 'rt.zu.kh');
+    fs.writeFileSync(f, back);
+    const r = run(['run', f]);
+    assert.strictEqual(r.status, 0, r.stderr);
+    assert.strictEqual(r.stdout, fs.readFileSync(path.join(__dirname, 'expected', 'konke.zu.kh.out'), 'utf8'));
   });
   test('compile errors point at the Khanya file and line, in the user language', () => {
     const f = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'khanya-t-')), 'iphutha.zu.kh');

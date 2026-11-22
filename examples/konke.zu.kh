@@ -1,0 +1,228 @@
+// konke.zu.kh - "Konke": uhlelo olusebenzisa cishe yonke into ye-C++ ngesiZulu.
+// A tour of the whole language in isiZulu: everything from the W3Schools / GeeksforGeeks C++ tutorials.
+#faka <okokufaka_nokukhipha>
+#faka <umbhalo>
+#faka <iqoqo>
+#faka <imephu>
+#faka <isethi>
+#faka <ulayini>
+#faka <inqwaba>
+#faka <amasu>
+#faka <izinombolo>
+#faka <izibalo>
+#faka <inkumbulo>
+#faka <amaphutha>
+#faka <umfudlana_wombhalo>
+#faka <ukuhlela_okuphumayo>
+#faka <iqembu>
+#faka <okungakhethwa>
+#faka <umucu>
+#faka <isivalo>
+#faka <izinombolo_ezinosayizi>
+
+#chaza UHLOBO 1
+#uma_kuchaziwe UHLOBO
+#chaza UMLAYEZO "Khanya v1"
+#kungenjalo
+#chaza UMLAYEZO "?"
+#qeda_uma
+
+sebenzisa indawo_yamagama isisekelo;
+
+// ---- Izinhlobo zedatha (data types), constexpr, static_assert ----
+ngaphambili inombolo UBUNINGI = 5;
+qinisekisa(usayizi(inombolo32) == 4, "inombolo32 kumele ibe ngama-byte angu-4");
+uhlu isigaba Umbala { Bomvu, Luhlaza, Okwesibhakabhaka };
+
+// ---- Amakilasi (classes), ifa (inheritance), okubonakalayo (virtual) ----
+isigaba Isimo {
+umphakathi:
+    okubonakalayo ~Isimo() = okujwayelekile;
+    okubonakalayo idesimali_kabili indawo() engaguquki = 0;
+    okubonakalayo umbhalo igama() engaguquki { buyisa "isimo"; }
+};
+
+isigaba Indilinga : umphakathi Isimo {
+    idesimali_kabili r;
+umphakathi:
+    ngokucacile Indilinga(idesimali_kabili r) : r(r) {}
+    idesimali_kabili indawo() engaguquki esikhundleni { buyisa 3.14159 * r * r; }
+    umbhalo igama() engaguquki esikhundleni { buyisa "indilinga"; }
+};
+
+isigaba Unxande okokugcina : umphakathi Isimo {
+    idesimali_kabili w, h;
+umphakathi:
+    Unxande(idesimali_kabili w, idesimali_kabili h) : w(w), h(h) {}
+    idesimali_kabili indawo() engaguquki esikhundleni { buyisa w * h; }
+    umbhalo igama() engaguquki esikhundleni { buyisa "unxande"; }
+};
+
+// ---- isakhiwo, isenzi (operator overloading), umngane (friend), lokhu (this) ----
+isakhiwo Iphuzu {
+    inombolo x, y;
+    Iphuzu isenzi+(engaguquki Iphuzu& o) engaguquki { buyisa {x + o.x, y + o.y}; }
+    ibhuli isenzi==(engaguquki Iphuzu& o) engaguquki { buyisa lokhu->x == o.x futhi y == o.y; }
+    umngane ostream& isenzi<<(ostream& os, engaguquki Iphuzu& p) { buyisa os << "(" << p.x << "," << p.y << ")"; }
+};
+
+// ---- Izifanekiso (templates) nemiqondo (concepts) ----
+isifanekiso<uhlobo T>
+umqondo Inombolo = std::is_arithmetic_v<T>;
+
+isifanekiso<uhlobo T> kudinga Inombolo<T>
+T isamba(engaguquki iqoqo<T>& izinto) {
+    buyisa qoqa_isamba(izinto.ukuqala(), izinto.ukuphela(), T{});
+}
+
+isifanekiso<uhlobo T>
+isigaba Ibhokisi {
+    T into;
+umphakathi:
+    Ibhokisi(T i) : into(i) {}
+    T thatha_into() engaguquki { buyisa into; }
+};
+
+indawo_yamagama izibalo_zami {
+    hlola_ngaphambili inombolo isikwele(inombolo n) { buyisa n * n; }
+}
+
+okumile inombolo isibali = 0;
+ize khuphula() ngaphandle_kwephutha { isibali++; }
+
+inombolo okuyinhloko() {
+    bhala << UMLAYEZO << umugqa;
+
+    // ---- Izinguquko (variables) nezinhlobo ----
+    inombolo iminyaka = 20;
+    idesimali_kabili ubude_bomuntu = 1.75;
+    uhlamvu uhlamvu_lokuqala = 'K';
+    ibhuli kuyiqiniso = iqiniso;
+    okuzenzakalelayo isibalo = 7 / 2.0;
+    uhlobo_lwa(iminyaka) enye = 3;
+    ongenaphawu8 ibhayithi = 255;
+    bhala << iminyaka << " " << ubude_bomuntu << " " << uhlamvu_lokuqala << " " << kuyiqiniso
+         << " " << isibalo << " " << enye << " " << guqula<inombolo>(ibhayithi) << umugqa;
+
+    // ---- Uma / kungenjalo, khetha / isimo ----
+    uma (iminyaka >= 18 futhi hhayi (iminyaka > 60)) bhala << "umuntu omdala" << umugqa;
+    kungenjalo uma (iminyaka < 13) bhala << "ingane" << umugqa;
+    kungenjalo bhala << "osemusha" << umugqa;
+
+    Umbala umbala = Umbala::Luhlaza;
+    khetha (umbala) {
+        isimo Umbala::Bomvu: bhala << "bomvu" << umugqa; phuma;
+        isimo Umbala::Luhlaza: bhala << "luhlaza" << umugqa; phuma;
+        okujwayelekile: bhala << "omunye" << umugqa;
+    }
+
+    // ---- Amaluphu (loops): jikeleza, ngenkathi, yenza-ngenkathi, phuma, qhubeka ----
+    jikeleza (inombolo i = 0; i < 10; i++) {
+        uma (i % 2 == 0) qhubeka;
+        uma (i > 7) phuma;
+        bhala << i << " ";
+    }
+    bhala << umugqa;
+    inombolo n = 3;
+    ngenkathi (n > 0) { bhala << n-- << " "; }
+    yenza { bhala << "kanye" << umugqa; } ngenkathi (amanga);
+
+    // ---- Imisebenzi (functions), indawo_yamagama ----
+    bhala << "isikwele: " << izibalo_zami::isikwele(UBUNINGI) << umugqa;
+    jikeleza (inombolo i = 0; i < 3; i++) khuphula();
+    bhala << "isibali: " << isibali << umugqa;
+
+    // ---- Umbhalo (strings) ----
+    umbhalo igama = "Sawubona";
+    igama.namathisela(" Mhlaba");
+    bhala << igama << " | ubude=" << igama.ubude() << " | ingxenye=" << igama.ingxenye(0, 4)
+         << " | thola=" << igama.thola("Mhlaba") << " | " << kumbhalo(42) + "!" << " | " << kunombolo("123") + 1 << umugqa;
+    umbhalo amagama_amakhulu = igama;
+    guqula_konke(amagama_amakhulu.ukuqala(), amagama_amakhulu.ukuphela(), amagama_amakhulu.ukuqala(),
+                 [](uhlamvu c) { buyisa guqula<uhlamvu>(kokukhulu(guqula<ongenaphawu uhlamvu>(c))); });
+    bhala << amagama_amakhulu << umugqa;
+
+    // ---- Iqoqo (vector) namasu (algorithms) ----
+    iqoqo<inombolo> izinombolo = {5, 3, 9, 1, 7};
+    izinombolo.engeza_ekugcineni(4);
+    hlela(izinombolo.ukuqala(), izinombolo.ukuphela());
+    jikeleza (inombolo x : izinombolo) bhala << x << " ";
+    bhala << "| ubukhulu=" << izinombolo.ubukhulu()
+         << " | okukhulu=" << *into_enkulu(izinombolo.ukuqala(), izinombolo.ukuphela())
+         << " | isamba=" << isamba(izinombolo)
+         << " | bala(7)=" << bala(izinombolo.ukuqala(), izinombolo.ukuphela(), 7)
+         << " | sesha(9)=" << sesha_kabili(izinombolo.ukuqala(), izinombolo.ukuphela(), 9) << umugqa;
+    hlehlisa(izinombolo.ukuqala(), izinombolo.ukuphela());
+    bhala << "okokuqala=" << izinombolo.phambili() << " okokugcina=" << izinombolo.emuva() << umugqa;
+
+    // ---- Imephu, isethi, ulayini, inqwaba, ipheya, iqembu, okungakhethwa ----
+    imephu<umbhalo, inombolo> amamaki = {{"Sipho", 72}, {"Thandiwe", 85}};
+    amamaki["Lerato"] = 91;
+    jikeleza (engaguquki okuzenzakalelayo& [igama_lomfundi, amaki] : amamaki) bhala << igama_lomfundi << "=" << amaki << " ";
+    bhala << umugqa;
+    isethi<inombolo> isethi_yami = {3, 1, 3, 2};
+    bhala << "isethi ubukhulu=" << isethi_yami.ubukhulu() << umugqa;
+    ulayini<inombolo> ulayini_wami; ulayini_wami.engeza(1); ulayini_wami.engeza(2);
+    inqwaba<inombolo> inqwaba_yami; inqwaba_yami.engeza(1); inqwaba_yami.engeza(2);
+    bhala << "ulayini phambili=" << ulayini_wami.phambili() << " inqwaba phezulu=" << inqwaba_yami.okuphezulu() << umugqa;
+    ipheya<umbhalo, inombolo> p = yenza_ipheya("iminyaka", 30);
+    iqembu<inombolo, idesimali_kabili, uhlamvu> q = yenza_iqembu(1, 2.5, 'z');
+    okungakhethwa<inombolo> mhlawumbe;
+    bhala << p.okokuqala << "=" << p.okwesibili << " " << thatha<1>(q) << " " << mhlawumbe.value_or(-1) << umugqa;
+
+    // ---- Izibalo (math) ----
+    bhala << amadesimali_aqinile << setha_ukunemba(2)
+         << impande(16.0) << " " << amandla(2, 10) << " " << nyusa(2.1) << " " << ehlisa(2.9) << " "
+         << inani_eliphelele(-5) << " " << okukhulu(3, 8) << " " << okuncane(3, 8) << umugqa;
+
+    // ---- Izikhombi (pointers), entsha/susa, izikhombi ezihlakaniphile ----
+    inombolo* isikhombi = entsha inombolo(10);
+    bhala << "isikhombi=" << *isikhombi << umugqa;
+    susa isikhombi;
+    isikhombi = lutho;
+    iqoqo<isikhombi_esisodwa<Isimo>> izimo;
+    izimo.engeza_ekugcineni(yenza_esisodwa<Indilinga>(1.0));
+    izimo.engeza_ekugcineni(yenza_esisodwa<Unxande>(2.0, 3.0));
+    jikeleza (engaguquki okuzenzakalelayo& s : izimo) bhala << s->igama() << ": " << s->indawo() << umugqa;
+    isikhombi_esabelwana<inombolo> okwabelwana = yenza_esabelwana<inombolo>(5);
+    bhala << "okwabelwana=" << *okwabelwana << umugqa;
+    Iphuzu a{1, 2}, b{3, 4};
+    bhala << "iphuzu=" << (a + b) << " " << (a == b) << umugqa;
+    Ibhokisi<umbhalo> ibhokisi("isipho");
+    bhala << ibhokisi.thatha_into() << umugqa;
+
+    // ---- Amaphutha (exceptions) ----
+    zama {
+        izinombolo.endaweni(100);
+    } bamba (engaguquki ngaphandle_kobubanzi& e) {
+        bhala << "iphutha libanjiwe: ngaphandle kobubanzi" << umugqa;
+    }
+    zama {
+        phonsa iphutha_lokusebenza("kukhona inkinga");
+    } bamba (engaguquki okwehlukile& e) {
+        bhala << "iphutha: " << e.kwenzenjani() << umugqa;
+    }
+
+    // ---- Umfudlana wombhalo (stringstream) ----
+    umfudlana_wombhalo ss("10 20 30");
+    inombolo inani, isamba_sonke = 0;
+    ngenkathi (ss >> inani) isamba_sonke += inani;
+    bhala << "umfudlana isamba=" << isamba_sonke << umugqa;
+
+    // ---- Imicu (threads) ----
+    inombolo isibali_semicu = 0;
+    isivalo isivalo_sami;
+    iqoqo<umucu> imicu;
+    jikeleza (inombolo i = 0; i < 4; i++)
+        imicu.beka_ekugcineni([&] { umqaphi_wesivalo<isivalo> lg(isivalo_sami); isibali_semicu += 10; });
+    jikeleza (okuzenzakalelayo& t : imicu) t.joyina();
+    bhala << "imicu=" << isibali_semicu << umugqa;
+
+    // ---- Ama-bitwise ----
+    inombolo izimpawu = 0b1100;
+    bhala << (izimpawu futhi_bhithi 0b1010) << " " << (izimpawu noma_bhithi 0b0011) << " "
+         << (izimpawu noma_kuphela 0b1111) << umugqa;
+
+    bhala << "Kuphelile!" << umugqa;
+    buyisa 0;
+}

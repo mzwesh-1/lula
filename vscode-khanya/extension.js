@@ -4,7 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { execFile } = require('child_process');
-const { translate, loadLanguage, detectLanguage, localizeMessage } = require('./lib/translator');
+const { translate, convert, listLanguages, loadLanguage, detectLanguage, localizeMessage } = require('./lib/translator');
 
 const CPP_SCHEME = 'khanya-cpp';
 const cppViews = new Map(); // virtual doc uri -> source uri
@@ -66,13 +66,34 @@ function activate(context) {
     vscode.window.showInformationMessage(`Khanya: wrote ${out} - open it in the Arduino IDE or PlatformIO.`);
   }));
 
+  // Convert the open C++ file (or the selection) into a Khanya language.
+  context.subscriptions.push(vscode.commands.registerCommand('khanya.convertFromCpp', async () => {
+    const ed = vscode.window.activeTextEditor;
+    if (!ed) return;
+    const pick = await vscode.window.showQuickPick(
+      listLanguages().map(l => ({ label: l.name, description: l.code, code: l.code })), { placeHolder: 'Convert to which language?' });
+    if (!pick) return;
+    const from = ed.document.languageId === 'khanya' ? langOf(ed.document) : 'cpp';
+    const text = ed.selection.isEmpty ? ed.document.getText() : ed.document.getText(ed.selection);
+    const result = convert(text, from, pick.code);
+    if (ed.document.uri.scheme === 'file') {
+      const base = ed.document.fileName.replace(/(\.[a-z]{2,3})?\.(kh|cpp|cc|cxx|ino|h|hpp)$/i, '');
+      const target = vscode.Uri.file(`${base}.${pick.code}.kh`);
+      await vscode.workspace.fs.writeFile(target, Buffer.from(result, 'utf8'));
+      vscode.window.showTextDocument(target);
+    } else {
+      const doc = await vscode.workspace.openTextDocument({ language: 'khanya', content: result });
+      vscode.window.showTextDocument(doc);
+    }
+  }));
+
   // Hover: show the C++ meaning of a word.
   context.subscriptions.push(vscode.languages.registerHoverProvider('khanya', {
     provideHover(doc, pos) {
       const lang = safeLang(doc); if (!lang) return;
       const range = doc.getWordRangeAtPosition(pos); if (!range) return;
       const word = doc.getText(range);
-      const cpp = lang.keywordMap.get(word) || lang.libraryMap.get(word) || lang.directiveMap.get(word);
+      const cpp = lang.keywordMap.get(word) || lang.libraryMap.get(word) || lang.directiveMap.get(word) || lang.headerMap.get(word);
       if (!cpp) return;
       return new vscode.Hover(new vscode.MarkdownString(`**${word}** (${lang.name}) → C++ \`${cpp}\``), range);
     },
@@ -102,7 +123,7 @@ function activate(context) {
     catch (e) { vscode.window.showErrorMessage(e.message); return; }
     const tmp = path.join(os.tmpdir(), `khanya-check-${process.pid}.cpp`);
     fs.writeFileSync(tmp, cpp);
-    const args = ['-std=c++17', ...config().get('compilerArgs'), '-fsyntax-only', tmp];
+    const args = ['-std=c++20', ...config().get('compilerArgs'), '-fsyntax-only', tmp];
     execFile(config().get('compilerPath'), args, { encoding: 'utf8' }, (err, _out, stderr) => {
       if (err && err.code === 'ENOENT') { diagnostics.delete(doc.uri); return; }
       const list = [];

@@ -4,7 +4,7 @@ const os = require('os');
 const path = require('path');
 const crypto = require('crypto');
 const { spawnSync } = require('child_process');
-const { translate, listLanguages, loadLanguage, detectLanguage, localizeMessage } = require('./translator');
+const { translate, convert, listLanguages, loadLanguage, detectLanguage, localizeMessage } = require('./translator');
 
 const HELP = `Khanya - C++ in South African languages
 
@@ -13,6 +13,7 @@ Usage:
   khanya build <file.zu.kh> [-o program] [options] [-- compiler flags]
   khanya run <file.zu.kh> [options] [-- compiler flags]
   khanya check <file.zu.kh>                        Check for errors only
+  khanya convert <file> --to <zu|af|cpp> [-o out]  Convert C++ -> Khanya, or between languages
   khanya keywords [zu|af|...]                      Show the keyword table
   khanya languages                                  List languages
 
@@ -20,7 +21,7 @@ Options:
   --lang <code>     Language (default: from file name, e.g. robot.zu.kh)
   --cxx <compiler>  C++ compiler (default: g++). For robots/embedded use e.g.
                     avr-g++, arm-none-eabi-g++, xtensa-esp32-elf-g++
-  --no-defaults     Do not add the default flags (-std=c++17 -O2)
+  --no-defaults     Do not add the default flags (-std=c++20 -O2)
 
 Examples:
   khanya run examples/sawubona.zu.kh
@@ -36,6 +37,7 @@ function parseArgs(argv) {
     if (a === '-o') args.out = argv[++i];
     else if (a === '--lang') args.lang = argv[++i];
     else if (a === '--cxx') args.cxx = argv[++i];
+    else if (a === '--to') args.to = argv[++i];
     else if (a === '--no-defaults') args.noDefaults = true;
     else if (a === '-h' || a === '--help') args.help = true;
     else args._.push(a);
@@ -70,7 +72,7 @@ function compile(args, { syntaxOnly = false, outPath } = {}) {
   const { cpp, lang } = translateFile(file, args.lang);
   const tmp = tempCpp(file, cpp);
   const cxx = args.cxx || process.env.KHANYA_CXX || 'g++';
-  const flags = args.noDefaults ? [] : ['-std=c++17', '-O2'];
+  const flags = args.noDefaults ? [] : ['-std=c++20', '-O2'];
   const exe = outPath || path.join(tmp.dir, tmp.base + '-' + tmp.hash + (process.platform === 'win32' ? '.exe' : ''));
   const cmd = [...flags, ...args.extra, tmp.cppPath, ...(syntaxOnly ? ['-fsyntax-only'] : ['-o', exe])];
   const r = spawnSync(cxx, cmd, { encoding: 'utf8' });
@@ -99,6 +101,16 @@ function main(argv) {
       process.stderr.write(`Khanya: built ${exe}\n`);
       break;
     }
+    case 'convert': {
+      const file = args._[1];
+      if (!file || !fs.existsSync(file)) fail(`Khanya: file not found: ${file || ''}`);
+      if (!args.to) fail('Khanya: say which language to convert to, e.g. --to zu');
+      const from = args.lang || (/\.(c|cc|cpp|cxx|h|hpp|ino)$/i.test(file) ? 'cpp' : detectLanguage(file));
+      if (!from) fail(`Khanya: cannot tell the language of '${file}'. Pass --lang zu or --lang cpp`);
+      const result = convert(fs.readFileSync(file, 'utf8'), from, args.to);
+      if (args.out) fs.writeFileSync(args.out, result); else process.stdout.write(result);
+      break;
+    }
     case 'check': compile(args, { syntaxOnly: true }); process.stderr.write('Khanya: OK\n'); break;
     case 'run': {
       const exe = compile(args);
@@ -114,12 +126,16 @@ function main(argv) {
       console.log(`${lang.name} -> C++`);
       for (const [category, table] of Object.entries(lang.keywords)) {
         console.log(`\n[${category}]`);
-        for (const [local, cpp] of Object.entries(table)) console.log(`  ${local.padEnd(22)} ${cpp}`);
+        for (const [local, cpp] of Object.entries(table)) console.log(`  ${local.padEnd(28)} ${cpp}`);
       }
       console.log('\n[preprocessor]');
-      for (const [local, cpp] of lang.directiveMap) console.log(`  #${local.padEnd(21)} #${cpp}`);
-      console.log('\n[library]');
-      for (const [local, cpp] of lang.libraryMap) console.log(`  ${local.padEnd(22)} ${cpp}`);
+      for (const [local, cpp] of lang.directiveMap) console.log(`  #${local.padEnd(27)} #${cpp}`);
+      console.log('\n[headers]');
+      for (const [local, cpp] of lang.headerMap) console.log(`  <${local}>`.padEnd(30) + ` <${cpp}>`);
+      for (const [category, table] of Object.entries(lang.library)) {
+        console.log(`\n[${category}]`);
+        for (const [local, cpp] of Object.entries(table)) console.log(`  ${local.padEnd(28)} ${cpp}`);
+      }
       break;
     }
     default: fail(`Khanya: unknown command '${cmd}'. Try: khanya --help`);

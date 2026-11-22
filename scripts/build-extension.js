@@ -14,30 +14,33 @@ for (const f of ['translator.js', 'cli.js']) fs.copyFileSync(path.join(ROOT, 'sr
 const langs = fs.readdirSync(path.join(ROOT, 'languages')).filter(f => f.endsWith('.json'));
 for (const f of langs) fs.copyFileSync(path.join(ROOT, 'languages', f), path.join(LIB, 'languages', f));
 
-const CPP = {
-  control: 'if else switch case default while do for break continue return goto try catch throw',
-  types: 'int float double char bool void short long signed unsigned auto',
-  modifiers: 'const constexpr static extern volatile mutable inline',
-  oop: 'class struct union enum public private protected virtual override final friend this new delete operator template typename namespace using typedef',
-  constants: 'true false nullptr',
-  operators: 'and or not sizeof',
-};
 const SCOPES = {
   control: 'keyword.control.khanya',
   types: 'storage.type.khanya',
   modifiers: 'storage.modifier.khanya',
   oop: 'keyword.other.khanya',
+  casts: 'keyword.operator.cast.khanya',
   constants: 'constant.language.khanya',
   operators: 'keyword.operator.word.khanya',
   library: 'support.function.khanya',
+  arduino: 'support.constant.arduino.khanya',
 };
-const words = Object.fromEntries(Object.keys(SCOPES).map(k => [k, new Set((CPP[k] || '').split(' ').filter(Boolean))]));
-const directives = new Set('include define undef ifdef ifndef if else elif endif error pragma line'.split(' '));
+const words = Object.fromEntries(Object.keys(SCOPES).map(k => [k, new Set()]));
+const directives = new Set('include define undef ifdef ifndef if else elif elifdef elifndef endif error warning pragma line'.split(' '));
+const includeWords = new Set(['include', 'import']);
 for (const f of langs) {
   const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'languages', f), 'utf8'));
-  for (const [cat, table] of Object.entries(data.keywords)) for (const w of Object.keys(table)) words[cat].add(w);
-  for (const w of Object.keys(data.library || {})) words.library.add(w);
-  for (const w of Object.keys(data.directives || {})) directives.add(w);
+  for (const [cat, table] of Object.entries(data.keywords)) {
+    const bucket = words[cat] || words.oop;
+    for (const [local, cpp] of Object.entries(table)) { bucket.add(local); bucket.add(cpp); }
+  }
+  for (const [cat, table] of Object.entries(data.library || {})) {
+    for (const local of Object.keys(table)) (cat === 'arduino' && /^[A-Z_]+$/.test(local) ? words.arduino : words.library).add(local);
+  }
+  for (const [local, cpp] of Object.entries(data.directives || {})) {
+    directives.add(local);
+    if (cpp === 'include') includeWords.add(local);
+  }
 }
 const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const alt = set => [...set].sort((a, b) => b.length - a.length).map(esc).join('|');
@@ -61,7 +64,7 @@ const grammar = {
       { name: 'comment.block.khanya', begin: '/\\*', end: '\\*/' },
     ] },
     preprocessor: { patterns: [
-      { match: `^\\s*(#\\s*(?:include|import|${alt(new Set([...directives].filter(d => /faka|sluitin/.test(d))))}))\\s*(<[^>]*>|"[^"]*")`,
+      { match: `^\\s*(#\\s*(?:${alt(includeWords)}))\\s*(<[^>]*>|"[^"]*")`,
         captures: { 1: { name: 'keyword.control.directive.khanya' }, 2: { name: 'string.quoted.other.lt-gt.include.khanya' } } },
       { name: 'keyword.control.directive.khanya', match: `^\\s*#\\s*(?:${alt(directives)})${E}` },
     ] },

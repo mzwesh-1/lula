@@ -2,43 +2,110 @@
   "name": "khanya",
   "displayName": "Khanya - C++ in South African languages",
   "description": "Write C++ for robots, embedded systems and PCs in isiZulu, Afrikaans and more. Syntax highlighting, error checking, hover translations and one-click run.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "khanya-lang",
   "license": "MIT",
-  "engines": { "vscode": "^1.80.0" },
-  "categories": ["Programming Languages", "Education"],
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Education"
+  ],
   "main": "./extension.js",
-  "activationEvents": ["onLanguage:khanya"],
+  "activationEvents": [
+    "onLanguage:khanya",
+    "onLanguage:cpp",
+    "onCommand:khanya.convertFromCpp"
+  ],
   "contributes": {
-    "languages": [{
-      "id": "khanya",
-      "aliases": ["Khanya", "khanya"],
-      "extensions": [".kh"],
-      "configuration": "./language-configuration.json"
-    }],
-    "grammars": [{
-      "language": "khanya",
-      "scopeName": "source.khanya",
-      "path": "./syntaxes/khanya.tmLanguage.json"
-    }],
+    "languages": [
+      {
+        "id": "khanya",
+        "aliases": [
+          "Khanya",
+          "khanya"
+        ],
+        "extensions": [
+          ".kh"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "khanya",
+        "scopeName": "source.khanya",
+        "path": "./syntaxes/khanya.tmLanguage.json"
+      }
+    ],
     "commands": [
-      { "command": "khanya.run", "title": "Khanya: Qalisa / Run", "icon": "$(play)" },
-      { "command": "khanya.showCpp", "title": "Khanya: Bonisa i-C++ / Show C++", "icon": "$(code)" },
-      { "command": "khanya.exportArduino", "title": "Khanya: Export for Arduino (.ino)" }
+      {
+        "command": "khanya.run",
+        "title": "Khanya: Qalisa / Run",
+        "icon": "$(play)"
+      },
+      {
+        "command": "khanya.showCpp",
+        "title": "Khanya: Bonisa i-C++ / Show C++",
+        "icon": "$(code)"
+      },
+      {
+        "command": "khanya.exportArduino",
+        "title": "Khanya: Export for Arduino (.ino)"
+      },
+      {
+        "command": "khanya.convertFromCpp",
+        "title": "Khanya: Convert C++ to Khanya (isiZulu, Afrikaans, ...)"
+      }
     ],
     "menus": {
       "editor/title": [
-        { "command": "khanya.run", "when": "resourceExtname == .kh", "group": "navigation" },
-        { "command": "khanya.showCpp", "when": "resourceExtname == .kh", "group": "navigation" }
+        {
+          "command": "khanya.run",
+          "when": "resourceExtname == .kh",
+          "group": "navigation"
+        },
+        {
+          "command": "khanya.showCpp",
+          "when": "resourceExtname == .kh",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "khanya.convertFromCpp",
+          "when": "resourceLangId == cpp || resourceLangId == c || resourceLangId == khanya",
+          "group": "khanya"
+        }
       ]
     },
     "configuration": {
       "title": "Khanya",
       "properties": {
-        "khanya.compilerPath": { "type": "string", "default": "g++", "description": "C++ compiler. For embedded targets use e.g. avr-g++ or arm-none-eabi-g++." },
-        "khanya.compilerArgs": { "type": "array", "items": { "type": "string" }, "default": [], "description": "Extra compiler flags (e.g. -mmcu=atmega328p)." },
-        "khanya.checkOnSave": { "type": "boolean", "default": true, "description": "Check for errors when the file is saved." },
-        "khanya.defaultLanguage": { "type": "string", "default": "zu", "description": "Language used when the file name has no language code (robot.kh instead of robot.zu.kh)." }
+        "khanya.compilerPath": {
+          "type": "string",
+          "default": "g++",
+          "description": "C++ compiler. For embedded targets use e.g. avr-g++ or arm-none-eabi-g++."
+        },
+        "khanya.compilerArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Extra compiler flags (e.g. -mmcu=atmega328p)."
+        },
+        "khanya.checkOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Check for errors when the file is saved."
+        },
+        "khanya.defaultLanguage": {
+          "type": "string",
+          "default": "zu",
+          "description": "Language used when the file name has no language code (robot.kh instead of robot.zu.kh)."
+        }
       }
     }
   }

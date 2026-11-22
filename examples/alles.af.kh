@@ -1,0 +1,228 @@
+// alles.af.kh - "Alles": 'n program wat byna alles in C++ gebruik, in Afrikaans.
+// A tour of the whole language in Afrikaans: everything from the W3Schools / GeeksforGeeks C++ tutorials.
+#sluitin <invoeruitvoer>
+#sluitin <teks>
+#sluitin <lys>
+#sluitin <kaart>
+#sluitin <versameling>
+#sluitin <tou>
+#sluitin <stapel>
+#sluitin <algoritmes>
+#sluitin <numeries>
+#sluitin <wiskunde>
+#sluitin <geheue>
+#sluitin <foute>
+#sluitin <teksstroom>
+#sluitin <formatering>
+#sluitin <tupel>
+#sluitin <opsioneel>
+#sluitin <draad>
+#sluitin <slot>
+#sluitin <vastegetalle>
+
+#definieer WEERGAWE 1
+#asgedefinieer WEERGAWE
+#definieer BOODSKAP "Khanya v1"
+#anders
+#definieer BOODSKAP "?"
+#eindeas
+
+gebruik naamruimte standaard;
+
+// ---- Datatipes (data types), constexpr, static_assert ----
+vaskonstant heelgetal MAKS = 5;
+staties_beweer(groottevan(heelgetal32) == 4, "heelgetal32 moet 4 grepe wees");
+opsomming klas Kleur { Rooi, Groen, Blou };
+
+// ---- Klasse (classes), oorerwing (inheritance), virtueel (virtual) ----
+klas Vorm {
+publiek:
+    virtueel ~Vorm() = verstek;
+    virtueel dubbel oppervlakte() konstant = 0;
+    virtueel teks naam() konstant { terug "vorm"; }
+};
+
+klas Sirkel : publiek Vorm {
+    dubbel r;
+publiek:
+    eksplisiet Sirkel(dubbel r) : r(r) {}
+    dubbel oppervlakte() konstant oorskryf { terug 3.14159 * r * r; }
+    teks naam() konstant oorskryf { terug "sirkel"; }
+};
+
+klas Reghoek finaal : publiek Vorm {
+    dubbel w, h;
+publiek:
+    Reghoek(dubbel w, dubbel h) : w(w), h(h) {}
+    dubbel oppervlakte() konstant oorskryf { terug w * h; }
+    teks naam() konstant oorskryf { terug "reghoek"; }
+};
+
+// ---- struktuur, operateur (operator overloading), vriend (friend), hierdie (this) ----
+struktuur Punt {
+    heelgetal x, y;
+    Punt operateur+(konstant Punt& o) konstant { terug {x + o.x, y + o.y}; }
+    boolees operateur==(konstant Punt& o) konstant { terug hierdie->x == o.x en y == o.y; }
+    vriend ostream& operateur<<(ostream& os, konstant Punt& p) { terug os << "(" << p.x << "," << p.y << ")"; }
+};
+
+// ---- Sjablone (templates) en konsepte (concepts) ----
+sjabloon<tipenaam T>
+konsep Numeries = standaard::is_arithmetic_v<T>;
+
+sjabloon<tipenaam T> vereis Numeries<T>
+T som(konstant lys<T>& items) {
+    terug somtotaal(items.begin(), items.einde(), T{});
+}
+
+sjabloon<tipenaam T>
+klas Boks {
+    T item;
+publiek:
+    Boks(T i) : item(i) {}
+    T kry_item() konstant { terug item; }
+};
+
+naamruimte my_wiskunde {
+    kompileerevalueer heelgetal kwadraat(heelgetal n) { terug n * n; }
+}
+
+staties heelgetal teller = 0;
+leeg verhoog() geenuitsondering { teller++; }
+
+heelgetal hoof() {
+    skryf << BOODSKAP << nuwereël;
+
+    // ---- Veranderlikes (variables) en tipes ----
+    heelgetal ouderdom = 20;
+    dubbel liggaamslengte = 1.75;
+    karakter eerste_letter = 'K';
+    boolees is_waar = waar;
+    outo berekening = 7 / 2.0;
+    tipevan(ouderdom) nog_een = 3;
+    ongeteken8 greep = 255;
+    skryf << ouderdom << " " << liggaamslengte << " " << eerste_letter << " " << is_waar
+         << " " << berekening << " " << nog_een << " " << omskakel<heelgetal>(greep) << nuwereël;
+
+    // ---- as / anders, kies / geval ----
+    as (ouderdom >= 18 en nie (ouderdom > 60)) skryf << "volwassene" << nuwereël;
+    anders as (ouderdom < 13) skryf << "kind" << nuwereël;
+    anders skryf << "tiener" << nuwereël;
+
+    Kleur kleur = Kleur::Groen;
+    kies (kleur) {
+        geval Kleur::Rooi: skryf << "rooi" << nuwereël; breek;
+        geval Kleur::Groen: skryf << "groen" << nuwereël; breek;
+        verstek: skryf << "ander" << nuwereël;
+    }
+
+    // ---- Lusse (loops): vir, terwyl, doen-terwyl, breek, gaanvoort ----
+    vir (heelgetal i = 0; i < 10; i++) {
+        as (i % 2 == 0) gaanvoort;
+        as (i > 7) breek;
+        skryf << i << " ";
+    }
+    skryf << nuwereël;
+    heelgetal n = 3;
+    terwyl (n > 0) { skryf << n-- << " "; }
+    doen { skryf << "een keer" << nuwereël; } terwyl (vals);
+
+    // ---- Funksies (functions), naamruimte ----
+    skryf << "kwadraat: " << my_wiskunde::kwadraat(MAKS) << nuwereël;
+    vir (heelgetal i = 0; i < 3; i++) verhoog();
+    skryf << "teller: " << teller << nuwereël;
+
+    // ---- Teks (strings) ----
+    teks naam = "Hallo";
+    naam.aanheg(" Wereld");
+    skryf << naam << " | lengte=" << naam.lengte() << " | subteks=" << naam.subteks(0, 4)
+         << " | vind=" << naam.vind("Wereld") << " | " << nateks(42) + "!" << " | " << naheelgetal("123") + 1 << nuwereël;
+    teks hoofletters = naam;
+    transformeer(hoofletters.begin(), hoofletters.einde(), hoofletters.begin(),
+                 [](karakter c) { terug omskakel<karakter>(nahoofletter(omskakel<ongeteken karakter>(c))); });
+    skryf << hoofletters << nuwereël;
+
+    // ---- Lys (vector) en algoritmes (algorithms) ----
+    lys<heelgetal> getalle = {5, 3, 9, 1, 7};
+    getalle.voegagter(4);
+    sorteer(getalle.begin(), getalle.einde());
+    vir (heelgetal x : getalle) skryf << x << " ";
+    skryf << "| grootte=" << getalle.grootte()
+         << " | maks=" << *grootste_element(getalle.begin(), getalle.einde())
+         << " | som=" << som(getalle)
+         << " | tel(7)=" << tel(getalle.begin(), getalle.einde(), 7)
+         << " | soek(9)=" << binêresoek(getalle.begin(), getalle.einde(), 9) << nuwereël;
+    keerom(getalle.begin(), getalle.einde());
+    skryf << "eerste=" << getalle.voorste() << " laaste=" << getalle.agterste() << nuwereël;
+
+    // ---- kaart, versameling, tou, stapel, paar, tupel, opsioneel ----
+    kaart<teks, heelgetal> punte = {{"Sipho", 72}, {"Thandiwe", 85}};
+    punte["Lerato"] = 91;
+    vir (konstant outo& [leerder, punt] : punte) skryf << leerder << "=" << punt << " ";
+    skryf << nuwereël;
+    versameling<heelgetal> my_versameling = {3, 1, 3, 2};
+    skryf << "versameling grootte=" << my_versameling.grootte() << nuwereël;
+    tou<heelgetal> my_tou; my_tou.stoot(1); my_tou.stoot(2);
+    stapel<heelgetal> my_stapel; my_stapel.stoot(1); my_stapel.stoot(2);
+    skryf << "tou voor=" << my_tou.voorste() << " stapel bo=" << my_stapel.bokant() << nuwereël;
+    paar<teks, heelgetal> p = maakpaar("ouderdom", 30);
+    tupel<heelgetal, dubbel, karakter> q = maaktupel(1, 2.5, 'z');
+    opsioneel<heelgetal> miskien;
+    skryf << p.eerste << "=" << p.tweede << " " << kry<1>(q) << " " << miskien.value_or(-1) << nuwereël;
+
+    // ---- Wiskunde (math) ----
+    skryf << vastepunt << stelpresisie(2)
+         << wortel(16.0) << " " << mag(2, 10) << " " << plafon(2.1) << " " << vloer(2.9) << " "
+         << absoluut(-5) << " " << maksimum(3, 8) << " " << minimum(3, 8) << nuwereël;
+
+    // ---- Wysers (pointers), nuut/verwyder, slim wysers ----
+    heelgetal* wyser = nuut heelgetal(10);
+    skryf << "wyser=" << *wyser << nuwereël;
+    verwyder wyser;
+    wyser = nulwyser;
+    lys<uniekewyser<Vorm>> vorms;
+    vorms.voegagter(maakuniek<Sirkel>(1.0));
+    vorms.voegagter(maakuniek<Reghoek>(2.0, 3.0));
+    vir (konstant outo& s : vorms) skryf << s->naam() << ": " << s->oppervlakte() << nuwereël;
+    gedeeldewyser<heelgetal> gedeel = maakgedeel<heelgetal>(5);
+    skryf << "gedeel=" << *gedeel << nuwereël;
+    Punt a{1, 2}, b{3, 4};
+    skryf << "punt=" << (a + b) << " " << (a == b) << nuwereël;
+    Boks<teks> boks("geskenk");
+    skryf << boks.kry_item() << nuwereël;
+
+    // ---- Uitsonderings (exceptions) ----
+    probeer {
+        getalle.by(100);
+    } vang (konstant buitebereik& e) {
+        skryf << "fout gevang: buite bereik" << nuwereël;
+    }
+    probeer {
+        gooi looptydfout("daar is 'n probleem");
+    } vang (konstant uitsondering& e) {
+        skryf << "fout: " << e.wat() << nuwereël;
+    }
+
+    // ---- Teksstroom (stringstream) ----
+    teksstroom ss("10 20 30");
+    heelgetal waarde, totaal = 0;
+    terwyl (ss >> waarde) totaal += waarde;
+    skryf << "stroom som=" << totaal << nuwereël;
+
+    // ---- Drade (threads) ----
+    heelgetal draad_teller = 0;
+    slot my_slot;
+    lys<draad> drade;
+    vir (heelgetal i = 0; i < 4; i++)
+        drade.plaasagter([&] { slotwag<slot> lg(my_slot); draad_teller += 10; });
+    vir (outo& t : drade) t.aansluit();
+    skryf << "drade=" << draad_teller << nuwereël;
+
+    // ---- Bisbewerkings (bitwise) ----
+    heelgetal bisse = 0b1100;
+    skryf << (bisse bisen 0b1010) << " " << (bisse bisof 0b0011) << " "
+         << (bisse eksof 0b1111) << nuwereël;
+
+    skryf << "Klaar!" << nuwereël;
+    terug 0;
+}

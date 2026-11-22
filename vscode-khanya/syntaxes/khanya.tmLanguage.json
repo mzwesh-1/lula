@@ -14,31 +14,39 @@
     },
     {
       "name": "keyword.control.khanya",
-      "match": "(?<![\\p{L}\\p{N}_])(?:okujwayelekile|kungenjalo|gaanvoort|ngenkathi|continue|jikeleza|default|verstek|probeer|qhubeka|switch|return|anders|terwyl|spring|khetha|buyisa|phonsa|while|break|catch|throw|geval|breek|terug|isimo|yenza|phuma|bamba|else|case|goto|kies|doen|vang|gooi|zama|for|try|vir|uma|eqa|if|do|as)(?![\\p{L}\\p{N}_])"
+      "match": "(?<![\\p{L}\\p{N}_])(?:okujwayelekile|kungenjalo|gaanvoort|co_return|ngenkathi|co_buyisa|continue|co_await|ko_terug|ko_lewer|co_yield|jikeleza|co_linda|verstek|default|probeer|qhubeka|co_veza|anders|switch|terwyl|return|spring|ko_wag|khetha|buyisa|phonsa|geval|while|breek|break|terug|catch|throw|isimo|yenza|phuma|bamba|else|kies|case|doen|goto|vang|gooi|zama|vir|for|try|uma|eqa|as|if|do)(?![\\p{L}\\p{N}_])"
     },
     {
       "name": "storage.type.khanya",
-      "match": "(?<![\\p{L}\\p{N}_])(?:idesimali_kabili|okuzenzakalelayo|ongenaphawu|heelgetal|dryfgetal|ongeteken|idesimali|unsigned|karakter|inombolo|onophawu|boolees|geteken|uhlamvu|fushane|double|signed|dubbel|ibhuli|float|short|char|bool|void|long|auto|leeg|kort|lank|outo|ende|int|ize)(?![\\p{L}\\p{N}_])"
+      "match": "(?<![\\p{L}\\p{N}_])(?:idesimali_kabili|uhlamvu_olubanzi|okuzenzakalelayo|wydkarakter|ongenaphawu|karakter16|karakter32|uhlobo_lwa|heelgetal|dryfgetal|karakter8|ongeteken|idesimali|uhlamvu16|uhlamvu32|karakter|char16_t|char32_t|unsigned|decltype|inombolo|uhlamvu8|onophawu|char8_t|wchar_t|boolees|geteken|tipevan|uhlamvu|fushane|dubbel|double|signed|ibhuli|float|short|char|bool|leeg|void|kort|lank|long|outo|auto|ende|int|ize)(?![\\p{L}\\p{N}_])"
     },
     {
       "name": "storage.modifier.khanya",
-      "match": "(?<![\\p{L}\\p{N}_])(?:okuguquguqukayo|okwangaphandle|vaskonstant|veranderlik|ngaphambili|okuguqukayo|ngaphakathi|engaguquki|constexpr|volatile|konstant|mutable|staties|ekstern|vlugtig|okumile|static|extern|inline|const|inlyn)(?![\\p{L}\\p{N}_])"
+      "match": "(?<![\\p{L}\\p{N}_])(?:kompileerinisialiseer|ngaphandle_kwephutha|kompileerevalueer|hlola_ngaphambili|geenuitsondering|qala_ngaphambili|okuguquguqukayo|okwangaphandle|thread_local|vaskonstant|veranderlik|draadlokaal|ngaphambili|okuguqukayo|ngaphakathi|ngokucacile|registreer|eksplisiet|engaguquki|constexpr|consteval|constinit|qondanisa|konstant|volatile|register|explicit|noexcept|irejista|staties|ekstern|vlugtig|mutable|belynas|alignas|okumile|okomucu|static|extern|inline|const|inlyn)(?![\\p{L}\\p{N}_])"
     },
     {
       "name": "keyword.other.khanya",
-      "match": "(?<![\\p{L}\\p{N}_])(?:indawo_yamagama|okubonakalayo|esikhundleni|igama_elisha|isifanekiso|naamruimte|umphakathi|okuvikelwe|okokugcina|protected|namespace|struktuur|opsomming|operateur|inyunyana|sebenzisa|override|operator|template|typename|beskermd|virtueel|oorskryf|verwyder|sjabloon|tipenaam|isakhiwo|private|virtual|typedef|publiek|privaat|hierdie|gebruik|tipedef|isigaba|imfihlo|umngane|struct|public|friend|delete|finaal|vriend|entsha|isenzi|uhlobo|class|union|final|using|lokhu|enum|this|klas|unie|nuut|uhlu|susa|new)(?![\\p{L}\\p{N}_])"
+      "match": "(?<![\\p{L}\\p{N}_])(?:thumela_ngaphandle|indawo_yamagama|okubonakalayo|esikhundleni|igama_elisha|umhlanganisi|samesteller|isifanekiso|naamruimte|umphakathi|okuvikelwe|okokugcina|struktuur|opsomming|protected|operateur|namespace|inyunyana|sebenzisa|beskermd|virtueel|oorskryf|override|verwyder|operator|sjabloon|template|tipenaam|typename|requires|isakhiwo|publiek|privaat|private|virtual|hierdie|concept|gebruik|tipedef|typedef|uitvoer|isigaba|imfihlo|umngane|umqondo|kudinga|ngenisa|imojula|struct|public|finaal|vriend|friend|delete|konsep|vereis|export|invoer|import|moduul|module|entsha|isenzi|uhlobo|class|union|final|using|lokhu|klas|unie|enum|this|nuut|uhlu|susa|new|asm)(?![\\p{L}\\p{N}_])"
+    },
+    {
+      "name": "keyword.operator.cast.khanya",
+      "match": "(?<![\\p{L}\\p{N}_])(?:herinterpreteer_omskakel|guqula_ngesikhathi|dinamies_omskakel|konstant_omskakel|guqula_engaguquki|reinterpret_cast|guqula_ngamandla|staties_beweer|static_assert|dynamic_cast|thola_uhlobo|static_cast|belyningvan|const_cast|groottevan|ukuqondana|qinisekisa|omskakel|alignof|usayizi|tipeid|typeid|sizeof|guqula)(?![\\p{L}\\p{N}_])"
     },
     {
       "name": "constant.language.khanya",
-      "match": "(?<![\\p{L}\\p{N}_])(?:nulwyser|nullptr|iqiniso|amanga|false|lutho|true|waar|vals)(?![\\p{L}\\p{N}_])"
+      "match": "(?<![\\p{L}\\p{N}_])(?:nulwyser|nullptr|iqiniso|amanga|false|lutho|waar|true|vals)(?![\\p{L}\\p{N}_])"
     },
     {
       "name": "keyword.operator.word.khanya",
-      "match": "(?<![\\p{L}\\p{N}_])(?:grootte|usayizi|sizeof|futhi|hhayi|noma|and|not|nie|or|en|of)(?![\\p{L}\\p{N}_])"
+      "match": "(?<![\\p{L}\\p{N}_])(?:noma_kuphela_lingana|phendula_bhithi|futhi_lingana|noma_lingana|noma_kuphela|futhi_bhithi|eksof_gelyk|noma_bhithi|komplement|akulingani|niegelyk|en_gelyk|of_gelyk|not_eq|and_eq|xor_eq|bitand|or_eq|eksof|bisen|bisof|bitor|compl|futhi|hhayi|noma|and|nie|not|xor|en|of|or)(?![\\p{L}\\p{N}_])"
     },
     {
       "name": "support.function.khanya",
-      "match": "(?<![\\p{L}\\p{N}_])(?:bhala_idijithali|funda_idijithali|amamilisekhondi|funda_ianalogi|bhala_ianalogi|skryfdigitaal|millisekondes|leesdigitaal|skryfanaloog|phindaphinda|setha_iphini|leesanaloog|okuyinhloko|OKUPHUMAYO|OKUNGENAYO|nuwereël|penmodus|umbhalo|PHEZULU|opstel|UITSET|umugqa|PHANSI|skryf|INSET|bhala|funda|iqoqo|linda|hoof|lees|teks|HOOG|LAAG|qala|lys|lus|wag)(?![\\p{L}\\p{N}_])"
+      "match": "(?<![\\p{L}\\p{N}_])(?:namathisela_ukuphazamiseka|ongesorteerdeversameling|iphindaphindwe_elincane|hlwanyela_okungahleliwe|impikiswano_engalungile|ukuhlelwa_okulandelayo|isehlukanisi_esikhulu|imingcele_yezinombolo|isikhombi_esabelwana|isikhombi_esibuthaka|ngaphandle_kobubanzi|amadesimali_aqinile|umfudlana_wokufunda|umfudlana_wokubhala|ulayini_obalulekile|iphutha_lokusebenza|iphutha_lokucabanga|amamayikhrosekhondi|ongesorteerdekaart|volgendepermutasie|umfudlana_wombhalo|imephu_engahleliwe|isethi_engahleliwe|isikhombi_esisodwa|ukuphela_kwefayela|ongeldigeargument|ifayela_lokufunda|ifayela_lokubhala|inombolo_kasayizi|umngcele_ophezulu|engeza_ekugcineni|faka_esikhundleni|shintsha_ubukhulu|linda_amamayikhro|multiversameling|grootste_element|kleinste_element|uhlu_oluxhunyiwe|yenza_esabelwana|umngcele_ophansi|kuyinye_ngayinye|susa_okuphindiwe|inani_eliphelele|umqaphi_wesivalo|engeza_ekuqaleni|bhala_idijithali|funda_idijithali|skryfteksstroom|hegonderbreking|ihayiphothenuse|susa_ekugcineni|beka_ekugcineni|amamilisekhondi|funda_ibhayithi|bhala_ibhayithi|leesteksstroom|prioriteitstou|setha_ukunemba|setha_ububanzi|ulayini_kabili|yenza_esisodwa|kunombolo_ende|susa_ekuqaleni|ukuphela_emuva|funda_ianalogi|bhala_ianalogi|gedeeldewyser|nakleinletter|iskleinletter|verwyderagter|skryfdigitaal|millisekondes|mikrosekondes|bhala_iphutha|bhala_umlando|ongenaphawu16|ongenaphawu32|ongenaphawu64|imephu_eningi|isethi_eningi|okungakhethwa|okungahleliwe|ukuqala_emuva|faka_phakathi|umbhalo_wonke|setha_kabusha|bonisa_umugqa|kutholakalayo|stelpresisie|transformeer|nahoofletter|ishoofletter|uitsondering|verwydervoor|leesdigitaal|skryfanaloog|funda_umugqa|ongenaphawu8|yenza_ipheya|yenza_iqembu|sesha_kabili|guqula_konke|shintshanisa|kungenalutho|gcina_indawo|phindaphinda|setha_iphini|gedefinieer|groottetipe|heelgetal16|heelgetal32|heelgetal64|ongeteken16|ongeteken32|ongeteken64|versameling|uniekewyser|getalgrense|saailukraak|naheelgetal|looptydfout|buitebereik|leesanaloog|okuyinhloko|into_enkulu|into_encane|qoqa_isamba|landelanisa|ieksponenti|ungokukhulu|ungokuncane|okwehlukile|namathisela|kwenzenjani|vula_ukhiye|misa_ithoni|teksstroom|heelgetal8|ongeteken8|multikaart|maakgedeel|binêresoek|ondergrens|logikafout|plaasagter|hergrootte|kapasiteit|beskikbaar|skryfgreep|inombolo16|inombolo32|inombolo64|ikhosayini|ithenjenti|kudesimali|uyidijithi|uyinhlamvu|uyisikhala|okuphezulu|sula_konke|qhathanisa|okwesibili|kuvulekile|standaard|skandeerf|skryffout|vastepunt|stelwydte|skryflêer|dubbeltou|skakellys|opsioneel|maaktupel|swakwyser|maakuniek|somtotaal|voegagter|maakskoon|reserveer|lêereinde|ontkoppel|leesgreep|isisekelo|kuchaziwe|inombolo8|amabhithi|isikhathi|kunombolo|kokukhulu|kokuncane|umbhalo_c|okokuqala|hlukanisa|Isiriyeli|skryflog|nuwereël|leesreël|leeslêer|skikking|maakpaar|maksimum|vulreeks|absoluut|skuinssy|nadubbel|isletter|isspasie|voegvoor|agterste|trubegin|trueinde|vergelyk|laatgaan|aansluit|ontsluit|penmodus|wagmikro|geentoon|drukreël|hlehlisa|okukhulu|okuncane|gcwalisa|insalela|kumbhalo|ubukhulu|phambili|ukuphela|endaweni|ingxenye|bisstel|sorteer|minimum|bogrens|kopieer|virelke|kosinus|tangens|logtien|restant|lukraak|issyfer|slotwag|grootte|voorste|subteks|vervang|oopmaak|toemaak|alsteks|herstel|Seriaal|phrinta|ifayela|umbhalo|ulayini|inqwaba|hambisa|kopisha|impande|amandla|sondeza|isayini|ilogi10|isivalo|ukuqala|umthamo|khulula|vimbela|stapel|keerom|wortel|plafon|natlog|nateks|nalank|lengte|isleeg|haalaf|bokant|voegin|uitvee|aanheg|c_teks|eerste|tweede|opstel|beperk|umugqa|geleza|imephu|isethi|ipheya|iqembu|thatha|ehlisa|engeza|khipha|joyina|ithoni|bonisa|drukf|skryf|spoel|kaart|tupel|skuif|uniek|vloer|sinus|draad|plaas|stoot|begin|einde|isoop|sluit|skena|bhala|funda|iqoqo|uhide|bopha|hlela|thola|nyusa|ilogi|umucu|ubude|emuva|cisha|khiya|linda|hoof|lees|lêer|teks|paar|bind|vind|ruil|rond|eksp|slot|toon|druk|bala|beka|vula|vala|qala|lys|tou|kry|tel|vul|mag|ggd|kgv|tyd|wat|lus|wag|by)(?![\\p{L}\\p{N}_])"
+    },
+    {
+      "name": "support.constant.arduino.khanya",
+      "match": "(?<![\\p{L}\\p{N}_])(?:OKUNGENAYO_KUDONSELWE|INGEBOUDE_LED|ILED_EYAKHIWE|INSET_OPTREK|OKUPHUMAYO|OKUNGENAYO|PHEZULU|UITSET|PHANSI|INSET|HOOG|LAAG)(?![\\p{L}\\p{N}_])"
     },
     {
       "name": "constant.numeric.khanya",
@@ -66,7 +74,7 @@
     "preprocessor": {
       "patterns": [
         {
-          "match": "^\\s*(#\\s*(?:include|import|sluitin|faka))\\s*(<[^>]*>|\"[^\"]*\")",
+          "match": "^\\s*(#\\s*(?:include|sluitin|import|faka))\\s*(<[^>]*>|\"[^\"]*\")",
           "captures": {
             "1": {
               "name": "keyword.control.directive.khanya"
@@ -78,7 +86,7 @@
         },
         {
           "name": "keyword.control.directive.khanya",
-          "match": "^\\s*#\\s*(?:uma_kungachazwanga|asniegedefinieer|kungenjalo_uma|asgedefinieer|uma_kuchaziwe|ondefinieer|kungenjalo|definieer|isiyalezo|andersas|qeda_uma|include|sluitin|eindeas|iphutha|define|ifndef|pragma|anders|undef|ifdef|endif|error|chaza|else|elif|line|fout|faka|sula|uma|if|as)(?![\\p{L}\\p{N}_])"
+          "match": "^\\s*#\\s*(?:kungenjalo_uma_kungachazwanga|kungenjalo_uma_kuchaziwe|andersasniegedefinieer|andersasgedefinieer|uma_kungachazwanga|asniegedefinieer|kungenjalo_uma|asgedefinieer|uma_kuchaziwe|ondefinieer|waarskuwing|kungenjalo|isexwayiso|definieer|direktief|isiyalezo|elifndef|andersas|qeda_uma|include|elifdef|warning|sluitin|eindeas|iphutha|define|ifndef|pragma|anders|umugqa|undef|ifdef|endif|error|chaza|else|elif|line|reël|fout|faka|sula|uma|if|as)(?![\\p{L}\\p{N}_])"
         }
       ]
     },
