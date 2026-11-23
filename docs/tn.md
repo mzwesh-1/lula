@@ -446,3 +446,267 @@ Every word below can be used in `.tn.lula` files. Plain English C++ keeps workin
 | `e_e_leng_teng` | `available` |
 | `bala_baete` | `read` |
 | `kwala_baete` | `write` |
+
+# Library packs
+
+A pack switches on when you include one of its headers (in your language or in English).
+
+## Arduino libraries
+
+Headers: `#tsenyeletsa <servo>` = `<Servo.h>`, `#tsenyeletsa <terata>` = `<Wire.h>`, `#tsenyeletsa <bese_ya_spi>` = `<SPI.h>`, `#tsenyeletsa <memori_e_nnelang>` = `<EEPROM.h>`
+
+| Setswana | C++ |
+|---|---|
+| `Seservo` | `Servo` |
+| `golaganya` | `attach` |
+| `kwala_dimaekerosekonte` | `writeMicroseconds` |
+| `Terata` | `Wire` |
+| `simolola_go_romela` | `beginTransmission` |
+| `fetsa_go_romela` | `endTransmission` |
+| `kopa_go` | `requestFrom` |
+| `fa_go_amogelwa` | `onReceive` |
+| `fa_go_kopiwa` | `onRequest` |
+| `Bese_ya_spi` | `SPI` |
+| `fetisetsa` | `transfer` |
+| `Memori_e_nnelang` | `EEPROM` |
+| `tsenya_mo_go_yona` | `put` |
+| `ntšhafatsa` | `update` |
+
+## Arduino (always on)
+
+| Setswana | C++ |
+|---|---|
+| `tlhopha_ka_tshoganyetso` | `random` |
+| `peo_ya_tshoganyetso` | `randomSeed` |
+| `lekanya_gape` | `map` |
+| `lekanya_phalese` | `pulseIn` |
+| `phini_go_tshitiso` | `digitalPinToInterrupt` |
+| `FA_E_TLHATLOGA` | `RISING` |
+| `FA_E_FOLOGA` | `FALLING` |
+| `FA_E_FETOGA` | `CHANGE` |
+| `letla_ditshitiso` | `interrupts` |
+| `thibela_ditshitiso` | `noInterrupts` |
+| `bala_nomore` | `parseInt` |
+| `bala_tesimale` | `parseFloat` |
+| `bala_mokwalo` | `readString` |
+| `bala_mokwalo_go_fitlha` | `readStringUntil` |
+| `e_nne_palo` | `toInt` |
+| `e_nne_tesimale` | `toFloat` |
+| `lefelo_la` | `indexOf` |
+| `karolo_ya_mokwalo` | `substring` |
+| `poma_sekgala` | `trim` |
+| `e_nne_ditlhaka_tse_dikgolo` | `toUpperCase` |
+| `e_nne_ditlhaka_tse_dinnye` | `toLowerCase` |
+| `e_simolola_ka` | `startsWith` |
+| `e_fela_ka` | `endsWith` |
+
+## CUDA
+
+Headers: `#tsenyeletsa <gpu>` = `<cuda_runtime.h>`
+
+| Setswana | C++ |
+|---|---|
+| `tiro_ya_gpu` | `__global__` |
+| `ya_gpu` | `__device__` |
+| `ya_khomphiutara` | `__host__` |
+| `e_abelanwang_gpu` | `__shared__` |
+| `lekanya_dikgole` | `__syncthreads` |
+| `palo_ya_kgole` | `threadIdx` |
+| `palo_ya_poloko` | `blockIdx` |
+| `bogolo_jwa_poloko` | `blockDim` |
+| `bogolo_jwa_gridi` | `gridDim` |
+| `bogolo3` | `dim3` |
+| `gpu_abela_memori` | `cudaMalloc` |
+| `gpu_golola_memori` | `cudaFree` |
+| `gpu_kopa_memori` | `cudaMemcpy` |
+| `GO_TSWA_KHOMPHIUTARA_GO_GPU` | `cudaMemcpyHostToDevice` |
+| `GO_TSWA_GPU_GO_KHOMPHIUTARA` | `cudaMemcpyDeviceToHost` |
+| `gpu_ema_e_fetse` | `cudaDeviceSynchronize` |
+| `gpu_phoso_ya_bofelo` | `cudaGetLastError` |
+| `gpu_mokwalo_wa_phoso` | `cudaGetErrorString` |
+| `Phoso_ya_gpu` | `cudaError_t` |
+| `GPU_E_ATLEGILE` | `cudaSuccess` |
+
+## Eigen
+
+Headers: `#tsenyeletsa <dimatrikisi>` = `<Eigen/Dense>`, `#tsenyeletsa <dimatrikisi_motheo>` = `<Eigen/Core>`, `#tsenyeletsa <jeometri>` = `<Eigen/Geometry>`
+
+| Setswana | C++ |
+|---|---|
+| `dimatrikisi` | `Eigen` |
+| `Matrikisi` | `Eigen::MatrixXd` |
+| `Vekethara` | `Eigen::VectorXd` |
+| `Matrikisi3` | `Eigen::Matrix3d` |
+| `Matrikisi4` | `Eigen::Matrix4d` |
+| `Vekethara3` | `Eigen::Vector3d` |
+| `Matrikisi_ya_mofuta` | `Eigen::Matrix` |
+| `Kwatheniono` | `Eigen::Quaterniond` |
+| `Khutlo_le_ekese` | `Eigen::AngleAxisd` |
+| `Bongwe` | `Identity` |
+| `Ziro` | `Zero` |
+| `Tsotlhe_ke_nngwe` | `Ones` |
+| `Ka_tshoganyetso` | `Random` |
+| `fetola_matrikisi` | `transpose` |
+| `e_e_fapaneng` | `inverse` |
+| `tshwetso` | `determinant` |
+| `boleele_jwa_vekethara` | `norm` |
+| `e_lekantshitswe` | `normalized` |
+| `setlhagiswa_sa_ntlha` | `dot` |
+| `setlhagiswa_sa_sefapaano` | `cross` |
+| `rarabolola` | `solve` |
+| `kgaoganya_qr` | `colPivHouseholderQr` |
+| `di_batla_di_lekana` | `isApprox` |
+| `Ekese_X` | `UnitX` |
+| `Ekese_Y` | `UnitY` |
+| `Ekese_Z` | `UnitZ` |
+| `e_nne_matrikisi` | `matrix` |
+
+## OpenCV
+
+Headers: `#tsenyeletsa <pono>` = `<opencv2/opencv.hpp>`, `#tsenyeletsa <pono_motheo>` = `<opencv2/core.hpp>`, `#tsenyeletsa <pono_ditshwantsho>` = `<opencv2/imgproc.hpp>`, `#tsenyeletsa <pono_difensetere>` = `<opencv2/highgui.hpp>`, `#tsenyeletsa <pono_bidio>` = `<opencv2/videoio.hpp>`, `#tsenyeletsa <pono_go_bona_dilo>` = `<opencv2/objdetect.hpp>`
+
+| Setswana | C++ |
+|---|---|
+| `pono` | `cv` |
+| `Setshwantsho` | `cv::Mat` |
+| `bala_setshwantsho` | `cv::imread` |
+| `boloka_setshwantsho` | `cv::imwrite` |
+| `bontsha_setshwantsho` | `cv::imshow` |
+| `ema_konopo` | `cv::waitKey` |
+| `tlhama_fensetere` | `cv::namedWindow` |
+| `tswala_difensetere_tsotlhe` | `cv::destroyAllWindows` |
+| `fetola_mmala` | `cv::cvtColor` |
+| `MMALA_GO_PUTSWA` | `cv::COLOR_BGR2GRAY` |
+| `MMALA_GO_HSV` | `cv::COLOR_BGR2HSV` |
+| `MMALA_GO_RGB` | `cv::COLOR_BGR2RGB` |
+| `fifatsa` | `cv::GaussianBlur` |
+| `bona_mathoko` | `cv::Canny` |
+| `molelwane_wa_kgaogano` | `cv::threshold` |
+| `MOLELWANE_O_MABEDI` | `cv::THRESH_BINARY` |
+| `fetola_bogolo_jwa_setshwantsho` | `cv::resize` |
+| `thala_khutlonne` | `cv::rectangle` |
+| `thala_sediko` | `cv::circle` |
+| `thala_mola` | `cv::line` |
+| `kwala_mo_setshwantshong` | `cv::putText` |
+| `Ntlha` | `cv::Point` |
+| `Bophara_le_boleele` | `cv::Size` |
+| `Boleng_jwa_mmala` | `cv::Scalar` |
+| `Lefelonyana` | `cv::Rect` |
+| `Khamera` | `cv::VideoCapture` |
+| `e_bulegile` | `isOpened` |
+| `mela` | `rows` |
+| `dikholomo` | `cols` |
+| `dikanale` | `channels` |
+| `dira_khopi` | `clone` |
+| `kopela_go` | `copyTo` |
+| `bona_meelelo` | `cv::findContours` |
+| `thala_meelelo` | `cv::drawContours` |
+| `bogolo_jwa_moelelo` | `cv::contourArea` |
+| `mo_teng_ga_molelwane` | `cv::inRange` |
+| `Motlhaodi` | `cv::CascadeClassifier` |
+| `bona_dilo` | `detectMultiScale` |
+| `rwala` | `load` |
+| `BALA_KA_MMALA` | `cv::IMREAD_COLOR` |
+| `BALA_KA_PUTSWA` | `cv::IMREAD_GRAYSCALE` |
+| `FONTO_E_BONOLO` | `cv::FONT_HERSHEY_SIMPLEX` |
+| `Phikisele` | `cv::Vec3b` |
+| `tse_di_tletseng_0` | `zeros` |
+| `tse_di_tletseng_1` | `ones` |
+| `MEELELO_YA_KWA_NTLE` | `cv::RETR_EXTERNAL` |
+| `MEELELO_E_BONOLO` | `cv::CHAIN_APPROX_SIMPLE` |
+| `lebokoso_le_le_dikaganyang` | `cv::boundingRect` |
+| `MMALA_8BIT_3` | `CV_8UC3` |
+| `bophara` | `width` |
+| `bogodimo` | `height` |
+
+## ROS 2
+
+Headers: `#tsenyeletsa <ros2>` = `<rclcpp/rclcpp.hpp>`, `#tsenyeletsa <molaetsa_wa_mokwalo>` = `<std_msgs/msg/string.hpp>`, `#tsenyeletsa <molaetsa_wa_palo>` = `<std_msgs/msg/int32.hpp>`, `#tsenyeletsa <molaetsa_wa_tesimale>` = `<std_msgs/msg/float64.hpp>`, `#tsenyeletsa <molaetsa_wa_bulini>` = `<std_msgs/msg/bool.hpp>`, `#tsenyeletsa <taelo_ya_lebelo>` = `<geometry_msgs/msg/twist.hpp>`, `#tsenyeletsa <sekene_sa_laser>` = `<sensor_msgs/msg/laser_scan.hpp>`, `#tsenyeletsa <setshwantsho_sa_sensa>` = `<sensor_msgs/msg/image.hpp>`
+
+| Setswana | C++ |
+|---|---|
+| `ros` | `rclcpp` |
+| `simolola_ros` | `rclcpp::init` |
+| `tswala_ros` | `rclcpp::shutdown` |
+| `tsamaisa_ros` | `rclcpp::spin` |
+| `tsamaisa_ros_gannye` | `rclcpp::spin_some` |
+| `ros_e_sa_ntse_e_tshela` | `rclcpp::ok` |
+| `Lefito` | `rclcpp::Node` |
+| `Mophasalatsi` | `rclcpp::Publisher` |
+| `Kwadiso` | `rclcpp::Subscription` |
+| `Sebadi_sa_nako` | `rclcpp::TimerBase` |
+| `tlhama_mophasalatsi` | `create_publisher` |
+| `tlhama_kwadiso` | `create_subscription` |
+| `tlhama_sebadi_sa_nako` | `create_wall_timer` |
+| `phasalatsa` | `publish` |
+| `mokwadi_wa_hisetori` | `get_logger` |
+| `ROS_TSHEDIMOSETSO` | `RCLCPP_INFO` |
+| `ROS_TLHAGISO` | `RCLCPP_WARN` |
+| `ROS_PHOSO` | `RCLCPP_ERROR` |
+| `Sesupi` | `SharedPtr` |
+| `datha` | `data` |
+| `ka_tlhamalalo` | `linear` |
+| `go_dikologa` | `angular` |
+| `bokgakala` | `ranges` |
+| `bolela_paramethara` | `declare_parameter` |
+| `bona_paramethara` | `get_parameter` |
+| `molaetsa_wa_mokwalo` | `std_msgs::msg::String` |
+| `molaetsa_wa_palo` | `std_msgs::msg::Int32` |
+| `molaetsa_wa_tesimale` | `std_msgs::msg::Float64` |
+| `molaetsa_wa_bulini` | `std_msgs::msg::Bool` |
+| `taelo_ya_lebelo` | `geometry_msgs::msg::Twist` |
+| `sekene_sa_laser` | `sensor_msgs::msg::LaserScan` |
+| `setshwantsho_sa_sensa` | `sensor_msgs::msg::Image` |
+
+## Standard library extras (always on)
+
+| Setswana | C++ |
+|---|---|
+| `datha` | `data` |
+
+## PyTorch (libtorch)
+
+Headers: `#tsenyeletsa <thuto_ya_metšhine>` = `<torch/torch.h>`
+
+| Setswana | C++ |
+|---|---|
+| `thuto_ya_metšhine` | `torch` |
+| `Tensa` | `torch::Tensor` |
+| `dira_tensa` | `torch::tensor` |
+| `tse_di_tletseng_0` | `torch::zeros` |
+| `tse_di_tletseng_1` | `torch::ones` |
+| `tensa_ka_tshoganyetso` | `torch::rand` |
+| `tensa_ka_tshoganyetso_e_e_tlwaelegileng` | `torch::randn` |
+| `baya_peo` | `torch::manual_seed` |
+| `Karolo_ya_neteweke` | `torch::nn::Module` |
+| `Lera_le_le_tlhamaletseng` | `torch::nn::Linear` |
+| `Lera_la_kopanyo2d` | `torch::nn::Conv2d` |
+| `tsosoloso_relu` | `torch::relu` |
+| `logo_ya_menyetla` | `torch::log_softmax` |
+| `tatlhegelo_ya_sekwere` | `torch::mse_loss` |
+| `tatlhegelo_ya_menyetla` | `torch::nll_loss` |
+| `Tokafatsi_SGD` | `torch::optim::SGD` |
+| `Tokafatsi_Adam` | `torch::optim::Adam` |
+| `Sedirisiwa` | `torch::Device` |
+| `GO_GPU` | `torch::kCUDA` |
+| `GO_CPU` | `torch::kCPU` |
+| `gpu_e_teng` | `torch::cuda::is_available` |
+| `boloka_motlolo` | `torch::save` |
+| `rwala_motlolo` | `torch::load` |
+| `Mosireletsi_yo_o_sa_ithuteng` | `torch::NoGradGuard` |
+| `kwadisa_karolo` | `register_module` |
+| `fetisetsa_pele` | `forward` |
+| `boela_kwa_morago` | `backward` |
+| `phimola_tshekamo` | `zero_grad` |
+| `tsaya_kgato` | `step` |
+| `isa_go` | `to` |
+| `boleng_jo_bo_le_bongwe` | `item` |
+| `leba_jaaka` | `view` |
+| `fetola_sebopego` | `reshape` |
+| `atisa_dimatrikisi` | `matmul` |
+| `palogotlhe_ya_tensa` | `sum` |
+| `palogare_ya_tensa` | `mean` |
+| `sesupo_se_segolo` | `argmax` |
+| `diparamethara` | `parameters` |
+| `katisa` | `train` |
+| `tlhatlhoba_motlolo` | `eval` |

@@ -1,0 +1,39 @@
+// Umbono wekhompyutha nge-OpenCV: thola izinto ezimibalabala esithombeni.
+// Computer vision with OpenCV: find coloured objects in an image.
+//   lula run examples/umbono.zu.lula
+#faka <umbono>
+#faka <okokufaka_nokukhipha>
+
+inombolo okuyinhloko() {
+    // Dala isithombe esimnyama, bese udweba izinto ezintathu (draw three objects on a black image)
+    Isithombe isithombe = Isithombe::kugcwele_ngo0(240, 320, UMBALA_8BIT_3);
+    dweba_indilinga(isithombe, Iphoyinti(80, 120), 40, Inani_lombala(0, 0, 255), -1);
+    dweba_unxande(isithombe, Iphoyinti(160, 60), Iphoyinti(220, 180), Inani_lombala(0, 255, 0), -1);
+    dweba_indilinga(isithombe, Iphoyinti(270, 60), 20, Inani_lombala(0, 0, 255), -1);
+
+    // Guqula kube mpunga, fiphalisa, bese usika ngomkhawulo (grey, blur, threshold)
+    Isithombe ompunga, ofiphele, okumbili;
+    guqula_umbala(isithombe, ompunga, UMBALA_KUYA_KOMPUNGA);
+    fiphalisa(ompunga, ofiphele, Ububanzi_nobude(5, 5), 0);
+    umkhawulo(ofiphele, okumbili, 10, 255, UMKHAWULO_OMBILI);
+
+    // Thola izinhlaka (find contours)
+    iqoqo<iqoqo<Iphoyinti>> izinhlaka;
+    thola_izinhlaka(okumbili, izinhlaka, IZINHLAKA_ZANGAPHANDLE, IZINHLAKA_EZILULA);
+    bhala << "Izinto ezitholakele: " << izinhlaka.ubukhulu() << umugqa;
+
+    // Thola izinto ezibomvu kuphela (only red objects)
+    Isithombe ibomvu;
+    ngaphakathi_kobubanzi(isithombe, Inani_lombala(0, 0, 200), Inani_lombala(50, 50, 255), ibomvu);
+    iqoqo<iqoqo<Iphoyinti>> ezibomvu;
+    thola_izinhlaka(ibomvu, ezibomvu, IZINHLAKA_ZANGAPHANDLE, IZINHLAKA_EZILULA);
+    bhala << "Izinto ezibomvu: " << ezibomvu.ubukhulu() << umugqa;
+
+    jikeleza (engaguquki okuzenzakalelayo& h : ezibomvu) {
+        Isifunda ibhokisi = ibhokisi_elizungezile(h);
+        bhala << "  ibhokisi: " << ibhokisi.ububanzi << "x" << ibhokisi.ukuphakama << umugqa;
+    }
+    bhala << "Usayizi wesithombe: " << isithombe.amakholamu << "x" << isithombe.imigqa
+          << ", iziteshi: " << isithombe.iziteshi() << umugqa;
+    buyisa 0;
+}

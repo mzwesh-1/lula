@@ -147,15 +147,80 @@ function tokenize(source) {
 const SKIP = new Set(['space', 'newline', 'comment']);
 const INCLUDE_LIKE = new Set(['include', 'include_next', 'import']);
 
+// ---------------------------------------------------------------------------
+// Library packs (ROS 2, OpenCV, Eigen, CUDA, PyTorch, more Arduino): packs/<id>.json
+// A pack's words switch on when the file includes one of its headers (in any language),
+// when it is marked `always`, or when asked for with opts.packs.
+// ---------------------------------------------------------------------------
+const PACK_DIRS = [path.join(__dirname, 'packs'), path.join(__dirname, '..', 'packs')];
+let packCache = null;
+function loadPacks() {
+  if (packCache) return packCache;
+  const dir = PACK_DIRS.find(d => fs.existsSync(d));
+  packCache = dir ? fs.readdirSync(dir).filter(f => f.endsWith('.json')).sort()
+    .map(f => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))) : [];
+  return packCache;
+}
+const packLangCache = new Map();
+/** Pack tables for one language: [{id, name, always, names: Map local->cpp, headers: Map local->cpp, cppHeaders: Set}] */
+function packsFor(langCode) {
+  if (packLangCache.has(langCode)) return packLangCache.get(langCode);
+  const list = loadPacks().map(p => {
+    const names = new Map(), headers = new Map();
+    for (const [cpp, words] of Object.entries(p.names)) if (words[langCode]) names.set(words[langCode], cpp);
+    for (const [cpp, words] of Object.entries(p.headers || {})) if (words[langCode]) headers.set(words[langCode], cpp);
+    return { id: p.id, name: p.name, always: !!p.always, names, headers, cppHeaders: new Set(Object.keys(p.headers || {})) };
+  });
+  packLangCache.set(langCode, list);
+  return list;
+}
+
+/** Arduino boards have no C++ standard library: in Arduino mode these become Arduino's own globals. */
+const ARDUINO_BARE = new Set(['abs', 'min', 'max', 'sqrt', 'pow', 'sin', 'cos', 'tan', 'log', 'log10', 'exp', 'floor', 'ceil',
+  'round', 'fmod', 'hypot', 'rand', 'srand', 'toupper', 'tolower', 'isdigit', 'isalpha', 'isspace', 'isupper', 'islower',
+  'int8_t', 'int16_t', 'int32_t', 'int64_t', 'uint8_t', 'uint16_t', 'uint32_t', 'uint64_t', 'size_t']);
+const ARDUINO_REPLACE = { 'std::string': 'String', 'std::to_string': 'String' };
+
+/** Bare name after `x.`, `p->` or `ns::`: cv::Mat -> Mat, std::vector -> vector. */
+function bareName(cpp) { const i = cpp.lastIndexOf('::'); return i < 0 ? cpp : cpp.slice(i + 2); }
+
+/**
+ * Everything a file in this language can use, given its tokens: core tables + active packs.
+ * @returns {{keywordMap, libraryMap, directiveMap, headerMap, active: string[], arduino: boolean}}
+ */
+function contextFor(langCode, toks, opts = {}) {
+  const lang = loadLanguage(langCode);
+  const packs = packsFor(langCode);
+  const headerMap = new Map(lang.headerMap);
+  for (const p of packs) for (const [local, cpp] of p.headers) if (!headerMap.has(local)) headerMap.set(local, cpp);
+  const included = new Set(toks.filter(t => t.type === 'header').map(t => t.text.slice(1, -1).trim()));
+  const wanted = new Set(opts.packs || []);
+  const active = packs.filter(p => p.always || wanted.has(p.id) ||
+    [...p.headers.keys()].some(h => included.has(h)) || [...p.cppHeaders].some(h => included.has(h)));
+  const libraryMap = new Map(lang.libraryMap);
+  for (const p of active) for (const [local, cpp] of p.names) if (!lang.keywordMap.has(local) && !libraryMap.has(local)) libraryMap.set(local, cpp);
+  // Arduino mode: setup() + loop() and no main(), or asked for explicitly.
+  const idents = new Set(toks.filter(t => t.type === 'ident').map(t => libraryMap.get(t.text) || t.text));
+  const arduino = opts.target === 'arduino' || (opts.target !== 'host' && idents.has('setup') && idents.has('loop') && !idents.has('main'));
+  if (arduino) {
+    for (const [local, cpp] of libraryMap) {
+      if (ARDUINO_REPLACE[cpp]) libraryMap.set(local, ARDUINO_REPLACE[cpp]);
+      else if (cpp.startsWith('std::') && ARDUINO_BARE.has(cpp.slice(5))) libraryMap.set(local, cpp.slice(5));
+    }
+  }
+  return { keywordMap: lang.keywordMap, libraryMap, directiveMap: lang.directiveMap, headerMap, active: active.map(p => p.id), arduino };
+}
+
 /**
  * Translate Lula source to C++.
  * @param {string} source
  * @param {string} langCode e.g. 'zu'
- * @param {{fileName?: string, lineDirective?: boolean}} opts
- * @returns {{cpp: string, used: Map<string,string>}}
+ * @param {{fileName?: string, lineDirective?: boolean, packs?: string[], target?: 'arduino'|'host'}} opts
+ * @returns {{cpp: string, used: Map<string,string>, packs: string[], arduino: boolean}}
  */
 function translate(source, langCode, opts = {}) {
-  const lang = loadLanguage(langCode);
+  const toks = tokenize(source);
+  const ctx = contextFor(langCode, toks, opts);
   const out = [];
   const used = new Map();
   let prev = '';
@@ -163,21 +228,21 @@ function translate(source, langCode, opts = {}) {
   if (opts.lineDirective !== false && opts.fileName) {
     out.push(`#line 1 ${JSON.stringify(opts.fileName.replace(/\\/g, '/'))}\n`);
   }
-  for (const t of tokenize(source)) {
+  for (const t of toks) {
     let text = t.text;
     if (t.type === 'directive') {
-      text = lang.directiveMap.get(t.text) || t.text;
+      text = ctx.directiveMap.get(t.text) || t.text;
       afterInclude = INCLUDE_LIKE.has(text);
     } else if (t.type === 'header' && afterInclude) {
-      const cpp = lang.headerMap.get(t.text.slice(1, -1).trim());
+      const cpp = ctx.headerMap.get(t.text.slice(1, -1).trim());
       if (cpp) text = `<${cpp}>`;
     } else if (t.type === 'ident') {
-      if (lang.keywordMap.has(t.text)) {
-        text = lang.keywordMap.get(t.text);
-      } else if (lang.libraryMap.has(t.text)) {
-        text = lang.libraryMap.get(t.text);
-        // After `x.`, `p->` or `std::` use the bare name: v.ubukhulu() -> v.size(), isisekelo::iqoqo -> std::vector
-        if ((prev === '::' || prev === '.' || prev === '->') && text.startsWith('std::')) text = text.slice(5);
+      if (ctx.keywordMap.has(t.text)) {
+        text = ctx.keywordMap.get(t.text);
+      } else if (ctx.libraryMap.has(t.text)) {
+        text = ctx.libraryMap.get(t.text);
+        // After `x.`, `p->` or `ns::` use the bare name: v.ubukhulu() -> v.size(), isisekelo::iqoqo -> std::vector
+        if (prev === '::' || prev === '.' || prev === '->') text = bareName(text);
       }
     }
     if (text !== t.text) used.set(t.text, text);
@@ -185,18 +250,18 @@ function translate(source, langCode, opts = {}) {
     if (!SKIP.has(t.type)) prev = t.text;
     out.push(text);
   }
-  return { cpp: out.join(''), used };
+  return { cpp: out.join(''), used, packs: ctx.active, arduino: ctx.arduino };
 }
 
-function reverseMaps(lang) {
+function reverseMaps(ctx) {
   const first = (entries) => { const m = new Map(); for (const [k, v] of entries) if (!m.has(v)) m.set(v, k); return m; };
   const qualified = new Map(), plain = new Map();
-  for (const [local, cpp] of lang.libraryMap) {
-    const target = cpp.startsWith('std::') ? qualified : plain;
+  for (const [local, cpp] of ctx.libraryMap) {
+    const target = cpp.includes('::') ? qualified : plain;
     if (!target.has(cpp)) target.set(cpp, local);
   }
-  const reserved = new Set([...lang.keywordMap.keys(), ...lang.libraryMap.keys()]);
-  return { keywords: first(lang.keywordMap), directives: first(lang.directiveMap), headers: first(lang.headerMap), qualified, plain, reserved };
+  const reserved = new Set([...ctx.keywordMap.keys(), ...ctx.libraryMap.keys()]);
+  return { keywords: first(ctx.keywordMap), directives: first(ctx.directiveMap), headers: first(ctx.headerMap), qualified, plain, reserved };
 }
 
 /**
@@ -204,16 +269,23 @@ function reverseMaps(lang) {
  * Strings, comments and your own names are kept; anything that would clash
  * with a reserved word in the target language gets a trailing underscore.
  */
-function fromCpp(cpp, langCode) {
-  const lang = loadLanguage(langCode);
-  const R = reverseMaps(lang);
+function fromCpp(cpp, langCode, opts = {}) {
   const toks = tokenize(cpp);
+  const ctx = contextFor(langCode, toks, { ...opts, target: 'host' });
+  const R = reverseMaps(ctx);
   const out = [];
   const nextSig = (k) => { while (k < toks.length && SKIP.has(toks[k].type)) k++; return k; };
   const sig = toks.filter(t => !SKIP.has(t.type));
-  // With `using namespace std`, bare names like vector/cout/sort are std names - unless the program
-  // declares its own variable or function with that name (e.g. `int count = 0;`), which we keep.
-  const usesStd = sig.some((t, k) => t.text === 'using' && sig[k + 1] && sig[k + 1].text === 'namespace' && sig[k + 2] && sig[k + 2].text === 'std');
+  // `using namespace std;` (or cv, Eigen, ...): bare names in those namespaces are library names -
+  // unless the program declares its own variable or function with that name (e.g. `int count = 0;`).
+  const usedNamespaces = new Set();
+  for (let k = 0; k + 2 < sig.length; k++) {
+    if (sig[k].text === 'using' && sig[k + 1].text === 'namespace') {
+      let ns = sig[k + 2].text, j = k + 3;
+      while (sig[j] && sig[j].text === '::' && sig[j + 1]) { ns += '::' + sig[j + 1].text; j += 2; }
+      usedNamespaces.add(ns);
+    }
+  }
   const declared = new Set();
   for (let k = 1; k + 1 < sig.length; k++) {
     const before = sig[k - 1], after = sig[k + 1];
@@ -221,6 +293,12 @@ function fromCpp(cpp, langCode) {
         && ['=', ';', '(', ',', '[', '{', ')', ':'].includes(after.text)
         && !['return', 'case', 'goto', 'throw', 'delete', 'new', 'co_return', 'co_yield', 'co_await'].includes(before.text)) declared.add(sig[k].text);
   }
+  const viaUsing = (word) => { for (const ns of usedNamespaces) if (R.qualified.has(`${ns}::${word}`)) return R.qualified.get(`${ns}::${word}`); return null; };
+  const memberWord = (word) => {
+    if (R.plain.has(word)) return R.plain.get(word);
+    for (const [cppName, local] of R.qualified) if (bareName(cppName) === word) return local;
+    return null;
+  };
   let prev = '';
   let afterInclude = false;
   for (let k = 0; k < toks.length; k++) {
@@ -234,17 +312,25 @@ function fromCpp(cpp, langCode) {
       if (local) text = `<${local}>`;
     } else if (t.type === 'ident') {
       const word = t.text;
-      const k1 = nextSig(k + 1), k2 = nextSig(k1 + 1);
+      // Longest qualified name first: std_msgs::msg::String, cv::Mat, std::vector
+      let chainEnd = k, chain = word, best = null;
+      if (prev !== '::' && prev !== '.' && prev !== '->') {
+        let j = k;
+        for (let depth = 0; depth < 4; depth++) {
+          const c = nextSig(j + 1), n = nextSig(c + 1);
+          if (!toks[c] || toks[c].text !== '::' || !toks[n] || toks[n].type !== 'ident') break;
+          chain += '::' + toks[n].text; j = n;
+          if (R.qualified.has(chain)) { best = R.qualified.get(chain); chainEnd = n; }
+        }
+      }
       if (R.keywords.has(word)) {
         text = R.keywords.get(word);
-      } else if (word === 'std' && prev !== '::' && toks[k1] && toks[k1].text === '::' && toks[k2] && toks[k2].type === 'ident'
-                 && R.qualified.has('std::' + toks[k2].text)) {
-        text = R.qualified.get('std::' + toks[k2].text); // std::vector -> iqoqo
-        k = k2;
-      } else if ((prev === '.' || prev === '->') && (R.plain.has(word) || R.qualified.has('std::' + word))) {
-        text = R.plain.get(word) || R.qualified.get('std::' + word); // v.size() -> v.ubukhulu()
-      } else if (usesStd && prev !== '::' && !declared.has(word) && R.qualified.has('std::' + word)) {
-        text = R.qualified.get('std::' + word); // vector -> iqoqo (after using namespace std)
+      } else if (best) {
+        text = best; k = chainEnd;
+      } else if ((prev === '.' || prev === '->' || prev === '::') && memberWord(word)) {
+        text = memberWord(word); // v.size() -> v.ubukhulu(), Node::SharedPtr
+      } else if (prev !== '::' && !declared.has(word) && viaUsing(word)) {
+        text = viaUsing(word); // vector -> iqoqo (after using namespace std)
       } else if (R.plain.has(word)) {
         text = R.plain.get(word); // main, setup, size, ...
       } else if (R.reserved.has(word)) {
@@ -252,34 +338,64 @@ function fromCpp(cpp, langCode) {
       }
     }
     if (t.type === 'newline') afterInclude = false;
-    if (!SKIP.has(t.type)) prev = t.text;
+    if (!SKIP.has(t.type)) prev = toks[k].text;
     out.push(text);
   }
   return out.join('');
 }
 
 /** Convert between languages: from/to are language codes or 'cpp'. */
-function convert(source, from, to) {
-  const cpp = from === 'cpp' ? source : translate(source, from).cpp;
-  return to === 'cpp' ? cpp : fromCpp(cpp, to);
+function convert(source, from, to, opts = {}) {
+  const cpp = from === 'cpp' ? source : translate(source, from, { ...opts, target: 'host' }).cpp;
+  return to === 'cpp' ? cpp : fromCpp(cpp, to, opts);
 }
 
+/** What does a word mean? Looks in the core tables and every pack. */
+function describeWord(word, langCode) {
+  const lang = loadLanguage(langCode);
+  if (lang.keywordMap.has(word)) return { cpp: lang.keywordMap.get(word), source: 'keyword' };
+  if (lang.libraryMap.has(word)) return { cpp: lang.libraryMap.get(word), source: 'library' };
+  if (lang.directiveMap.has(word)) return { cpp: '#' + lang.directiveMap.get(word), source: 'directive' };
+  if (lang.headerMap.has(word)) return { cpp: `<${lang.headerMap.get(word)}>`, source: 'header' };
+  for (const p of packsFor(langCode)) {
+    if (p.names.has(word)) return { cpp: p.names.get(word), source: p.name };
+    if (p.headers.has(word)) return { cpp: `<${p.headers.get(word)}>`, source: p.name };
+  }
+  return null;
+}
+
+/** Make libstdc++'s long type names readable: std::__cxx11::basic_string<char> -> std::string */
+function simplifyTypes(text) {
+  return text
+    .replace(/std::__cxx11::/g, 'std::')
+    .replace(/std::basic_string<char(?:, std::char_traits<char>, std::allocator<char> ?)?>/g, 'std::string')
+    .replace(/, std::allocator<([^<>]*(?:<[^<>]*>)?)> ?>/g, '>');
+}
+
+const reverseCache = new Map();
 /** Rewrite C++ names inside compiler messages back into the user's language. */
 function localizeMessage(text, langCode) {
-  const lang = loadLanguage(langCode);
-  const reverse = new Map();
-  for (const [local, cpp] of lang.keywordMap) if (!reverse.has(cpp)) reverse.set(cpp, local);
-  for (const [local, cpp] of lang.libraryMap) if (!reverse.has(cpp)) reverse.set(cpp, local);
-  for (const [local, cpp] of lang.libraryMap) {
-    const bare = cpp.replace(/^std::/, '');
-    if (bare !== cpp && !reverse.has(bare)) reverse.set(bare, local);
+  if (!reverseCache.has(langCode)) {
+    const lang = loadLanguage(langCode);
+    const reverse = new Map();
+    const add = (cpp, local) => { if (!reverse.has(cpp)) reverse.set(cpp, local); };
+    for (const [local, cpp] of lang.keywordMap) add(cpp, local);
+    for (const [local, cpp] of lang.libraryMap) add(cpp, local);
+    for (const p of packsFor(langCode)) for (const [local, cpp] of p.names) add(cpp, local);
+    for (const [local, cpp] of [...lang.libraryMap, ...packsFor(langCode).flatMap(p => [...p.names])]) add(bareName(cpp), local);
+    for (const [local, cpp] of lang.headerMap) add(`<${cpp}>`, `<${local}>`);
+    for (const p of packsFor(langCode)) for (const [local, cpp] of p.headers) add(`<${cpp}>`, `<${local}>`);
+    const names = [...reverse.keys()].sort((a, b) => b.length - a.length).map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const re = names.length ? new RegExp(`(?<![\\p{L}\\p{N}_:])(${names.join('|')})(?![\\p{L}\\p{N}_])`, 'gu') : null;
+    reverseCache.set(langCode, { reverse, re });
   }
-  const names = [...reverse.keys()].sort((a, b) => b.length - a.length)
-    .map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-  if (!names.length) return text;
-  const re = new RegExp(`(?<![\\p{L}\\p{N}_:])(${names.join('|')})(?![\\p{L}\\p{N}_])`, 'gu');
+  const { reverse, re } = reverseCache.get(langCode);
+  if (!re) return text;
   // Only touch code shown inside quotes, never the file path or the message prose.
-  return text.replace(/([‘'])([^’'\n]*)([’'])/g, (_, a, body, b) => a + body.replace(re, w => reverse.get(w)) + b);
+  return simplifyTypes(text).replace(/([‘'`])([^’'\n]*)([’'])/g, (_, a, body, b) => a + body.replace(re, w => reverse.get(w)) + b);
 }
 
-module.exports = { tokenize, translate, fromCpp, convert, loadLanguage, listLanguages, detectLanguage, localizeMessage };
+module.exports = {
+  tokenize, translate, fromCpp, convert, loadLanguage, listLanguages, detectLanguage, localizeMessage,
+  loadPacks, packsFor, describeWord, bareName,
+};

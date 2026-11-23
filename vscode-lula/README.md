@@ -5,7 +5,9 @@ Write C++ in all 10 written official South African languages.
 - Syntax highlighting for all Lula languages
 - Hover a keyword to see its C++ meaning
 - Keyword completion
-- Errors shown in the editor on save (in your language's keywords)
+- Errors shown in the editor as full sentences in your language
+- ROS 2, OpenCV, Eigen, CUDA, PyTorch and Arduino words in every language
+- Build and upload to Arduino Uno/Nano/Mega from the editor
 - 🤟 South African Sign Language: hover a keyword → **Show SASL sign** (or Ctrl+Alt+S) to play the sign video
 - ▶ Run button, "Show C++" side view, "Export for Arduino (.ino)"
 

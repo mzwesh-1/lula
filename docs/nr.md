@@ -446,3 +446,267 @@ Every word below can be used in `.nr.lula` files. Plain English C++ keeps workin
 | `okutholakalako` | `available` |
 | `funda_ibhayithi` | `read` |
 | `tlola_ibhayithi` | `write` |
+
+# Library packs
+
+A pack switches on when you include one of its headers (in your language or in English).
+
+## Arduino libraries
+
+Headers: `#faka <iservo>` = `<Servo.h>`, `#faka <ucingo>` = `<Wire.h>`, `#faka <ibhasi_spi>` = `<SPI.h>`, `#faka <ikhumbulo_ehlalako>` = `<EEPROM.h>`
+
+| isiNdebele | C++ |
+|---|---|
+| `Iservo` | `Servo` |
+| `bopha_ephinini` | `attach` |
+| `tlola_amamayikhrosekhondi` | `writeMicroseconds` |
+| `Ucingo` | `Wire` |
+| `thoma_ukuthumela` | `beginTransmission` |
+| `qeda_ukuthumela` | `endTransmission` |
+| `bawa_ku` | `requestFrom` |
+| `nakwamukelwa` | `onReceive` |
+| `nakubawa` | `onRequest` |
+| `Ibhasi_spi` | `SPI` |
+| `dlulisa` | `transfer` |
+| `Ikhumbulo_ehlalako` | `EEPROM` |
+| `faka_kuyo` | `put` |
+| `vuselela` | `update` |
+
+## Arduino (always on)
+
+| isiNdebele | C++ |
+|---|---|
+| `khetha_ngokungahlelwanga` | `random` |
+| `imbewu_yokungahlelwanga` | `randomSeed` |
+| `linganisa_butjha` | `map` |
+| `linganisa_iphalsi` | `pulseIn` |
+| `iphini_uye_ekuphazamisekeni` | `digitalPinToInterrupt` |
+| `NAKWENYUKA` | `RISING` |
+| `NAKWEHLAKO` | `FALLING` |
+| `NAKUTJHUGULUKA` | `CHANGE` |
+| `vumela_ukuphazamiseka` | `interrupts` |
+| `vimba_ukuphazamiseka` | `noInterrupts` |
+| `funda_inomboro` | `parseInt` |
+| `funda_idesimali` | `parseFloat` |
+| `funda_umtlolo` | `readString` |
+| `funda_umtlolo_bekube` | `readStringUntil` |
+| `kube_yinomboro` | `toInt` |
+| `kube_yidesimali` | `toFloat` |
+| `indawo_ka` | `indexOf` |
+| `ingcenye_yomtlolo` | `substring` |
+| `quma_iinkhala` | `trim` |
+| `kube_kukhulu` | `toUpperCase` |
+| `kube_kuncani` | `toLowerCase` |
+| `ithoma_nga` | `startsWith` |
+| `iphela_nga` | `endsWith` |
+
+## CUDA
+
+Headers: `#faka <igpu>` = `<cuda_runtime.h>`
+
+| isiNdebele | C++ |
+|---|---|
+| `umsebenzi_wegpu` | `__global__` |
+| `okwegpu` | `__device__` |
+| `okwekhomphyutha` | `__host__` |
+| `okwabelanako_gpu` | `__shared__` |
+| `vumelanisa_iintambo` | `__syncthreads` |
+| `inomboro_yentambo` | `threadIdx` |
+| `inomboro_yebhulokhi` | `blockIdx` |
+| `ubukhulu_bebhulokhi` | `blockDim` |
+| `ubukhulu_begridi` | `gridDim` |
+| `ubukhulu3` | `dim3` |
+| `gpu_beka_ikhumbulo` | `cudaMalloc` |
+| `gpu_khulula_ikhumbulo` | `cudaFree` |
+| `gpu_kopa_ikhumbulo` | `cudaMemcpy` |
+| `UKUSUKA_KHOMPHYUTHA_UYE_GPU` | `cudaMemcpyHostToDevice` |
+| `UKUSUKA_GPU_UYE_KHOMPHYUTHA` | `cudaMemcpyDeviceToHost` |
+| `gpu_lindela_iqede` | `cudaDeviceSynchronize` |
+| `gpu_isiphoso_sokugcina` | `cudaGetLastError` |
+| `gpu_umtlolo_wesiphoso` | `cudaGetErrorString` |
+| `Isiphoso_segpu` | `cudaError_t` |
+| `GPU_KUPHUMELELE` | `cudaSuccess` |
+
+## Eigen
+
+Headers: `#faka <iimatriki>` = `<Eigen/Dense>`, `#faka <iimatriki_isisekelo>` = `<Eigen/Core>`, `#faka <ijiyomethri>` = `<Eigen/Geometry>`
+
+| isiNdebele | C++ |
+|---|---|
+| `iimatriki` | `Eigen` |
+| `Imatriki` | `Eigen::MatrixXd` |
+| `Ivektha` | `Eigen::VectorXd` |
+| `Imatriki3` | `Eigen::Matrix3d` |
+| `Imatriki4` | `Eigen::Matrix4d` |
+| `Ivektha3` | `Eigen::Vector3d` |
+| `Imatriki_yohlobo` | `Eigen::Matrix` |
+| `Ikhwatheniyoni` | `Eigen::Quaterniond` |
+| `Ingili_ne_eksisi` | `Eigen::AngleAxisd` |
+| `Ubunye` | `Identity` |
+| `Iziro` | `Zero` |
+| `Koke_kunye` | `Ones` |
+| `Ngokungahlelwanga` | `Random` |
+| `phendula_imatriki` | `transpose` |
+| `okuphambeneko` | `inverse` |
+| `isiqunto` | `determinant` |
+| `ubude_bevektha` | `norm` |
+| `ilinganisiwe` | `normalized` |
+| `umkhiqizo_wechatjhazi` | `dot` |
+| `umkhiqizo_wesiphambano` | `cross` |
+| `rarulula` | `solve` |
+| `ahlukanisa_qr` | `colPivHouseholderQr` |
+| `pheze_kuyalingana` | `isApprox` |
+| `Eksisi_X` | `UnitX` |
+| `Eksisi_Y` | `UnitY` |
+| `Eksisi_Z` | `UnitZ` |
+| `ibe_matriki` | `matrix` |
+
+## OpenCV
+
+Headers: `#faka <ukubona>` = `<opencv2/opencv.hpp>`, `#faka <ukubona_isisekelo>` = `<opencv2/core.hpp>`, `#faka <ukubona_izithombe>` = `<opencv2/imgproc.hpp>`, `#faka <ukubona_amafesdere>` = `<opencv2/highgui.hpp>`, `#faka <ukubona_ividiyo>` = `<opencv2/videoio.hpp>`, `#faka <ukubona_ukufumana_izinto>` = `<opencv2/objdetect.hpp>`
+
+| isiNdebele | C++ |
+|---|---|
+| `ukubona` | `cv` |
+| `Isithombe` | `cv::Mat` |
+| `funda_isithombe` | `cv::imread` |
+| `bulunga_isithombe` | `cv::imwrite` |
+| `khombisa_isithombe` | `cv::imshow` |
+| `lindela_ikinobho` | `cv::waitKey` |
+| `bumba_ifesdere` | `cv::namedWindow` |
+| `vala_amafesdere_woke` | `cv::destroyAllWindows` |
+| `tjhugulula_umbala` | `cv::cvtColor` |
+| `UMBALA_UYE_EMPUNGENI` | `cv::COLOR_BGR2GRAY` |
+| `UMBALA_UYE_KU_HSV` | `cv::COLOR_BGR2HSV` |
+| `UMBALA_UYE_KU_RGB` | `cv::COLOR_BGR2RGB` |
+| `fiphalisa` | `cv::GaussianBlur` |
+| `fumana_imiphetho` | `cv::Canny` |
+| `umkhawulo_wokwahlukanisa` | `cv::threshold` |
+| `UMKHAWULO_OMBILI` | `cv::THRESH_BINARY` |
+| `tjhugulula_ubukhulu_besithombe` | `cv::resize` |
+| `dweba_unxande` | `cv::rectangle` |
+| `dweba_indilinga` | `cv::circle` |
+| `dweba_umugqa` | `cv::line` |
+| `tlola_esithombeni` | `cv::putText` |
+| `Iphoyinti` | `cv::Point` |
+| `Ububanzi_nobude` | `cv::Size` |
+| `Inani_lombala` | `cv::Scalar` |
+| `Isifunda` | `cv::Rect` |
+| `Ikhamera` | `cv::VideoCapture` |
+| `ivuliwe` | `isOpened` |
+| `imigqa` | `rows` |
+| `amakholamu` | `cols` |
+| `iinteshi` | `channels` |
+| `enza_ikhophi` | `clone` |
+| `kopela_ku` | `copyTo` |
+| `fumana_iinhlaka` | `cv::findContours` |
+| `dweba_iinhlaka` | `cv::drawContours` |
+| `indawo_yehlaka` | `cv::contourArea` |
+| `ngaphakathi_kobubanzi` | `cv::inRange` |
+| `Umahlukanisi` | `cv::CascadeClassifier` |
+| `fumana_izinto` | `detectMultiScale` |
+| `layisha` | `load` |
+| `FUNDA_NGOMBALA` | `cv::IMREAD_COLOR` |
+| `FUNDA_NGOMPUNGA` | `cv::IMREAD_GRAYSCALE` |
+| `IFONTI_ELULA` | `cv::FONT_HERSHEY_SIMPLEX` |
+| `Iphikseli` | `cv::Vec3b` |
+| `kuzele_ngo0` | `zeros` |
+| `kuzele_ngo1` | `ones` |
+| `IINHLAKA_ZANGAPHANDLE` | `cv::RETR_EXTERNAL` |
+| `IINHLAKA_EZILULA` | `cv::CHAIN_APPROX_SIMPLE` |
+| `ibhokisi_elizungezileko` | `cv::boundingRect` |
+| `UMBALA_8BIT_3` | `CV_8UC3` |
+| `ububanzi` | `width` |
+| `ukuphakama` | `height` |
+
+## ROS 2
+
+Headers: `#faka <ros2>` = `<rclcpp/rclcpp.hpp>`, `#faka <umlayezo_womtlolo>` = `<std_msgs/msg/string.hpp>`, `#faka <umlayezo_wenomboro>` = `<std_msgs/msg/int32.hpp>`, `#faka <umlayezo_wedesimali>` = `<std_msgs/msg/float64.hpp>`, `#faka <umlayezo_webhuli>` = `<std_msgs/msg/bool.hpp>`, `#faka <umyalo_wejubane>` = `<geometry_msgs/msg/twist.hpp>`, `#faka <ukuskena_kwelaser>` = `<sensor_msgs/msg/laser_scan.hpp>`, `#faka <isithombe_senzwa>` = `<sensor_msgs/msg/image.hpp>`
+
+| isiNdebele | C++ |
+|---|---|
+| `ros` | `rclcpp` |
+| `thoma_ros` | `rclcpp::init` |
+| `vala_ros` | `rclcpp::shutdown` |
+| `gijima_ros` | `rclcpp::spin` |
+| `gijima_ros_kancani` | `rclcpp::spin_some` |
+| `ros_isaphila` | `rclcpp::ok` |
+| `Ifindo` | `rclcpp::Node` |
+| `Umsakazi` | `rclcpp::Publisher` |
+| `Ukubhalisa` | `rclcpp::Subscription` |
+| `Isibali_sikhathi` | `rclcpp::TimerBase` |
+| `bumba_umsakazi` | `create_publisher` |
+| `bumba_ukubhalisa` | `create_subscription` |
+| `bumba_isibali_sikhathi` | `create_wall_timer` |
+| `sakaza` | `publish` |
+| `umtloli_womlando` | `get_logger` |
+| `ROS_ILWAZI` | `RCLCPP_INFO` |
+| `ROS_ISIYELELISO` | `RCLCPP_WARN` |
+| `ROS_ISIPHOSO` | `RCLCPP_ERROR` |
+| `Isikhombi` | `SharedPtr` |
+| `idatha` | `data` |
+| `okunqophileko` | `linear` |
+| `ukujikeleza` | `angular` |
+| `amabanga` | `ranges` |
+| `memezela_ipharamitha` | `declare_parameter` |
+| `fumana_ipharamitha` | `get_parameter` |
+| `umlayezo_womtlolo` | `std_msgs::msg::String` |
+| `umlayezo_wenomboro` | `std_msgs::msg::Int32` |
+| `umlayezo_wedesimali` | `std_msgs::msg::Float64` |
+| `umlayezo_webhuli` | `std_msgs::msg::Bool` |
+| `umyalo_wejubane` | `geometry_msgs::msg::Twist` |
+| `ukuskena_kwelaser` | `sensor_msgs::msg::LaserScan` |
+| `isithombe_senzwa` | `sensor_msgs::msg::Image` |
+
+## Standard library extras (always on)
+
+| isiNdebele | C++ |
+|---|---|
+| `idatha` | `data` |
+
+## PyTorch (libtorch)
+
+Headers: `#faka <ukufunda_komtjhini>` = `<torch/torch.h>`
+
+| isiNdebele | C++ |
+|---|---|
+| `ukufunda_komtjhini` | `torch` |
+| `Ithensa` | `torch::Tensor` |
+| `enza_ithensa` | `torch::tensor` |
+| `kuzele_ngo0` | `torch::zeros` |
+| `kuzele_ngo1` | `torch::ones` |
+| `ithensa_engahlelwanga` | `torch::rand` |
+| `ithensa_engahlelwanga_ejayelekileko` | `torch::randn` |
+| `beka_imbewu` | `torch::manual_seed` |
+| `Ingcenye_yenethiwekhi` | `torch::nn::Module` |
+| `Ungqimba_olunqophileko` | `torch::nn::Linear` |
+| `Ungqimba_lokuhlanganisa2d` | `torch::nn::Conv2d` |
+| `isivuseleli_relu` | `torch::relu` |
+| `ilogi_yamathuba` | `torch::log_softmax` |
+| `ukulahlekelwa_kwesikwere` | `torch::mse_loss` |
+| `ukulahlekelwa_kwamathuba` | `torch::nll_loss` |
+| `Isithuthukisi_SGD` | `torch::optim::SGD` |
+| `Isithuthukisi_Adam` | `torch::optim::Adam` |
+| `Isisetjenziswa` | `torch::Device` |
+| `KU_GPU` | `torch::kCUDA` |
+| `KU_CPU` | `torch::kCPU` |
+| `igpu_ikhona` | `torch::cuda::is_available` |
+| `bulunga_imodeli` | `torch::save` |
+| `layisha_imodeli` | `torch::load` |
+| `Umqaphi_ongafundiko` | `torch::NoGradGuard` |
+| `bhalisa_ingcenye` | `register_module` |
+| `dlulisela_phambili` | `forward` |
+| `buyela_ngemva` | `backward` |
+| `sula_ukuthambeka` | `zero_grad` |
+| `thatha_igadango` | `step` |
+| `yisa_ku` | `to` |
+| `inani_elilodwa` | `item` |
+| `qala_njenga` | `view` |
+| `tjhugulula_isimo` | `reshape` |
+| `phindaphinda_iimatriki` | `matmul` |
+| `isamba_sethensa` | `sum` |
+| `isilinganiso_sethensa` | `mean` |
+| `ikomba_ekulu` | `argmax` |
+| `iipharamitha` | `parameters` |
+| `bandula` | `train` |
+| `hlola_imodeli` | `eval` |

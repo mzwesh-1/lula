@@ -10,7 +10,11 @@ const LIB = path.join(EXT, 'lib');
 
 fs.rmSync(LIB, { recursive: true, force: true });
 fs.mkdirSync(path.join(LIB, 'languages'), { recursive: true });
-for (const f of ['translator.js', 'cli.js', 'sasl.js']) fs.copyFileSync(path.join(ROOT, 'src', f), path.join(LIB, f));
+for (const f of ['translator.js', 'cli.js', 'sasl.js', 'messages.js']) fs.copyFileSync(path.join(ROOT, 'src', f), path.join(LIB, f));
+fs.mkdirSync(path.join(LIB, 'packs'), { recursive: true });
+for (const f of fs.readdirSync(path.join(ROOT, 'packs')).filter(f => f.endsWith('.json'))) fs.copyFileSync(path.join(ROOT, 'packs', f), path.join(LIB, 'packs', f));
+fs.mkdirSync(path.join(LIB, 'messages'), { recursive: true });
+fs.copyFileSync(path.join(ROOT, 'messages', 'catalog.txt'), path.join(LIB, 'messages', 'catalog.txt'));
 fs.cpSync(path.join(ROOT, 'sasl'), path.join(LIB, 'sasl'), { recursive: true, filter: src => !src.endsWith('.gitkeep') });
 const langs = fs.readdirSync(path.join(ROOT, 'languages')).filter(f => f.endsWith('.json'));
 for (const f of langs) fs.copyFileSync(path.join(ROOT, 'languages', f), path.join(LIB, 'languages', f));
@@ -42,6 +46,10 @@ for (const f of langs) {
     directives.add(local);
     if (cpp === 'include') includeWords.add(local);
   }
+}
+for (const f of fs.readdirSync(path.join(ROOT, 'packs')).filter(f => f.endsWith('.json'))) {
+  const pack = JSON.parse(fs.readFileSync(path.join(ROOT, 'packs', f), 'utf8'));
+  for (const perLang of Object.values(pack.names)) for (const w of Object.values(perLang)) (/^[A-Z0-9_]+$/.test(w) ? words.arduino : words.library).add(w);
 }
 const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const alt = set => [...set].sort((a, b) => b.length - a.length).map(esc).join('|');

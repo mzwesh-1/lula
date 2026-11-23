@@ -446,3 +446,267 @@ Every word below can be used in `.ts.lula` files. Plain English C++ keeps workin
 | `leswi_kumekaka` | `available` |
 | `hlaya_bayiti` | `read` |
 | `tsala_bayiti` | `write` |
+
+# Library packs
+
+A pack switches on when you include one of its headers (in your language or in English).
+
+## Arduino libraries
+
+Headers: `#katsa <servo>` = `<Servo.h>`, `#katsa <waya>` = `<Wire.h>`, `#katsa <bazi_ya_spi>` = `<SPI.h>`, `#katsa <memori_leyi_tshamaka>` = `<EEPROM.h>`
+
+| Xitsonga | C++ |
+|---|---|
+| `Xiservo` | `Servo` |
+| `khomanisa` | `attach` |
+| `tsala_timaykhrosekoni` | `writeMicroseconds` |
+| `Waya` | `Wire` |
+| `sungula_ku_rhumela` | `beginTransmission` |
+| `hetisa_ku_rhumela` | `endTransmission` |
+| `kombela_eka` | `requestFrom` |
+| `loko_ku_amukeriwa` | `onReceive` |
+| `loko_ku_kombeliwa` | `onRequest` |
+| `Bazi_ya_spi` | `SPI` |
+| `hundzisa` | `transfer` |
+| `Memori_leyi_tshamaka` | `EEPROM` |
+| `nghenisa_eka_yona` | `put` |
+| `pfuxeta` | `update` |
+
+## Arduino (always on)
+
+| Xitsonga | C++ |
+|---|---|
+| `hlawula_hi_ku_tshuka` | `random` |
+| `mbewu_ya_ku_tshuka` | `randomSeed` |
+| `ringanisa_nakambe` | `map` |
+| `pima_phalisi` | `pulseIn` |
+| `phini_ku_kavanyeta` | `digitalPinToInterrupt` |
+| `LOKO_YI_TLAKUKA` | `RISING` |
+| `LOKO_YI_RHELELA` | `FALLING` |
+| `LOKO_YI_CINCA` | `CHANGE` |
+| `pfumelela_ku_kavanyeta` | `interrupts` |
+| `sivela_ku_kavanyeta` | `noInterrupts` |
+| `hlaya_nomboro` | `parseInt` |
+| `hlaya_desimali` | `parseFloat` |
+| `hlaya_matsalwa` | `readString` |
+| `hlaya_matsalwa_ku_fikela` | `readStringUntil` |
+| `yi_va_nomboro` | `toInt` |
+| `yi_va_desimali` | `toFloat` |
+| `ndhawu_ya` | `indexOf` |
+| `xiphemu_xa_matsalwa` | `substring` |
+| `tsema_swivandla` | `trim` |
+| `yi_va_maletere_lamakulu` | `toUpperCase` |
+| `yi_va_maletere_lamatsongo` | `toLowerCase` |
+| `yi_sungula_hi` | `startsWith` |
+| `yi_hela_hi` | `endsWith` |
+
+## CUDA
+
+Headers: `#katsa <gpu>` = `<cuda_runtime.h>`
+
+| Xitsonga | C++ |
+|---|---|
+| `ntirho_wa_gpu` | `__global__` |
+| `xa_gpu` | `__device__` |
+| `xa_khompyuta` | `__host__` |
+| `leswi_avelaniwaka_gpu` | `__shared__` |
+| `ringanisa_tintambu` | `__syncthreads` |
+| `nomboro_ya_ntambu` | `threadIdx` |
+| `nomboro_ya_bloko` | `blockIdx` |
+| `vukulu_bya_bloko` | `blockDim` |
+| `vukulu_bya_gridi` | `gridDim` |
+| `vukulu3` | `dim3` |
+| `gpu_avela_memori` | `cudaMalloc` |
+| `gpu_ntshunxa_memori` | `cudaFree` |
+| `gpu_kopa_memori` | `cudaMemcpy` |
+| `KU_SUKA_KHOMPYUTA_KU_GPU` | `cudaMemcpyHostToDevice` |
+| `KU_SUKA_GPU_KU_KHOMPYUTA` | `cudaMemcpyDeviceToHost` |
+| `gpu_rindza_yi_hetisa` | `cudaDeviceSynchronize` |
+| `gpu_xihoxo_xo_hetelela` | `cudaGetLastError` |
+| `gpu_matsalwa_ya_xihoxo` | `cudaGetErrorString` |
+| `Xihoxo_xa_gpu` | `cudaError_t` |
+| `GPU_SWI_HUMELERILE` | `cudaSuccess` |
+
+## Eigen
+
+Headers: `#katsa <timatriki>` = `<Eigen/Dense>`, `#katsa <timatriki_masungulo>` = `<Eigen/Core>`, `#katsa <jiyometiri>` = `<Eigen/Geometry>`
+
+| Xitsonga | C++ |
+|---|---|
+| `timatriki` | `Eigen` |
+| `Matriki` | `Eigen::MatrixXd` |
+| `Vhekitara` | `Eigen::VectorXd` |
+| `Matriki3` | `Eigen::Matrix3d` |
+| `Matriki4` | `Eigen::Matrix4d` |
+| `Vhekitara3` | `Eigen::Vector3d` |
+| `Matriki_ya_muxaka` | `Eigen::Matrix` |
+| `Khwatheniyoni` | `Eigen::Quaterniond` |
+| `Engele_ni_ekisisi` | `Eigen::AngleAxisd` |
+| `Vunwe` | `Identity` |
+| `Ziro` | `Zero` |
+| `Hinkwaswo_i_nwe` | `Ones` |
+| `Hi_ku_tshuka` | `Random` |
+| `hundzuluxa_matriki` | `transpose` |
+| `leswi_hambaneke` | `inverse` |
+| `xiboho` | `determinant` |
+| `ku_leha_ka_vhekitara` | `norm` |
+| `yi_ringanisiwe` | `normalized` |
+| `vuhumelerisi_bya_thonsi` | `dot` |
+| `vuhumelerisi_bya_xihambano` | `cross` |
+| `tlhantlha` | `solve` |
+| `hambanisa_qr` | `colPivHouseholderQr` |
+| `swi_lava_ku_ringana` | `isApprox` |
+| `Ekisisi_X` | `UnitX` |
+| `Ekisisi_Y` | `UnitY` |
+| `Ekisisi_Z` | `UnitZ` |
+| `yi_va_matriki` | `matrix` |
+
+## OpenCV
+
+Headers: `#katsa <vonelo>` = `<opencv2/opencv.hpp>`, `#katsa <vonelo_masungulo>` = `<opencv2/core.hpp>`, `#katsa <vonelo_swifaniso>` = `<opencv2/imgproc.hpp>`, `#katsa <vonelo_mafasitere>` = `<opencv2/highgui.hpp>`, `#katsa <vonelo_vidiyo>` = `<opencv2/videoio.hpp>`, `#katsa <vonelo_ku_kuma_swilo>` = `<opencv2/objdetect.hpp>`
+
+| Xitsonga | C++ |
+|---|---|
+| `vonelo` | `cv` |
+| `Xifaniso` | `cv::Mat` |
+| `hlaya_xifaniso` | `cv::imread` |
+| `hlayisa_xifaniso` | `cv::imwrite` |
+| `kombisa_xifaniso` | `cv::imshow` |
+| `rindza_buto` | `cv::waitKey` |
+| `endla_fasitere` | `cv::namedWindow` |
+| `pfala_mafasitere_hinkwawo` | `cv::destroyAllWindows` |
+| `cinca_muhlovo` | `cv::cvtColor` |
+| `MUHLOVO_KU_MPUNGA` | `cv::COLOR_BGR2GRAY` |
+| `MUHLOVO_KU_HSV` | `cv::COLOR_BGR2HSV` |
+| `MUHLOVO_KU_RGB` | `cv::COLOR_BGR2RGB` |
+| `pfilunganya` | `cv::GaussianBlur` |
+| `kuma_tinsiya` | `cv::Canny` |
+| `ndzilakano_wo_avanyisa` | `cv::threshold` |
+| `NDZILAKANO_WA_MBIRHI` | `cv::THRESH_BINARY` |
+| `cinca_vukulu_bya_xifaniso` | `cv::resize` |
+| `dirowa_rhekithengele` | `cv::rectangle` |
+| `dirowa_rhendzevutani` | `cv::circle` |
+| `dirowa_layini` | `cv::line` |
+| `tsala_exifanisweni` | `cv::putText` |
+| `Phoyinti` | `cv::Point` |
+| `Vuanami_ni_ku_leha` | `cv::Size` |
+| `Nkoka_wa_muhlovo` | `cv::Scalar` |
+| `Xiyenge` | `cv::Rect` |
+| `Khamera` | `cv::VideoCapture` |
+| `yi_pfuriwile` | `isOpened` |
+| `tilayini` | `rows` |
+| `tikholomu` | `cols` |
+| `tikanele` | `channels` |
+| `endla_khopi` | `clone` |
+| `kopela_eka` | `copyTo` |
+| `kuma_swivumbeko` | `cv::findContours` |
+| `dirowa_swivumbeko` | `cv::drawContours` |
+| `ndhawu_ya_xivumbeko` | `cv::contourArea` |
+| `endzeni_ka_ndzilakano` | `cv::inRange` |
+| `Muhlawuri` | `cv::CascadeClassifier` |
+| `kuma_swilo` | `detectMultiScale` |
+| `layicha` | `load` |
+| `HLAYA_HI_MUHLOVO` | `cv::IMREAD_COLOR` |
+| `HLAYA_HI_MPUNGA` | `cv::IMREAD_GRAYSCALE` |
+| `FONTI_YO_OLOVA` | `cv::FONT_HERSHEY_SIMPLEX` |
+| `Phikisele` | `cv::Vec3b` |
+| `swi_tele_hi_0` | `zeros` |
+| `swi_tele_hi_1` | `ones` |
+| `SWIVUMBEKO_SWA_EHANDLE` | `cv::RETR_EXTERNAL` |
+| `SWIVUMBEKO_LESWI_OLOVEKE` | `cv::CHAIN_APPROX_SIMPLE` |
+| `bokisi_leri_rhendzeleke` | `cv::boundingRect` |
+| `MUHLOVO_8BIT_3` | `CV_8UC3` |
+| `vuanami` | `width` |
+| `ku_leha_ehenhla` | `height` |
+
+## ROS 2
+
+Headers: `#katsa <ros2>` = `<rclcpp/rclcpp.hpp>`, `#katsa <rungula_ra_matsalwa>` = `<std_msgs/msg/string.hpp>`, `#katsa <rungula_ra_nomboro>` = `<std_msgs/msg/int32.hpp>`, `#katsa <rungula_ra_desimali>` = `<std_msgs/msg/float64.hpp>`, `#katsa <rungula_ra_buliyani>` = `<std_msgs/msg/bool.hpp>`, `#katsa <xileriso_xa_rivilo>` = `<geometry_msgs/msg/twist.hpp>`, `#katsa <xikena_xa_laser>` = `<sensor_msgs/msg/laser_scan.hpp>`, `#katsa <xifaniso_xa_sensa>` = `<sensor_msgs/msg/image.hpp>`
+
+| Xitsonga | C++ |
+|---|---|
+| `ros` | `rclcpp` |
+| `sungula_ros` | `rclcpp::init` |
+| `pfala_ros` | `rclcpp::shutdown` |
+| `fambisa_ros` | `rclcpp::spin` |
+| `fambisa_ros_switsongo` | `rclcpp::spin_some` |
+| `ros_ya_ha_hanya` | `rclcpp::ok` |
+| `Fundzu` | `rclcpp::Node` |
+| `Muhangalasi` | `rclcpp::Publisher` |
+| `Matsariso` | `rclcpp::Subscription` |
+| `Xihlayi_xa_nkarhi` | `rclcpp::TimerBase` |
+| `endla_muhangalasi` | `create_publisher` |
+| `endla_matsariso` | `create_subscription` |
+| `endla_xihlayi_xa_nkarhi` | `create_wall_timer` |
+| `hangalasa` | `publish` |
+| `mutsari_wa_matimu` | `get_logger` |
+| `ROS_MAHUNGU` | `RCLCPP_INFO` |
+| `ROS_XITSUNDZUXO` | `RCLCPP_WARN` |
+| `ROS_XIHOXO` | `RCLCPP_ERROR` |
+| `Xikombi` | `SharedPtr` |
+| `datha` | `data` |
+| `leswi_kongomeke` | `linear` |
+| `ku_rhendzeleka` | `angular` |
+| `mpfhuka` | `ranges` |
+| `tivisa_paramitha` | `declare_parameter` |
+| `kuma_paramitha` | `get_parameter` |
+| `rungula_ra_matsalwa` | `std_msgs::msg::String` |
+| `rungula_ra_nomboro` | `std_msgs::msg::Int32` |
+| `rungula_ra_desimali` | `std_msgs::msg::Float64` |
+| `rungula_ra_buliyani` | `std_msgs::msg::Bool` |
+| `xileriso_xa_rivilo` | `geometry_msgs::msg::Twist` |
+| `xikena_xa_laser` | `sensor_msgs::msg::LaserScan` |
+| `xifaniso_xa_sensa` | `sensor_msgs::msg::Image` |
+
+## Standard library extras (always on)
+
+| Xitsonga | C++ |
+|---|---|
+| `datha` | `data` |
+
+## PyTorch (libtorch)
+
+Headers: `#katsa <dyondzo_ya_michini>` = `<torch/torch.h>`
+
+| Xitsonga | C++ |
+|---|---|
+| `dyondzo_ya_michini` | `torch` |
+| `Thensa` | `torch::Tensor` |
+| `endla_thensa` | `torch::tensor` |
+| `swi_tele_hi_0` | `torch::zeros` |
+| `swi_tele_hi_1` | `torch::ones` |
+| `thensa_hi_ku_tshuka` | `torch::rand` |
+| `thensa_hi_ku_tshuka_yo_tolovelekeke` | `torch::randn` |
+| `veka_mbewu` | `torch::manual_seed` |
+| `Xiphemu_xa_netiweke` | `torch::nn::Module` |
+| `Lera_leri_kongomeke` | `torch::nn::Linear` |
+| `Lera_ra_nhlanganiso2d` | `torch::nn::Conv2d` |
+| `xihlohlotelo_relu` | `torch::relu` |
+| `logo_ya_swikoweto` | `torch::log_softmax` |
+| `ku_lahlekeriwa_ka_xikwere` | `torch::mse_loss` |
+| `ku_lahlekeriwa_ka_swikoweto` | `torch::nll_loss` |
+| `Antswisi_SGD` | `torch::optim::SGD` |
+| `Antswisi_Adam` | `torch::optim::Adam` |
+| `Xitirhisiwa` | `torch::Device` |
+| `EKA_GPU` | `torch::kCUDA` |
+| `EKA_CPU` | `torch::kCPU` |
+| `gpu_yi_kona` | `torch::cuda::is_available` |
+| `hlayisa_modlolo` | `torch::save` |
+| `layicha_modlolo` | `torch::load` |
+| `Murindzi_wa_ku_nga_dyondzi` | `torch::NoGradGuard` |
+| `tsarisa_xiphemu` | `register_module` |
+| `hundzisela_emahlweni` | `forward` |
+| `tlhelela_endzhaku` | `backward` |
+| `sula_ku_khinsama` | `zero_grad` |
+| `teka_goza` | `step` |
+| `yisa_eka` | `to` |
+| `nkoka_wunwe` | `item` |
+| `languta_tanihi` | `view` |
+| `cinca_xivumbeko` | `reshape` |
+| `andzisa_timatriki` | `matmul` |
+| `ntsengo_wa_thensa` | `sum` |
+| `xiringaniso_xa_thensa` | `mean` |
+| `nkombo_wukulu` | `argmax` |
+| `tiparamitha` | `parameters` |
+| `leteri` | `train` |
+| `kambela_modlolo` | `eval` |

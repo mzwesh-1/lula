@@ -1,0 +1,53 @@
+// I-node ye-ROS 2: thumela umyalo wejubane kurobhothi, ubheke inzwa ye-laser.
+// A ROS 2 node: drive a robot forward and stop when the laser sees an obstacle.
+//   lula translate examples/irobhothi_ros.zu.lula -o ~/ros2_ws/src/umshayeli/src/umshayeli.cpp
+//   colcon build   (inside your ROS 2 workspace)
+#faka <ros2>
+#faka <umyalo_wejubane>
+#faka <ukuskena_kwelaser>
+#faka <isikhathi_esinembile>
+#faka <amasu>
+
+sebenzisa indawo_yamagama isisekelo::chrono_literals;
+
+isigaba Umshayeli : umphakathi ros::Ifindo {
+umphakathi:
+    Umshayeli() : Ifindo("umshayeli") {
+        ibanga_eliphephile_ = memezela_ipharamitha("ibanga_eliphephile", 0.5);
+        umsakazi_ = dala_umsakazi<umyalo_wejubane>("cmd_vel", 10);
+        ukubhalisa_ = dala_ukubhalisa<ukuskena_kwelaser>("scan", 10,
+            [lokhu](engaguquki ukuskena_kwelaser::Isikhombi ukuskena) { lokhu->kufike_ukuskena(ukuskena); });
+        isibali_ = dala_isibali_sikhathi(100ms, [lokhu]() { lokhu->shayela(); });
+        ROS_ULWAZI(umbhali_womlando(), "Umshayeli usekulungele. Ibanga eliphephile: %.2f m", ibanga_eliphephile_);
+    }
+
+imfihlo:
+    ize kufike_ukuskena(engaguquki ukuskena_kwelaser::Isikhombi ukuskena) {
+        okuzenzakalelayo eduze = into_encane(ukuskena->amabanga.ukuqala(), ukuskena->amabanga.ukuphela());
+        ibanga_eliseduze_ = *eduze;
+    }
+
+    ize shayela() {
+        umyalo_wejubane umyalo;
+        uma (ibanga_eliseduze_ > ibanga_eliphephile_) {
+            umyalo.oqondile.x = 0.2;      // hamba phambili (drive forward)
+        } kungenjalo {
+            umyalo.ukujikeleza.z = 0.5;   // jika (turn away)
+            ROS_ISEXWAYISO(umbhali_womlando(), "Isithiyo ku-%.2f m: ngiyajika", ibanga_eliseduze_);
+        }
+        umsakazi_->sakaza(umyalo);
+    }
+
+    ros::Umsakazi<umyalo_wejubane>::Isikhombi umsakazi_;
+    ros::Ukubhalisa<ukuskena_kwelaser>::Isikhombi ukubhalisa_;
+    ros::Isibali_sikhathi::Isikhombi isibali_;
+    idesimali_kabili ibanga_eliphephile_ = 0.5;
+    idesimali_kabili ibanga_eliseduze_ = 10.0;
+};
+
+inombolo okuyinhloko(inombolo argc, uhlamvu* argv[]) {
+    qalisa_ros(argc, argv);
+    gijima_ros(yenza_esabelwana<Umshayeli>());
+    vala_ros();
+    buyisa 0;
+}

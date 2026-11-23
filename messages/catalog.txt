@@ -1,0 +1,1006 @@
+# Lula message catalog: compiler errors and warnings, runtime crashes, and Lula's own messages.
+# Each entry: @id, then one or more `re:` lines (regex on the GCC message text, LC_ALL=C),
+# then the sentence in English and every language. {1} {2} {3} are the regex captures;
+# {kw:else} is the word for a C++ keyword in that language.
+
+# ---- severity labels -------------------------------------------------------------------
+@sev.error
+en: error
+zu: iphutha
+xh: impazamo
+ss: liphutsa
+nr: isiphoso
+st: phoso
+tn: phoso
+nso: phošo
+ts: xihoxo
+ve: vhukhakhi
+af: fout
+
+@sev.warning
+en: warning
+zu: isexwayiso
+xh: isilumkiso
+ss: secwayiso
+nr: isiyeleliso
+st: temoso
+tn: tlhagiso
+nso: temošo
+ts: xitsundzuxo
+ve: tsevhudzo
+af: waarskuwing
+
+@sev.note
+en: note
+zu: qaphela
+xh: qaphela
+ss: naka
+nr: qaphela
+st: hlokomela
+tn: ela tlhoko
+nso: ela hloko
+ts: xiya
+ve: zwi ele
+af: let wel
+
+@sev.fatal
+en: fatal error
+zu: iphutha elikhulu
+xh: impazamo enkulu
+ss: liphutsa lelikhulu
+nr: isiphoso esikhulu
+st: phoso e kgolo
+tn: phoso e kgolo
+nso: phošo ye kgolo
+ts: xihoxo lexikulu
+ve: vhukhakhi vhuhulwane
+af: ernstige fout
+
+# ---- context lines ---------------------------------------------------------------------
+@ctx.function
+re: ^In function (.+):$
+en: In function {1}:
+zu: Emsebenzini {1}:
+xh: Kumsebenzi {1}:
+ss: Emsebentini {1}:
+nr: Emsebenzini {1}:
+st: Mosebetsing {1}:
+tn: Mo tirong {1}:
+nso: Mošomong {1}:
+ts: Entirhweni {1}:
+ve: Kha mushumo {1}:
+af: In funksie {1}:
+
+@ctx.member
+re: ^In member function (.+):$
+en: In member function {1}:
+zu: Emsebenzini welungu {1}:
+xh: Kumsebenzi welungu {1}:
+ss: Emsebentini welilunga {1}:
+nr: Emsebenzini welunga {1}:
+st: Mosebetsing wa setho {1}:
+tn: Mo tirong ya leloko {1}:
+nso: Mošomong wa leloko {1}:
+ts: Entirhweni wa xirho {1}:
+ve: Kha mushumo wa tshirado {1}:
+af: In lidfunksie {1}:
+
+@ctx.ctor
+re: ^In constructor (.+):$
+en: In constructor {1}:
+zu: Kumakhi {1}:
+xh: Kumakhi {1}:
+ss: Kumakhi {1}:
+nr: Kumakhi {1}:
+st: Ho moqapi {1}:
+tn: Mo moagi {1}:
+nso: Go moagi {1}:
+ts: Eka muaki {1}:
+ve: Kha mufhati {1}:
+af: In konstruktor {1}:
+
+@ctx.global
+re: ^At global scope:$
+en: At the top level of the file:
+zu: Ezingeni eliphezulu lefayela:
+xh: Kwinqanaba eliphezulu lefayile:
+ss: Ezingeni lelisetulu lelifayela:
+nr: Ezingeni eliphezulu lefayela:
+st: Boemong bo hodimo ba faele:
+tn: Mo maemong a a kwa godimo a faele:
+nso: Maemong a godimo a faele:
+ts: Eka xiyimo xa le henhla xa fayili:
+ve: Kha vhuimo ha ntha ha faela:
+af: Op die boonste vlak van die lêer:
+
+@ctx.instantiation
+re: ^In instantiation of (.+):$
+en: While building the template {1}:
+zu: Lapho kwakhiwa isifanekiso {1}:
+xh: Xa kusakhiwa umzekelo {1}:
+ss: Nakwakhiwa sifanekiso {1}:
+nr: Nakwakhiwa isibonelo {1}:
+st: Ha ho ahwa mohlala {1}:
+tn: Fa go agiwa sekao {1}:
+nso: Ge go agwa mohlala {1}:
+ts: Loko ku akiwa xikombiso {1}:
+ve: Musi hu tshi fhatiwa tsumbo {1}:
+af: Terwyl die sjabloon gebou word {1}:
+
+@ctx.required
+re: ^required from here$
+en: needed from here
+zu: kudingeka lapha
+xh: kufuneka apha
+ss: kudzingeka lapha
+nr: kutlhogeka lapha
+st: ho hlokahala mona
+tn: go tlhokega fa
+nso: go nyakega mo
+ts: swi laveka laha
+ve: zwi a todea fhano
+af: hier benodig
+
+@ctx.included
+re: ^In file included from (.+)$
+en: In the file included from {1}
+zu: Efayeleni elifakwe kusuka ku {1}
+xh: Kwifayile efakwe ukusuka ku {1}
+ss: Elifayeleni lelifakwe kusuka ku {1}
+nr: Efayeleni elifakwe ukusuka ku {1}
+st: Faeleng e kentsweng ho tswa ho {1}
+tn: Mo faeleng e e tsentsweng go tswa go {1}
+nso: Faeleng ye e tsentšwego go tšwa go {1}
+ts: Eka fayili leyi katsiweke ku suka eka {1}
+ve: Kha faela yo katelwaho u bva kha {1}
+af: In die lêer ingesluit vanaf {1}
+
+@suffix.did_you_mean
+en: did you mean {1}?
+zu: ingabe ubuqonde {1}?
+xh: ingaba ubuthetha {1}?
+ss: kungabe bewusho {1}?
+nr: kungenzeka bewuqalise {1}?
+st: na o ne o bolela {1}?
+tn: a o ne o raya {1}?
+nso: na o be o ra {1}?
+ts: xana a wu vula {1}?
+ve: naa no vha ni tshi amba {1}?
+af: het jy {1} bedoel?
+
+# ---- compiler errors and warnings --------------------------------------------------------
+@e.expected_primary
+re: ^expected primary-expression before (.+)$
+en: a value or expression is missing before {1}
+zu: kushoda inani noma isisho ngaphambi kuka {1}
+xh: kukho ixabiso okanye intetho elahlekileyo phambi ko {1}
+ss: kusweleka linani nome sisho ngaphambi kwa {1}
+nr: kutlhogeka inani namkha isitjho ngaphambi kwa {1}
+st: boleng kapa polelo e haella pele ho {1}
+tn: boleng kgotsa polelo e tlhaela pele ga {1}
+nso: boleng goba polelo e hlaela pele ga {1}
+ts: nkoka kumbe xivulwa swa pfumaleka emahlweni ka {1}
+ve: ndeme kana tshitatamennde zwi khou shaya phanda ha {1}
+af: 'n waarde of uitdrukking ontbreek voor {1}
+
+@e.expected_unqualified
+re: ^expected unqualified-id before (.+)$
+en: a name was expected before {1}
+zu: bekulindeleke igama ngaphambi kuka {1}
+xh: bekulindelwe igama phambi ko {1}
+ss: bekulindzeleke libito ngaphambi kwa {1}
+nr: bekulindeleke ibizo ngaphambi kwa {1}
+st: ho ne ho lebeletswe lebitso pele ho {1}
+tn: go ne go solofetswe leina pele ga {1}
+nso: go be go letetšwe leina pele ga {1}
+ts: a ku languteriwe vito emahlweni ka {1}
+ve: ho vha hu tshi lavhelelwa dzina phanda ha {1}
+af: 'n naam is verwag voor {1}
+
+@e.expected_initializer
+re: ^expected initializer before (.+)$
+en: a starting value (or ;) was expected before {1}
+zu: bekulindeleke inani lokuqala (noma ;) ngaphambi kuka {1}
+xh: bekulindelwe ixabiso lokuqala (okanye ;) phambi ko {1}
+ss: bekulindzeleke linani lekucala (nome ;) ngaphambi kwa {1}
+nr: bekulindeleke inani lokuthoma (namkha ;) ngaphambi kwa {1}
+st: ho ne ho lebeletswe boleng ba qalo (kapa ;) pele ho {1}
+tn: go ne go solofetswe boleng jwa ntlha (kgotsa ;) pele ga {1}
+nso: go be go letetšwe boleng bja mathomo (goba ;) pele ga {1}
+ts: a ku languteriwe nkoka wo sungula (kumbe ;) emahlweni ka {1}
+ve: ho vha hu tshi lavhelelwa ndeme ya u thoma (kana ;) phanda ha {1}
+af: 'n beginwaarde (of ;) is verwag voor {1}
+
+@e.expected_before
+re: ^expected (.+?) before (.+)$
+en: {1} is missing before {2}
+zu: kushoda u-{1} ngaphambi kuka {2}
+xh: kulahleke u-{1} phambi ko {2}
+ss: kusweleka {1} ngaphambi kwa {2}
+nr: kutlhogeka {1} ngaphambi kwa {2}
+st: {1} e haella pele ho {2}
+tn: {1} e tlhaela pele ga {2}
+nso: {1} e hlaela pele ga {2}
+ts: {1} yi pfumaleka emahlweni ka {2}
+ve: {1} i khou shaya phanda ha {2}
+af: {1} ontbreek voor {2}
+
+@e.expected_end
+re: ^expected (.+?) at end of input$
+en: {1} is missing at the end of the file
+zu: kushoda u-{1} ekugcineni kwefayela
+xh: kulahleke u-{1} ekupheleni kwefayile
+ss: kusweleka {1} ekugcineni kwelifayela
+nr: kutlhogeka {1} ekupheleni kwefayela
+st: {1} e haella qetellong ya faele
+tn: {1} e tlhaela kwa bofelong jwa faele
+nso: {1} e hlaela mafelelong a faele
+ts: {1} yi pfumaleka emakumu ya fayili
+ve: {1} i khou shaya magumoni a faela
+af: {1} ontbreek aan die einde van die lêer
+
+@e.expected
+re: ^expected (.+)$
+en: {1} was expected
+zu: bekulindeleke u-{1}
+xh: bekulindelwe u-{1}
+ss: bekulindzeleke {1}
+nr: bekulindeleke {1}
+st: ho ne ho lebeletswe {1}
+tn: go ne go solofetswe {1}
+nso: go be go letetšwe {1}
+ts: a ku languteriwe {1}
+ve: ho vha hu tshi lavhelelwa {1}
+af: {1} is verwag
+
+@e.not_declared
+re: ^(.+?) was not declared in this scope$
+en: {1} has not been declared here
+zu: u-{1} akakamenyezelwa lapha
+xh: u-{1} akakabhengezwa apha
+ss: {1} akakamenyetelwa lapha
+nr: u-{1} akakamenyezelwa lapha
+st: {1} ha e so phatlalatswe mona
+tn: {1} ga e ise e bolelwe fa
+nso: {1} ga se ya tsebišwa mo
+ts: {1} a yi si tivisiwa laha
+ve: {1} a i athu divhadzwa fhano
+af: {1} is nie hier verklaar nie
+
+@e.no_type
+re: ^(.+?) does not name a type$
+en: {1} is not a type
+zu: u-{1} akulona uhlobo
+xh: u-{1} asilohlobo
+ss: {1} akusiluhlobo
+nr: u-{1} akusiwo uhlobo
+st: {1} hase mofuta
+tn: {1} ga se mofuta
+nso: {1} ga se mohuta
+ts: {1} a hi muxaka
+ve: {1} a si lushaka
+af: {1} is nie 'n tipe nie
+
+@e.no_matching_call
+re: ^no matching function for call to (.+)$
+en: no function matches the call {1} (check the number and types of the values you pass)
+zu: awukho umsebenzi ofanele ukubiza {1} (hlola inani nezinhlobo zamanani owanikezayo)
+xh: akukho msebenzi ulingana nobizo {1} (jonga inani neentlobo zamaxabiso owanikayo)
+ss: kute umsebenti lofanelana nekubita {1} (hlola linani netinhlobo temanani lowanikako)
+nr: akukho msebenzi ofanelana nokubiza {1} (hlola inani neenhlobo zamanani owanikelako)
+st: ha ho mosebetsi o tsamaellanang le pitso {1} (hlahloba palo le mefuta ya boleng boo o bo fanang)
+tn: ga go na tiro e e tsamaisanang le pitso {1} (tlhatlhoba palo le mefuta ya boleng jo o bo nayang)
+nso: ga go na mošomo wo o sepelelanago le pitšo {1} (lekola palo le mehuta ya boleng bjo o bo fago)
+ts: a ku na ntirho lowu fambelanaka na xirhambo {1} (kambela nhlayo ni mixaka ya mimpimo leyi u yi nyikaka)
+ve: a hu na mushumo u tshimbilelanaho na u vhidza {1} (sedza tshivhalo na tshaka dza ndeme dze na dzi ṋea)
+af: geen funksie pas by die oproep {1} nie (kyk na die aantal en tipes waardes wat jy deurgee)
+
+@e.invalid_conversion
+re: ^invalid conversion from (.+?) to (.+)$
+en: cannot automatically change {1} into {2}
+zu: angeke kuguqulwe ngokuzenzakalela u-{1} kube ngu-{2}
+xh: akunakuguqulwa ngokuzenzekelayo u-{1} ube ngu-{2}
+ss: angeke kugucululwe ngekutentekela {1} kube ngu-{2}
+nr: angeze kutjhugululwe ngokuzenzakalela u-{1} kube ngu-{2}
+st: {1} e ke ke ya fetolwa ka boiketsetso ho ba {2}
+tn: {1} e ka se fetolwe ka boitiriso go nna {2}
+nso: {1} e ka se fetošwe ka boithomelo go ba {2}
+ts: {1} a yi nge cinciwi hi yoxe ku va {2}
+ve: {1} a i nga shandukiswi nga u ditita u vha {2}
+af: {1} kan nie outomaties na {2} omgeskakel word nie
+
+@e.cannot_convert
+re: ^cannot convert (.+?) to (.+?)(?: in .+)?$
+en: {1} cannot be changed into {2}
+zu: u-{1} angeke aguqulwe abe ngu-{2}
+xh: u-{1} akanakuguqulwa abe ngu-{2}
+ss: {1} angeke agucululwe abe ngu-{2}
+nr: u-{1} angeze atjhugululwe abe ngu-{2}
+st: {1} e ke ke ya fetolwa ho ba {2}
+tn: {1} e ka se fetolwe go nna {2}
+nso: {1} e ka se fetošwe go ba {2}
+ts: {1} a yi nge cinciwi ku va {2}
+ve: {1} a i nga shandukiswi u vha {2}
+af: {1} kan nie na {2} omgeskakel word nie
+
+@e.redeclaration
+re: ^redeclaration of (.+)$
+re: ^conflicting declaration (.+)$
+en: {1} is declared twice
+zu: u-{1} umenyezelwe kabili
+xh: u-{1} ubhengezwe kabini
+ss: {1} umenyetelwe kabili
+nr: u-{1} umenyezelwe kabili
+st: {1} e phatlaladitswe habedi
+tn: {1} e boletswe gabedi
+nso: {1} e tsebišitšwe gabedi
+ts: {1} yi tivisiwile kambirhi
+ve: {1} yo divhadzwa luvhili
+af: {1} is twee keer verklaar
+
+@e.redefinition
+re: ^redefinition of (.+)$
+en: {1} is defined twice
+zu: u-{1} uchazwe kabili
+xh: u-{1} uchazwe kabini
+ss: {1} uchazwe kabili
+nr: u-{1} uhlathululwe kabili
+st: {1} e hlalositswe habedi
+tn: {1} e tlhalositswe gabedi
+nso: {1} e hlalošitšwe gabedi
+ts: {1} yi hlamuseriwile kambirhi
+ve: {1} yo talutshedzwa luvhili
+af: {1} is twee keer gedefinieer
+
+@e.too_few_args
+re: ^too few arguments to function (.+)$
+en: too few values were given to {1}
+zu: amanani anikezwe u-{1} mancane kakhulu
+xh: amaxabiso anikwe u-{1} mancinci kakhulu
+ss: emanani laniketwe {1} mancane kakhulu
+nr: amanani anikelwe u-{1} ancani khulu
+st: boleng bo fuwang {1} bo fokola haholo
+tn: boleng jo bo neilweng {1} bo fokotse thata
+nso: boleng bjo bo filwego {1} bo fokola kudu
+ts: mimpimo leyi nyikiweke {1} yi tsongo ngopfu
+ve: ndeme dzo ṋewaho {1} dzi a fhungudzea vhukuma
+af: te min waardes is aan {1} gegee
+
+@e.too_many_args
+re: ^too many arguments to function (.+)$
+en: too many values were given to {1}
+zu: amanani anikezwe u-{1} maningi kakhulu
+xh: amaxabiso anikwe u-{1} maninzi kakhulu
+ss: emanani laniketwe {1} manyenti kakhulu
+nr: amanani anikelwe u-{1} manengi khulu
+st: boleng bo fuwang {1} bo bongata haholo
+tn: boleng jo bo neilweng {1} bo bontsi thata
+nso: boleng bjo bo filwego {1} bo bontši kudu
+ts: mimpimo leyi nyikiweke {1} yi tala ngopfu
+ve: ndeme dzo ṋewaho {1} dzi nnzhi vhukuma
+af: te veel waardes is aan {1} gegee
+
+@e.no_member
+re: ^(.+?) has no member named (.+)$
+en: {1} has no member called {2}
+zu: u-{1} akanalo ilungu elibizwa ngokuthi {2}
+xh: u-{1} akanalo ilungu elibizwa ngokuba {2}
+ss: {1} akanalo lilunga lelibitwa ngekutsi {2}
+nr: u-{1} akanalo ilunga elibizwa ngokuthi {2}
+st: {1} ha e na setho se bitswang {2}
+tn: {1} ga e na leloko le le bidiwang {2}
+nso: {1} ga e na leloko leo le bitšwago {2}
+ts: {1} a yi na xirho lexi vitaniwaka {2}
+ve: {1} a i na tshirado tshi vhidzwaho {2}
+af: {1} het geen lid genaamd {2} nie
+
+@e.not_member_of
+re: ^(.+?) is not a member of (.+)$
+en: {1} is not part of {2}
+zu: u-{1} akayona ingxenye ka-{2}
+xh: u-{1} asiyonxalenye ka-{2}
+ss: {1} akusiyo incenye ya-{2}
+nr: u-{1} akusiyo ingcenye ka-{2}
+st: {1} hase karolo ya {2}
+tn: {1} ga se karolo ya {2}
+nso: {1} ga se karolo ya {2}
+ts: {1} a hi xiphemu xa {2}
+ve: {1} a si tshipida tsha {2}
+af: {1} is nie deel van {2} nie
+
+@e.lvalue
+re: ^lvalue required as left operand of assignment$
+en: the left side of = must be a variable
+zu: uhlangothi lwesobunxele luka = kumele lube yisiguquguquki
+xh: icala lasekhohlo lika = kufuneka libe sisiguquguquki
+ss: luhlangotsi lwesencele lwa = kufanele lube sigucuguculi
+nr: icala lesinceleni la = kufuze libe sitjhugululi
+st: lehlakore le letshehadi la = le tlameha ho ba se fetohang
+tn: letlhakore la molema la = le tshwanetse go nna se se fetogang
+nso: lehlakore la nngele la = le swanetše go ba seo se fetogago
+ts: tlhelo ra ximatsi ra = ri fanele ku va lexi cincaka
+ve: tshipida tsha monde tsha = tshi fanela u vha tshishanduki
+af: die linkerkant van = moet 'n veranderlike wees
+
+@e.return_value_void
+re: ^return-statement with a value, in function returning (.+)$
+en: this function returns {1}, so {kw:return} must not give a value
+zu: lo msebenzi ubuyisa {1}, ngakho u-{kw:return} akumele anikeze inani
+xh: lo msebenzi ubuyisa {1}, ngoko u-{kw:return} makanganiki xabiso
+ss: lomsebenti ubuyisa {1}, ngako {kw:return} akukafaneli kuniketa linani
+nr: umsebenzi lo ubuyisa {1}, ngalokho u-{kw:return} akukafuzi anikele inani
+st: mosebetsi ona o kgutlisa {1}, ka hona {kw:return} ha ea lokela ho fana ka boleng
+tn: tiro e e busa {1}, ka jalo {kw:return} ga e a tshwanela go naya boleng
+nso: mošomo wo o bušetša {1}, ka gona {kw:return} ga se ya swanela go fa boleng
+ts: ntirho lowu wu vuyisa {1}, hikwalaho {kw:return} a yi fanelanga ku nyika nkoka
+ve: mushumo uyu u vhuisa {1}, nga zwenezwo {kw:return} a i faneli u ṋea ndeme
+af: hierdie funksie gee {1} terug, dus moet {kw:return} nie 'n waarde gee nie
+
+@e.return_no_value
+re: ^return-statement with no value, in function returning (.+)$
+en: this function must give back a {1}, but {kw:return} has no value
+zu: lo msebenzi kumele ubuyise u-{1}, kodwa u-{kw:return} akanalo inani
+xh: lo msebenzi kufuneka ubuyise u-{1}, kodwa u-{kw:return} akanaxabiso
+ss: lomsebenti kufanele ubuyise {1}, kodvwa {kw:return} akanalo linani
+nr: umsebenzi lo kufuze ubuyise u-{1}, kodwana u-{kw:return} akanalo inani
+st: mosebetsi ona o tlameha ho kgutlisa {1}, empa {kw:return} ha e na boleng
+tn: tiro e e tshwanetse go busa {1}, mme {kw:return} ga e na boleng
+nso: mošomo wo o swanetše go bušetša {1}, eupša {kw:return} ga e na boleng
+ts: ntirho lowu wu fanele ku vuyisa {1}, kambe {kw:return} a yi na nkoka
+ve: mushumo uyu u fanela u vhuisa {1}, fhedzi {kw:return} a i na ndeme
+af: hierdie funksie moet 'n {1} teruggee, maar {kw:return} het geen waarde nie
+
+@e.no_return
+re: ^no return statement in function returning non-void$
+re: ^control reaches end of non-void function$
+en: the function can reach its end without {kw:return} giving back a value
+zu: umsebenzi ungafinyelela ekugcineni ngaphandle kokuthi u-{kw:return} abuyise inani
+xh: umsebenzi unokufikelela ekupheleni ngaphandle kokuba u-{kw:return} abuyise ixabiso
+ss: umsebenti ungafika ekugcineni ngaphandle kwekutsi {kw:return} abuyise linani
+nr: umsebenzi ungafika ekupheleni ngaphandle kokuthi u-{kw:return} abuyise inani
+st: mosebetsi o ka fihla qetellong ntle le hore {kw:return} e kgutlise boleng
+tn: tiro e ka fitlha kwa bofelong kwa ntle ga gore {kw:return} e buse boleng
+nso: mošomo o ka fihla mafelelong ntle le gore {kw:return} e bušetše boleng
+ts: ntirho wu nga fika emakumu handle ka leswaku {kw:return} yi vuyisa nkoka
+ve: mushumo u nga swika magumoni hu si na {kw:return} i tshi vhuisa ndeme
+af: die funksie kan sy einde bereik sonder dat {kw:return} 'n waarde teruggee
+
+@e.unused_variable
+re: ^unused variable (.+)$
+en: {1} is never used
+zu: u-{1} akasetshenziswa neze
+xh: u-{1} akasetyenziswa kwaphela
+ss: {1} akasetjentiswa nanini
+nr: u-{1} akasetjenziswa nanini
+st: {1} ha e sebediswe le ka mohla
+tn: {1} ga e dirisiwe gope
+nso: {1} ga e šomišwe le gatee
+ts: {1} a yi tirhisiwi nikatsongo
+ve: {1} a i shumiswi na luthihi
+af: {1} word nooit gebruik nie
+
+@e.uninitialized
+re: ^(.+?) is used uninitialized$
+re: ^(.+?) may be used uninitialized$
+en: {1} is used before it has been given a value
+zu: u-{1} usetshenziswa ngaphambi kokuba anikezwe inani
+xh: u-{1} usetyenziswa phambi kokuba anikwe ixabiso
+ss: {1} usetjentiswa ngaphambi kwekutsi aniketwe linani
+nr: u-{1} usetjenziswa ngaphambi kobana anikelwe inani
+st: {1} e sebediswa pele e fuwa boleng
+tn: {1} e dirisiwa pele e newa boleng
+nso: {1} e šomišwa pele e fiwa boleng
+ts: {1} yi tirhisiwa yi nga si nyikiwa nkoka
+ve: {1} i shumiswa i sa athu ṋewa ndeme
+af: {1} word gebruik voordat dit 'n waarde gekry het
+
+@e.signed_compare
+re: ^comparison of integer expressions of different signedness: (.+?) and (.+)$
+en: comparing a number that can be negative ({1}) with one that cannot ({2})
+zu: kuqhathaniswa inombolo engaba negethivu ({1}) neyingeke ibe yiyo ({2})
+xh: kuthelekiswa inani elinokuba lilahleko ({1}) nelingenakuba njalo ({2})
+ss: kucatsaniswa inombolo lengaba yinegethivu ({1}) nalengeke ibe njalo ({2})
+nr: kumadaniswa inomboro engaba yinegethivu ({1}) nengeze ibe njalo ({2})
+st: ho bapiswa palo e ka bang e fokolang ho 0 ({1}) le e sa kgoneng ({2})
+tn: go bapisiwa palo e e ka nnang kwa tlase ga 0 ({1}) le e e sa kgoneng ({2})
+nso: go bapetšwa palo ye e ka bago ka fase ga 0 ({1}) le ye e sa kgonego ({2})
+ts: ku pimanisiwa nomboro leyi nga va ehansi ka 0 ({1}) ni leyi nga swi kotiki ({2})
+ve: u vhambedzwa nomboro i nga vhaho fhasi ha 0 ({1}) na i sa koni ({2})
+af: 'n getal wat negatief kan wees ({1}) word met een vergelyk wat nie kan nie ({2})
+
+@e.no_match_operator
+re: ^no match for (.+?) \(operand types? (?:are|is) (.+)\)$
+en: {1} cannot be used with {2}
+zu: u-{1} angeke asetshenziswe no-{2}
+xh: u-{1} akanakusetyenziswa no-{2}
+ss: {1} angeke asetjentiswe na-{2}
+nr: u-{1} angeze asetjenziswe no-{2}
+st: {1} e ke ke ya sebediswa le {2}
+tn: {1} e ka se dirisiwe le {2}
+nso: {1} e ka se šomišwe le {2}
+ts: {1} a yi nge tirhisiwi na {2}
+ve: {1} a i nga shumiswi na {2}
+af: {1} kan nie met {2} gebruik word nie
+
+@e.invalid_operands
+re: ^invalid operands of types (.+?) and (.+?) to binary (.+)$
+en: {3} cannot combine {1} and {2}
+zu: u-{3} angeke ahlanganise u-{1} no-{2}
+xh: u-{3} akanakudibanisa u-{1} no-{2}
+ss: {3} angeke ahlanganise {1} na-{2}
+nr: u-{3} angeze ahlanganise u-{1} no-{2}
+st: {3} e ke ke ya kopanya {1} le {2}
+tn: {3} e ka se kopanye {1} le {2}
+nso: {3} e ka se kopanye {1} le {2}
+ts: {3} a yi nge hlanganisi {1} na {2}
+ve: {3} a i nga ṱanganyi {1} na {2}
+af: {3} kan nie {1} en {2} kombineer nie
+
+@e.discards_qualifiers
+re: ^passing (.+?) as 'this' argument discards qualifiers$
+en: {1} is constant ({kw:const}), so this function may not change it
+zu: u-{1} akaguquki ({kw:const}), ngakho lo msebenzi angeke amshintshe
+xh: u-{1} akatshintshi ({kw:const}), ngoko lo msebenzi akanakumtshintsha
+ss: {1} akagucuki ({kw:const}), ngako lomsebenti angeke amshintshe
+nr: u-{1} akatjhuguluki ({kw:const}), ngalokho umsebenzi lo angeze amtjhugulule
+st: {1} ha e fetohe ({kw:const}), ka hona mosebetsi ona o ke ke wa e fetola
+tn: {1} ga e fetoge ({kw:const}), ka jalo tiro e e ka se e fetole
+nso: {1} ga e fetoge ({kw:const}), ka gona mošomo wo o ka se e fetoše
+ts: {1} a yi cinciki ({kw:const}), hikwalaho ntirho lowu a wu nge yi cinci
+ve: {1} a i shanduki ({kw:const}), nga zwenezwo mushumo uyu a u nga i shandukisi
+af: {1} is konstant ({kw:const}), dus mag hierdie funksie dit nie verander nie
+
+@e.read_only
+re: ^assignment of read-only (?:variable|location|member|parameter) (.+)$
+en: {1} is constant ({kw:const}) and cannot be changed
+zu: u-{1} akaguquki ({kw:const}) futhi angeke ashintshwe
+xh: u-{1} akatshintshi ({kw:const}) kwaye akanakutshintshwa
+ss: {1} akagucuki ({kw:const}) futsi angeke ashintshwe
+nr: u-{1} akatjhuguluki ({kw:const}) begodu angeze atjhugululwe
+st: {1} ha e fetohe ({kw:const}) mme e ke ke ya fetolwa
+tn: {1} ga e fetoge ({kw:const}) mme e ka se fetolwe
+nso: {1} ga e fetoge ({kw:const}) gomme e ka se fetošwe
+ts: {1} a yi cinciki ({kw:const}) naswona a yi nge cinciwi
+ve: {1} a i shanduki ({kw:const}) nahone a i nga shandukiswi
+af: {1} is konstant ({kw:const}) en kan nie verander word nie
+
+@e.division_by_zero
+re: ^division by zero.*$
+en: division by zero
+zu: ukwahlukanisa ngo-0
+xh: ukwahlula ngo-0
+ss: kwehlukanisa nga-0
+nr: ukwahlukanisa ngo-0
+st: karolo ka 0
+tn: kabo ka 0
+nso: go aroganya ka 0
+ts: ku avanyisa hi 0
+ve: u kovha nga 0
+af: deling deur nul
+
+@e.defined_in_header
+re: ^(.+?) is defined in header (.+?); did you forget to '#include (.+?)'\?$
+re: ^(.+?) is defined in header (.+?); this is probably fixable by adding '#include (.+?)'$
+en: {1} comes from {2}: add #{kw:#include} {3} at the top of the file
+zu: u-{1} uvela ku-{2}: engeza #{kw:#include} {3} phezulu efayeleni
+xh: u-{1} uvela ku-{2}: yongeza #{kw:#include} {3} phezulu kwifayile
+ss: {1} uvela ku-{2}: engeta #{kw:#include} {3} etulu elifayeleni
+nr: u-{1} uvela ku-{2}: engeza #{kw:#include} {3} phezulu efayeleni
+st: {1} e tswa ho {2}: eketsa #{kw:#include} {3} hodimo faeleng
+tn: {1} e tswa go {2}: oketsa #{kw:#include} {3} kwa godimo mo faeleng
+nso: {1} e tšwa go {2}: oketša #{kw:#include} {3} godimo faeleng
+ts: {1} yi huma eka {2}: engetela #{kw:#include} {3} ehenhla ka fayili
+ve: {1} i bva kha {2}: engedza #{kw:#include} {3} nṱha ha faela
+af: {1} kom uit {2}: voeg #{kw:#include} {3} bo-aan die lêer by
+
+@e.no_such_file
+re: ^(.+?): No such file or directory$
+en: the file {1} was not found
+zu: ifayela {1} alitholakalanga
+xh: ifayile {1} ayifumanekanga
+ss: lifayela {1} alitfolakalanga
+nr: ifayela {1} alifumaneki
+st: faele {1} ha e a fumanwa
+tn: faele {1} ga e a bonwa
+nso: faele {1} ga se ya hwetšwa
+ts: fayili {1} a yi kumekanga
+ve: faela {1} a yo ngo wanala
+af: die lêer {1} is nie gevind nie
+
+@e.undefined_reference
+re: ^undefined reference to (.+)$
+en: {1} is used but never defined (did you write its body, or link its library?)
+zu: u-{1} uyasetshenziswa kodwa akakaze achazwe (ingabe ubhale umzimba wakhe noma uxhumanise ilayibrari yakhe?)
+xh: u-{1} uyasetyenziswa kodwa akazange achazwe (ingaba ubhale umzimba wakhe okanye wadibanisa ilayibrari yakhe?)
+ss: {1} uyasetjentiswa kodvwa akazange achazwe (kungabe ubhale umtimba wakhe nome uhlanganise ilayibhrari yakhe?)
+nr: u-{1} uyasetjenziswa kodwana akakhenge ahlathululwe (kghani utlole umzimba wakhe namkha uhlanganise ilayibhrari yakhe?)
+st: {1} e a sebediswa empa ha e so hlaloswe (na o ngotse mmele wa yona kapa o hokahantse laeborari ya yona?)
+tn: {1} e a dirisiwa mme ga e ise e tlhalosiwe (a o kwadile mmele wa yone kgotsa o golagantse laeborari ya yone?)
+nso: {1} e a šomišwa eupša ga se ya hlalošwa (na o ngwadile mmele wa yona goba o kgokagantše laeborari ya yona?)
+ts: {1} yi tirhisiwa kambe a yi si hlamuseriwa (xana u tsarile miri wa yona kumbe u hlanganisile layiburari ya yona?)
+ve: {1} i a shumiswa fhedzi a i athu talutshedzwa (naa no nwala muvhili wayo kana no ṱanganya laiburari yayo?)
+af: {1} word gebruik maar is nooit gedefinieer nie (het jy sy liggaam geskryf, of sy biblioteek gekoppel?)
+
+@e.else_without_if
+re: ^'else' without a previous 'if'$
+en: {kw:else} without a {kw:if} before it
+zu: u-{kw:else} ngaphandle kuka-{kw:if} ngaphambi kwakhe
+xh: u-{kw:else} ngaphandle ko-{kw:if} phambi kwakhe
+ss: {kw:else} ngaphandle kwa-{kw:if} ngaphambi kwakhe
+nr: u-{kw:else} ngaphandle kwa-{kw:if} ngaphambi kwakhe
+st: {kw:else} ntle le {kw:if} pele ho yona
+tn: {kw:else} kwa ntle ga {kw:if} pele ga yone
+nso: {kw:else} ntle le {kw:if} pele ga yona
+ts: {kw:else} handle ka {kw:if} emahlweni ka yona
+ve: {kw:else} hu si na {kw:if} phanda hayo
+af: {kw:else} sonder 'n {kw:if} daarvoor
+
+@e.break_outside
+re: ^break statement not within loop or switch$
+en: {kw:break} can only be used inside a loop or {kw:switch}
+zu: u-{kw:break} angasetshenziswa kuphela ngaphakathi kweluphu noma ku-{kw:switch}
+xh: u-{kw:break} angasetyenziswa kuphela ngaphakathi kwelophu okanye ku-{kw:switch}
+ss: {kw:break} angasetjentiswa kuphela ngekhatsi kweluphu nome ku-{kw:switch}
+nr: u-{kw:break} angasetjenziswa kwaphela ngaphakathi kweluphu namkha ku-{kw:switch}
+st: {kw:break} e ka sebediswa feela ka hare ho lupu kapa {kw:switch}
+tn: {kw:break} e ka dirisiwa fela mo teng ga lupu kgotsa {kw:switch}
+nso: {kw:break} e ka šomišwa fela ka gare ga lupu goba {kw:switch}
+ts: {kw:break} yi nga tirhisiwa ntsena endzeni ka luphu kumbe {kw:switch}
+ve: {kw:break} i nga shumiswa fhedzi ngomu ha lupu kana {kw:switch}
+af: {kw:break} kan net binne 'n lus of {kw:switch} gebruik word
+
+@e.continue_outside
+re: ^continue statement not within a loop$
+en: {kw:continue} can only be used inside a loop
+zu: u-{kw:continue} angasetshenziswa kuphela ngaphakathi kweluphu
+xh: u-{kw:continue} angasetyenziswa kuphela ngaphakathi kwelophu
+ss: {kw:continue} angasetjentiswa kuphela ngekhatsi kweluphu
+nr: u-{kw:continue} angasetjenziswa kwaphela ngaphakathi kweluphu
+st: {kw:continue} e ka sebediswa feela ka hare ho lupu
+tn: {kw:continue} e ka dirisiwa fela mo teng ga lupu
+nso: {kw:continue} e ka šomišwa fela ka gare ga lupu
+ts: {kw:continue} yi nga tirhisiwa ntsena endzeni ka luphu
+ve: {kw:continue} i nga shumiswa fhedzi ngomu ha lupu
+af: {kw:continue} kan net binne 'n lus gebruik word
+
+@e.missing_terminating
+re: ^missing terminating (.) character$
+en: a closing {1} is missing
+zu: kushoda u-{1} wokuvala
+xh: kulahleke u-{1} wokuvala
+ss: kusweleka {1} wekuvala
+nr: kutlhogeka u-{1} wokuvala
+st: {1} ya ho kwala e haella
+tn: {1} ya go tswala e tlhaela
+nso: {1} ya go tswalela e hlaela
+ts: {1} yo pfala yi pfumaleka
+ve: {1} ya u vala i khou shaya
+af: 'n sluitende {1} ontbreek
+
+@e.private
+re: ^(.+?) is private within this context$
+en: {1} is {kw:private} and cannot be used from here
+zu: u-{1} ngu-{kw:private} futhi angeke asetshenziswe lapha
+xh: u-{1} ngu-{kw:private} kwaye akanakusetyenziswa apha
+ss: {1} ngu-{kw:private} futsi angeke asetjentiswe lapha
+nr: u-{1} ngu-{kw:private} begodu angeze asetjenziswe lapha
+st: {1} ke {kw:private} mme e ke ke ya sebediswa mona
+tn: {1} ke {kw:private} mme e ka se dirisiwe fa
+nso: {1} ke {kw:private} gomme e ka se šomišwe mo
+ts: {1} i {kw:private} naswona a yi nge tirhisiwi laha
+ve: {1} ndi {kw:private} nahone a i nga shumiswi fhano
+af: {1} is {kw:private} en kan nie van hier af gebruik word nie
+
+@e.protected
+re: ^(.+?) is protected within this context$
+en: {1} is {kw:protected} and cannot be used from here
+zu: u-{1} ngu-{kw:protected} futhi angeke asetshenziswe lapha
+xh: u-{1} ngu-{kw:protected} kwaye akanakusetyenziswa apha
+ss: {1} ngu-{kw:protected} futsi angeke asetjentiswe lapha
+nr: u-{1} ngu-{kw:protected} begodu angeze asetjenziswe lapha
+st: {1} ke {kw:protected} mme e ke ke ya sebediswa mona
+tn: {1} ke {kw:protected} mme e ka se dirisiwe fa
+nso: {1} ke {kw:protected} gomme e ka se šomišwe mo
+ts: {1} i {kw:protected} naswona a yi nge tirhisiwi laha
+ve: {1} ndi {kw:protected} nahone a i nga shumiswi fhano
+af: {1} is {kw:protected} en kan nie van hier af gebruik word nie
+
+@e.suggest_parens
+re: ^suggest parentheses around assignment used as truth value$
+en: = changes a value; to compare, use ==
+zu: u-= ushintsha inani; ukuze uqhathanise, sebenzisa ==
+xh: u-= utshintsha ixabiso; ukuthelekisa, sebenzisa ==
+ss: = ushintsha linani; kute ucatsanise, sebentisa ==
+nr: u-= utjhugulula inani; bona umadanise, sebenzisa ==
+st: = e fetola boleng; ho bapisa, sebedisa ==
+tn: = e fetola boleng; go bapisa, dirisa ==
+nso: = e fetoša boleng; go bapetša, šomiša ==
+ts: = yi cinca nkoka; ku pimanisa, tirhisa ==
+ve: = i shandukisa ndeme; u vhambedza, shumisa ==
+af: = verander 'n waarde; om te vergelyk, gebruik ==
+
+@e.candidate
+re: ^candidate: (.+)$
+re: ^candidate \d+: (.+)$
+en: possible match: {1}
+zu: okungase kufanele: {1}
+xh: okunokulingana: {1}
+ss: lokungahle kufanele: {1}
+nr: okungafanelana: {1}
+st: e ka tshwanelang: {1}
+tn: e e ka tshwanelang: {1}
+nso: ye e ka swanelago: {1}
+ts: leswi nga ha fambelanaka: {1}
+ve: zwi nga tshimbilelanaho: {1}
+af: moontlike passing: {1}
+
+@e.previous_decl
+re: ^previous declaration (?:of |as )?(.+)$
+re: ^(.+?) previously declared here$
+re: ^(.+?) previously defined here$
+en: {1} was first declared here
+zu: u-{1} umenyezelwe okokuqala lapha
+xh: u-{1} ubhengezwe okokuqala apha
+ss: {1} umenyetelwe kwekucala lapha
+nr: u-{1} umenyezelwe kokuthoma lapha
+st: {1} e phatlaladitswe la pele mona
+tn: {1} e boletswe la ntlha fa
+nso: {1} e tsebišitšwe la mathomo mo
+ts: {1} yi tivisiwile ro sungula laha
+ve: {1} yo divhadzwa lwa u thoma fhano
+af: {1} is eerste hier verklaar
+
+@e.declared_here
+re: ^declared here$
+re: ^(.+?) declared here$
+en: declared here {1}
+zu: imenyezelwe lapha {1}
+xh: ibhengezwe apha {1}
+ss: imenyetelwe lapha {1}
+nr: imenyezelwe lapha {1}
+st: e phatlaladitswe mona {1}
+tn: e boletswe fa {1}
+nso: e tsebišitšwe mo {1}
+ts: yi tivisiwile laha {1}
+ve: yo divhadzwa fhano {1}
+af: hier verklaar {1}
+
+@e.link_failed
+re: ^ld returned \d+ exit status$
+en: linking the program failed (see the errors above)
+zu: ukuxhumanisa uhlelo kwehlulekile (bheka amaphutha angenhla)
+xh: ukudibanisa inkqubo akuphumelelanga (jonga iimpazamo ezingentla)
+ss: kuhlanganisa luhlelo kwehlulekile (buka emaphutsa langetulu)
+nr: ukuhlanganisa ihlelo kwehlulekile (qala iimphoso ezingehla)
+st: ho hokahanya lenaneo ho hlolehile (sheba diphoso tse ka hodimo)
+tn: go golaganya lenaneo go paletswe (leba diphoso tse di kwa godimo)
+nso: go kgokaganya lenaneo go paletšwe (lebelela diphošo tše di lego godimo)
+ts: ku hlanganisa nongonoko swi tsandzekile (languta swihoxo leswi nga laha henhla)
+ve: u tumanya mbekanyamushumo zwo kundelwa (sedzani vhukhakhi ha nṱha)
+af: die program kon nie gekoppel word nie (kyk na die foute hierbo)
+
+# ---- runtime -----------------------------------------------------------------------------
+@r.terminate
+re: ^terminate called after throwing an instance of (.+)$
+en: the program stopped: an error of type {1} was thrown ({kw:throw}) and never caught ({kw:catch})
+zu: uhlelo lumile: iphutha lohlobo {1} liphonswe ({kw:throw}) kodwa alibanjwanga ({kw:catch})
+xh: inkqubo imile: impazamo yohlobo {1} iphoswe ({kw:throw}) kodwa ayibanjwanga ({kw:catch})
+ss: luhlelo lumile: liphutsa leluhlobo {1} lijikijelwe ({kw:throw}) kodvwa alibanjwanga ({kw:catch})
+nr: ihlelo lijamile: isiphoso sohlobo {1} sijikijelwe ({kw:throw}) kodwana asibanjwanga ({kw:catch})
+st: lenaneo le emile: phoso ya mofuta {1} e akgetswe ({kw:throw}) empa ha ya tshwarwa ({kw:catch})
+tn: lenaneo le emile: phoso ya mofuta {1} e latlhilwe ({kw:throw}) mme ga ya tshwarwa ({kw:catch})
+nso: lenaneo le emile: phošo ya mohuta {1} e lahletšwe ({kw:throw}) eupša ga se ya swarwa ({kw:catch})
+ts: nongonoko wu yimile: xihoxo xa muxaka {1} xi hoxiwile ({kw:throw}) kambe a xi khomiwanga ({kw:catch})
+ve: mbekanyamushumo yo ima: vhukhakhi ha lushaka {1} ho posiwa ({kw:throw}) fhedzi a ho ngo farwa ({kw:catch})
+af: die program het gestop: 'n fout van tipe {1} is gegooi ({kw:throw}) en nooit gevang ({kw:catch}) nie
+
+@r.what
+re: ^\s*what\(\):\s*(.+)$
+en: reason: {1}
+zu: isizathu: {1}
+xh: isizathu: {1}
+ss: sizatfu: {1}
+nr: isizathu: {1}
+st: lebaka: {1}
+tn: lebaka: {1}
+nso: lebaka: {1}
+ts: xivangelo: {1}
+ve: tshiitisi: {1}
+af: rede: {1}
+
+@r.segv
+en: the program crashed: it used memory it does not own (often an index outside an array, or a {kw:nullptr} pointer)
+zu: uhlelo lwephukile: lusebenzise inkumbulo okungeyona yalo (kaningi inkomba engaphandle kohlu, noma isikhombi esingu-{kw:nullptr})
+xh: inkqubo iwile: isebenzise inkumbulo engeyoyayo (rhoqo isalathiso esingaphandle koludwe, okanye isalathisi esingu-{kw:nullptr})
+ss: luhlelo lwephukile: lusebentise inkhumbulo lengasiyo yalo (kanyenti inkhomba lengaphandle kweluhla, nome sikhombi lesingu-{kw:nullptr})
+nr: ihlelo liphukile: lisebenzise ikhumbulo engasiyo yalo (kanengi ikomba engaphandle kwerhelo, namkha isikhombi esingu-{kw:nullptr})
+st: lenaneo le senyehile: le sebedisitse memori eo e seng ya lona (hangata sesupo se kantle ho lenane, kapa sesupa sa {kw:nullptr})
+tn: lenaneo le senyegile: le dirisitse memori e e seng ya lone (gantsi sesupo se se kwa ntle ga lenane, kgotsa sesupi sa {kw:nullptr})
+nso: lenaneo le senyegile: le šomišitše memori yeo e sego ya lona (gantši sešupo seo se lego ka ntle ga lenaneo, goba sešupi sa {kw:nullptr})
+ts: nongonoko wu onhakile: wu tirhisile memori leyi nga riki ya wona (hakanyingi nkombo lowu nga ehandle ka nxaxamelo, kumbe xikombi xa {kw:nullptr})
+ve: mbekanyamushumo yo tshinyala: yo shumisa memori i si yayo (kanzhi tsumbo i re nnḓa ha mutevhe, kana tsumbi ya {kw:nullptr})
+af: die program het ineengestort: dit het geheue gebruik wat nie syne is nie (dikwels 'n indeks buite 'n skikking, of 'n {kw:nullptr}-wyser)
+
+@r.fpe
+en: the program crashed: arithmetic error (often division by zero)
+zu: uhlelo lwephukile: iphutha lezibalo (kaningi ukwahlukanisa ngo-0)
+xh: inkqubo iwile: impazamo yezibalo (rhoqo ukwahlula ngo-0)
+ss: luhlelo lwephukile: liphutsa letibalo (kanyenti kwehlukanisa nga-0)
+nr: ihlelo liphukile: isiphoso sezibalo (kanengi ukwahlukanisa ngo-0)
+st: lenaneo le senyehile: phoso ya dipalo (hangata karolo ka 0)
+tn: lenaneo le senyegile: phoso ya dipalo (gantsi kabo ka 0)
+nso: lenaneo le senyegile: phošo ya dipalo (gantši go aroganya ka 0)
+ts: nongonoko wu onhakile: xihoxo xa tinhlayo (hakanyingi ku avanyisa hi 0)
+ve: mbekanyamushumo yo tshinyala: vhukhakhi ha mbalo (kanzhi u kovha nga 0)
+af: die program het ineengestort: rekenfout (dikwels deling deur nul)
+
+@r.abort
+en: the program was stopped (aborted)
+zu: uhlelo lumisiwe
+xh: inkqubo imisiwe
+ss: luhlelo lumisiwe
+nr: ihlelo lijanyisiwe
+st: lenaneo le emisitswe
+tn: lenaneo le emisitswe
+nso: lenaneo le emišitšwe
+ts: nongonoko wu yimisiwile
+ve: mbekanyamushumo yo imiswa
+af: die program is gestop
+
+# ---- Lula's own messages -----------------------------------------------------------------
+@cli.not_found
+en: file not found: {1}
+zu: ifayela alitholakalanga: {1}
+xh: ifayile ayifumanekanga: {1}
+ss: lifayela alitfolakalanga: {1}
+nr: ifayela alifumaneki: {1}
+st: faele ha e a fumanwa: {1}
+tn: faele ga e a bonwa: {1}
+nso: faele ga se ya hwetšwa: {1}
+ts: fayili a yi kumekanga: {1}
+ve: faela a yo ngo wanala: {1}
+af: lêer nie gevind nie: {1}
+
+@cli.compiler_missing
+en: could not start the compiler {1}. Install a C++ compiler or set --cxx
+zu: angikwazanga ukuqalisa i-compiler {1}. Faka i-compiler ye-C++ noma usebenzise --cxx
+xh: andikwazanga ukuqalisa i-compiler {1}. Faka i-compiler ye-C++ okanye usebenzise --cxx
+ss: angikhonanga kucalisa i-compiler {1}. Faka i-compiler ye-C++ nome usebentise --cxx
+nr: angikghonanga ukuthomisa i-compiler {1}. Faka i-compiler ye-C++ namkha usebenzise --cxx
+st: ha ke a kgona ho qala compiler {1}. Kenya compiler ya C++ kapa o sebedise --cxx
+tn: ga ke a kgona go simolola compiler {1}. Tsenya compiler ya C++ kgotsa o dirise --cxx
+nso: ga ke a kgona go thoma compiler {1}. Tsenya compiler ya C++ goba o šomiše --cxx
+ts: a ndzi swi kotanga ku sungula compiler {1}. Nghenisa compiler ya C++ kumbe u tirhisa --cxx
+ve: a tho ngo kona u thoma compiler {1}. Dzhenisani compiler ya C++ kana ni shumise --cxx
+af: kon nie die samesteller {1} begin nie. Installeer 'n C++-samesteller of gebruik --cxx
+
+@cli.built
+en: built {1}
+zu: kwakhiwe {1}
+xh: kwakhiwe {1}
+ss: kwakhiwe {1}
+nr: kwakhiwe {1}
+st: ho ahilwe {1}
+tn: go agilwe {1}
+nso: go agilwe {1}
+ts: ku akiwile {1}
+ve: ho fhatiwa {1}
+af: gebou: {1}
+
+@cli.ok
+en: no errors found
+zu: awekho amaphutha atholakele
+xh: akukho mpazamo ifunyenweyo
+ss: kute emaphutsa latfolakele
+nr: azikho iimphoso ezifunyenweko
+st: ha ho diphoso tse fumanweng
+tn: ga go na diphoso tse di bonweng
+nso: ga go na diphošo tšeo di hweditšwego
+ts: a ku na swihoxo leswi kumekeke
+ve: a hu na vhukhakhi ho wanalaho
+af: geen foute gevind nie
+
+@cli.arduino_hint
+en: this is an Arduino program (it has {1} and {2}). Build it for a board with: lula arduino {3}
+zu: lolu wuhlelo lwe-Arduino (lunayo {1} no-{2}). Lwakhele ibhodi ngokuthi: lula arduino {3}
+xh: le yinkqubo ye-Arduino (inayo {1} no-{2}). Yakhele ibhodi ngokuthi: lula arduino {3}
+ss: loluhlelo lwe-Arduino (lunayo {1} na-{2}). Lwakhele libhodi ngekutsi: lula arduino {3}
+nr: leli lihlelo le-Arduino (linayo {1} no-{2}). Lakhele ibhodo ngokuthi: lula arduino {3}
+st: lena ke lenaneo la Arduino (le na le {1} le {2}). Le ahele boto ka: lula arduino {3}
+tn: le ke lenaneo la Arduino (le na le {1} le {2}). Le agele boto ka: lula arduino {3}
+nso: le ke lenaneo la Arduino (le na le {1} le {2}). Le agele boto ka: lula arduino {3}
+ts: lowu i nongonoko wa Arduino (wu na {1} na {2}). Wu akela bodo hi: lula arduino {3}
+ve: iyi ndi mbekanyamushumo ya Arduino (i na {1} na {2}). I fhatela bodo nga: lula arduino {3}
+af: dit is 'n Arduino-program (dit het {1} en {2}). Bou dit vir 'n bord met: lula arduino {3}
+
+@cli.pack_hint
+en: this program uses {1}. {2}
+zu: lolu hlelo lusebenzisa {1}. {2}
+xh: le nkqubo isebenzisa {1}. {2}
+ss: loluhlelo lusebentisa {1}. {2}
+nr: ihlelo leli lisebenzisa {1}. {2}
+st: lenaneo lena le sebedisa {1}. {2}
+tn: lenaneo le le dirisa {1}. {2}
+nso: lenaneo le le šomiša {1}. {2}
+ts: nongonoko lowu wu tirhisa {1}. {2}
+ve: mbekanyamushumo iyi i shumisa {1}. {2}
+af: hierdie program gebruik {1}. {2}
+
+# ---- GCC's grammar words inside messages (term.<english word as GCC writes it>) ------------
+@term.identifier
+en: a name
+zu: igama
+xh: igama
+ss: libito
+nr: ibizo
+st: lebitso
+tn: leina
+nso: leina
+ts: vito
+ve: dzina
+af: 'n naam
+
+@term.declaration
+en: a declaration
+zu: isimemezelo
+xh: isibhengezo
+ss: simemetelo
+nr: isimemezelo
+st: phatlalatso
+tn: kitsiso
+nso: tsebišo
+ts: xitiviso
+ve: nḓivhadzo
+af: 'n verklaring
+
+@term.type-specifier
+en: a type
+zu: uhlobo
+xh: uhlobo
+ss: luhlobo
+nr: uhlobo
+st: mofuta
+tn: mofuta
+nso: mohuta
+ts: muxaka
+ve: lushaka
+af: 'n tipe
+
+@term.expression
+en: an expression
+zu: isisho
+xh: intetho
+ss: sisho
+nr: isitjho
+st: polelo
+tn: polelo
+nso: polelo
+ts: xivulwa
+ve: tshitatamennde
+af: 'n uitdrukking
+
+@term.statement
+en: a statement
+zu: umyalo
+xh: umyalelo
+ss: umyalo
+nr: umyalo
+st: taelo
+tn: taelo
+nso: taelo
+ts: xileriso
+ve: ndaela
+af: 'n opdrag
+
+@term.initializer
+en: a starting value
+zu: inani lokuqala
+xh: ixabiso lokuqala
+ss: linani lekucala
+nr: inani lokuthoma
+st: boleng ba qalo
+tn: boleng jwa ntlha
+nso: boleng bja mathomo
+ts: nkoka wo sungula
+ve: ndeme ya u thoma
+af: 'n beginwaarde

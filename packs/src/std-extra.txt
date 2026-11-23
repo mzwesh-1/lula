@@ -1,0 +1,7 @@
+# More standard-library members that every program can use. Order: zu xh ss nr st tn nso ts ve af
+id: std-extra
+name: Standard library extras
+always: true
+
+[names]
+data: idatha idatha idatha idatha datha datha datha datha datha gegewens

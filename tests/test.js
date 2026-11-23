@@ -177,7 +177,7 @@ if (hasGpp) {
     assert.match(r.stdout, /Lula-1 tree 3/);
   });
   test('robot program compiles against mock Arduino and reacts to sensor', () => {
-    const r = run(['run', path.join(ROOT, 'examples', 'irobhothi.zu.lula'), '--',
+    const r = run(['run', path.join(ROOT, 'examples', 'irobhothi.zu.lula'), '--target', 'host', '--',
       '-include', path.join(__dirname, 'mock', 'Arduino.h')]);
     assert.strictEqual(r.status, 0, r.stderr);
     assert.strictEqual(r.stdout.trim().split('\n').join('|'),
@@ -234,10 +234,12 @@ if (hasGpp) {
     fs.writeFileSync(f, 'inombolo okuyinhloko() {\n    inombolo x = 5\n    buyisa x;\n}\n');
     const r = run(['check', f]);
     assert.notStrictEqual(r.status, 0);
-    assert.match(r.stderr, /iphutha\.zu\.lula:3:5: error/);
-    assert.match(r.stderr, /inombolo okuyinhloko\(\)/);
-    assert.match(r.stderr, /before .buyisa./);
+    assert.match(r.stderr, /iphutha\.zu\.lula:3:5: iphutha: kushoda u-',' noma ';' ngaphambi kuka 'buyisa'/);
+    assert.match(r.stderr, /Emsebenzini 'inombolo okuyinhloko\(\)'/);
+    assert.doesNotMatch(r.stderr, /\berror\b|\bexpected\b|\bbefore\b/);
   });
 } else console.log('  skip (g++ not found)');
+
+require('./packs_messages.test.js')({ test, ROOT, CLI });
 
 console.log(`\n${passed} passed${process.exitCode ? ', some FAILED' : ''}`);

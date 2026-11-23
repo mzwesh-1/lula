@@ -2,7 +2,7 @@
 // Generates docs/<code>.md: a complete reference of every Lula word for each language.
 const fs = require('fs');
 const path = require('path');
-const { listLanguages, loadLanguage } = require('../src/translator');
+const { listLanguages, loadLanguage, loadPacks } = require('../src/translator');
 
 const ROOT = path.join(__dirname, '..');
 const TITLES = {
@@ -26,6 +26,15 @@ for (const { code } of listLanguages()) {
   table('Preprocessor', [...lang.directiveMap], s => `\`#${s}\``);
   table('Header files', [...lang.headerMap], s => `\`<${s}>\``);
   for (const [cat, rows] of Object.entries(lang.library)) table(`Library: ${TITLES[cat] || cat}`, Object.entries(rows));
+  md.push('# Library packs', '', 'A pack switches on when you include one of its headers (in your language or in English).', '');
+  for (const p of loadPacks()) {
+    md.push(`## ${p.name}${p.always ? ' (always on)' : ''}`, '');
+    const hs = Object.entries(p.headers || {});
+    if (hs.length) md.push('Headers: ' + hs.map(([cpp, w]) => `\`#${[...lang.directiveMap].find(([, c]) => c === 'include')[0]} <${w[code]}>\` = \`<${cpp}>\``).join(', '), '');
+    md.push(`| ${lang.name} | C++ |`, '|---|---|');
+    for (const [cpp, w] of Object.entries(p.names)) md.push(`| \`${w[code]}\` | \`${cpp}\` |`);
+    md.push('');
+  }
   fs.writeFileSync(path.join(ROOT, 'docs', `${code}.md`), md.join('\n'));
   console.log(`docs/${code}.md: ${lang.keywordMap.size} keywords, ${lang.directiveMap.size} directives, ${lang.headerMap.size} headers, ${lang.libraryMap.size} library names`);
 }

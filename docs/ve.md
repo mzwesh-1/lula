@@ -446,3 +446,267 @@ Every word below can be used in `.ve.lula` files. Plain English C++ keeps workin
 | `zwi_wanalaho` | `available` |
 | `vhala_baithi` | `read` |
 | `nwala_baithi` | `write` |
+
+# Library packs
+
+A pack switches on when you include one of its headers (in your language or in English).
+
+## Arduino libraries
+
+Headers: `#katela <servo>` = `<Servo.h>`, `#katela <waya>` = `<Wire.h>`, `#katela <bisi_ya_spi>` = `<SPI.h>`, `#katela <memori_i_dzulaho>` = `<EEPROM.h>`
+
+| Tshivenḓa | C++ |
+|---|---|
+| `Tshiservo` | `Servo` |
+| `tumanya` | `attach` |
+| `nwala_maikhrosekhondo` | `writeMicroseconds` |
+| `Waya` | `Wire` |
+| `thoma_u_rumela` | `beginTransmission` |
+| `fhedza_u_rumela` | `endTransmission` |
+| `humbela_kha` | `requestFrom` |
+| `musi_hu_tshi_tanganedzwa` | `onReceive` |
+| `musi_hu_tshi_humbelwa` | `onRequest` |
+| `Bisi_ya_spi` | `SPI` |
+| `fhirisa` | `transfer` |
+| `Memori_i_dzulaho` | `EEPROM` |
+| `dzhenisa_khayo` | `put` |
+| `vusuludza` | `update` |
+
+## Arduino (always on)
+
+| Tshivenḓa | C++ |
+|---|---|
+| `nanga_nga_u_wela` | `random` |
+| `mbeu_ya_u_wela` | `randomSeed` |
+| `linganya_hafhu` | `map` |
+| `ela_phalisi` | `pulseIn` |
+| `phini_u_ya_tshithithisi` | `digitalPinToInterrupt` |
+| `MUSI_I_TSHI_GONYA` | `RISING` |
+| `MUSI_I_TSHI_TSIA` | `FALLING` |
+| `MUSI_I_TSHI_SHANDUKA` | `CHANGE` |
+| `tendela_tshithithisi` | `interrupts` |
+| `thivhela_tshithithisi` | `noInterrupts` |
+| `vhala_nomboro` | `parseInt` |
+| `vhala_desimala` | `parseFloat` |
+| `vhala_manwalwa` | `readString` |
+| `vhala_manwalwa_u_swika` | `readStringUntil` |
+| `i_vhe_nomboro` | `toInt` |
+| `i_vhe_desimala` | `toFloat` |
+| `fhethu_ha` | `indexOf` |
+| `tshipida_tsha_manwalwa` | `substring` |
+| `gera_zwikhala` | `trim` |
+| `i_vhe_maledere_mahulwane` | `toUpperCase` |
+| `i_vhe_maledere_matuku` | `toLowerCase` |
+| `i_thoma_nga` | `startsWith` |
+| `i_fhela_nga` | `endsWith` |
+
+## CUDA
+
+Headers: `#katela <gpu>` = `<cuda_runtime.h>`
+
+| Tshivenḓa | C++ |
+|---|---|
+| `mushumo_wa_gpu` | `__global__` |
+| `zwa_gpu` | `__device__` |
+| `zwa_khomphyutha` | `__host__` |
+| `zwi_kovhekanaho_gpu` | `__shared__` |
+| `lugelanya_dzithambo` | `__syncthreads` |
+| `nomboro_ya_thambo` | `threadIdx` |
+| `nomboro_ya_bloko` | `blockIdx` |
+| `vhuhulu_ha_bloko` | `blockDim` |
+| `vhuhulu_ha_gridi` | `gridDim` |
+| `vhuhulu3` | `dim3` |
+| `gpu_kovhela_memori` | `cudaMalloc` |
+| `gpu_vhofholola_memori` | `cudaFree` |
+| `gpu_kopa_memori` | `cudaMemcpy` |
+| `U_BVA_KHOMPHYUTHA_U_YA_GPU` | `cudaMemcpyHostToDevice` |
+| `U_BVA_GPU_U_YA_KHOMPHYUTHA` | `cudaMemcpyDeviceToHost` |
+| `gpu_lindela_i_fhedze` | `cudaDeviceSynchronize` |
+| `gpu_vhukhakhi_ha_magumo` | `cudaGetLastError` |
+| `gpu_manwalwa_a_vhukhakhi` | `cudaGetErrorString` |
+| `Vhukhakhi_ha_gpu` | `cudaError_t` |
+| `GPU_ZWO_BUDEKA` | `cudaSuccess` |
+
+## Eigen
+
+Headers: `#katela <dzimatriki>` = `<Eigen/Dense>`, `#katela <dzimatriki_mutheo>` = `<Eigen/Core>`, `#katela <dzhiomethri>` = `<Eigen/Geometry>`
+
+| Tshivenḓa | C++ |
+|---|---|
+| `dzimatriki` | `Eigen` |
+| `Matiriki` | `Eigen::MatrixXd` |
+| `Vekitha` | `Eigen::VectorXd` |
+| `Matiriki3` | `Eigen::Matrix3d` |
+| `Matiriki4` | `Eigen::Matrix4d` |
+| `Vekitha3` | `Eigen::Vector3d` |
+| `Matiriki_ya_lushaka` | `Eigen::Matrix` |
+| `Khwathenioni` | `Eigen::Quaterniond` |
+| `Khona_na_ekisisi` | `Eigen::AngleAxisd` |
+| `Vhuthihi` | `Identity` |
+| `Ziro` | `Zero` |
+| `Zwothe_ndi_nthihi` | `Ones` |
+| `Nga_u_wela` | `Random` |
+| `shandukisa_matiriki` | `transpose` |
+| `zwi_fhambanaho` | `inverse` |
+| `phetho_ya_matiriki` | `determinant` |
+| `vhulapfu_ha_vekitha` | `norm` |
+| `yo_lingananywa` | `normalized` |
+| `mbveledzo_ya_tshitondo` | `dot` |
+| `mbveledzo_ya_tshifhambano` | `cross` |
+| `tandulula` | `solve` |
+| `khethekanya_qr` | `colPivHouseholderQr` |
+| `zwi_tou_lingana` | `isApprox` |
+| `Ekisisi_X` | `UnitX` |
+| `Ekisisi_Y` | `UnitY` |
+| `Ekisisi_Z` | `UnitZ` |
+| `i_vhe_matiriki` | `matrix` |
+
+## OpenCV
+
+Headers: `#katela <mbono>` = `<opencv2/opencv.hpp>`, `#katela <mbono_mutheo>` = `<opencv2/core.hpp>`, `#katela <mbono_zwifanyiso>` = `<opencv2/imgproc.hpp>`, `#katela <mbono_mafasitere>` = `<opencv2/highgui.hpp>`, `#katela <mbono_vidio>` = `<opencv2/videoio.hpp>`, `#katela <mbono_u_wana_zwithu>` = `<opencv2/objdetect.hpp>`
+
+| Tshivenḓa | C++ |
+|---|---|
+| `mbono` | `cv` |
+| `Tshifanyiso` | `cv::Mat` |
+| `vhala_tshifanyiso` | `cv::imread` |
+| `vhulunga_tshifanyiso` | `cv::imwrite` |
+| `sumbedza_tshifanyiso` | `cv::imshow` |
+| `lindela_khii` | `cv::waitKey` |
+| `sika_fasitere` | `cv::namedWindow` |
+| `vala_mafasitere_othe` | `cv::destroyAllWindows` |
+| `shandukisa_muvhala` | `cv::cvtColor` |
+| `MUVHALA_U_YA_GRAYI` | `cv::COLOR_BGR2GRAY` |
+| `MUVHALA_U_YA_HSV` | `cv::COLOR_BGR2HSV` |
+| `MUVHALA_U_YA_RGB` | `cv::COLOR_BGR2RGB` |
+| `dzumbisa` | `cv::GaussianBlur` |
+| `wana_mathungo` | `cv::Canny` |
+| `mukano_wa_u_khethekanya` | `cv::threshold` |
+| `MUKANO_WA_ZWIVHILI` | `cv::THRESH_BINARY` |
+| `shandukisa_vhuhulu_ha_tshifanyiso` | `cv::resize` |
+| `ola_tshikwea` | `cv::rectangle` |
+| `ola_tshitenga` | `cv::circle` |
+| `ola_mutalo` | `cv::line` |
+| `nwala_kha_tshifanyiso` | `cv::putText` |
+| `Phoindi` | `cv::Point` |
+| `Vhuphara_na_vhulapfu` | `cv::Size` |
+| `Ndeme_ya_muvhala` | `cv::Scalar` |
+| `Fhethu_ha_tshifanyiso` | `cv::Rect` |
+| `Khamera` | `cv::VideoCapture` |
+| `yo_vulwa` | `isOpened` |
+| `mitalo` | `rows` |
+| `dzikholomo` | `cols` |
+| `dzikanala` | `channels` |
+| `ita_khophi` | `clone` |
+| `kopela_kha` | `copyTo` |
+| `wana_zwivhumbeo` | `cv::findContours` |
+| `ola_zwivhumbeo` | `cv::drawContours` |
+| `fhethu_ha_tshivhumbeo` | `cv::contourArea` |
+| `ngomu_ha_mukano` | `cv::inRange` |
+| `Mukhethululi` | `cv::CascadeClassifier` |
+| `wana_zwithu` | `detectMultiScale` |
+| `hwala` | `load` |
+| `VHALA_NGA_MUVHALA` | `cv::IMREAD_COLOR` |
+| `VHALA_NGA_GRAYI` | `cv::IMREAD_GRAYSCALE` |
+| `FONTO_I_LEDZANAHO` | `cv::FONT_HERSHEY_SIMPLEX` |
+| `Phikisele` | `cv::Vec3b` |
+| `zwo_dala_nga_0` | `zeros` |
+| `zwo_dala_nga_1` | `ones` |
+| `ZWIVHUMBEO_ZWA_NNDA` | `cv::RETR_EXTERNAL` |
+| `ZWIVHUMBEO_ZWI_LEDZANAHO` | `cv::CHAIN_APPROX_SIMPLE` |
+| `bogisi_lo_monaho` | `cv::boundingRect` |
+| `MUVHALA_8BIT_3` | `CV_8UC3` |
+| `vhuphara` | `width` |
+| `vhulapfu_ha_ntha` | `height` |
+
+## ROS 2
+
+Headers: `#katela <ros2>` = `<rclcpp/rclcpp.hpp>`, `#katela <mulaedza_wa_manwalwa>` = `<std_msgs/msg/string.hpp>`, `#katela <mulaedza_wa_nomboro>` = `<std_msgs/msg/int32.hpp>`, `#katela <mulaedza_wa_desimala>` = `<std_msgs/msg/float64.hpp>`, `#katela <mulaedza_wa_buliani>` = `<std_msgs/msg/bool.hpp>`, `#katela <ndaela_ya_tshimbilo>` = `<geometry_msgs/msg/twist.hpp>`, `#katela <sikena_ya_laser>` = `<sensor_msgs/msg/laser_scan.hpp>`, `#katela <tshifanyiso_tsha_sensa>` = `<sensor_msgs/msg/image.hpp>`
+
+| Tshivenḓa | C++ |
+|---|---|
+| `ros` | `rclcpp` |
+| `thoma_ros` | `rclcpp::init` |
+| `vala_ros` | `rclcpp::shutdown` |
+| `tshimbidza_ros` | `rclcpp::spin` |
+| `tshimbidza_ros_zwituku` | `rclcpp::spin_some` |
+| `ros_i_kha_di_tshila` | `rclcpp::ok` |
+| `Fundo` | `rclcpp::Node` |
+| `Mutandavhudzi` | `rclcpp::Publisher` |
+| `Nwaliso` | `rclcpp::Subscription` |
+| `Tshivhali_tsha_tshifhinga` | `rclcpp::TimerBase` |
+| `sika_mutandavhudzi` | `create_publisher` |
+| `sika_nwaliso` | `create_subscription` |
+| `sika_tshivhali_tsha_tshifhinga` | `create_wall_timer` |
+| `andadza` | `publish` |
+| `munwali_wa_mafhungo` | `get_logger` |
+| `ROS_MAFHUNGO` | `RCLCPP_INFO` |
+| `ROS_TSEVHUDZO` | `RCLCPP_WARN` |
+| `ROS_VHUKHAKHI` | `RCLCPP_ERROR` |
+| `Tsumbi` | `SharedPtr` |
+| `datha` | `data` |
+| `zwo_livhaho` | `linear` |
+| `u_mona` | `angular` |
+| `zwikhala` | `ranges` |
+| `divhadza_pharamitha` | `declare_parameter` |
+| `wana_pharamitha` | `get_parameter` |
+| `mulaedza_wa_manwalwa` | `std_msgs::msg::String` |
+| `mulaedza_wa_nomboro` | `std_msgs::msg::Int32` |
+| `mulaedza_wa_desimala` | `std_msgs::msg::Float64` |
+| `mulaedza_wa_buliani` | `std_msgs::msg::Bool` |
+| `ndaela_ya_tshimbilo` | `geometry_msgs::msg::Twist` |
+| `sikena_ya_laser` | `sensor_msgs::msg::LaserScan` |
+| `tshifanyiso_tsha_sensa` | `sensor_msgs::msg::Image` |
+
+## Standard library extras (always on)
+
+| Tshivenḓa | C++ |
+|---|---|
+| `datha` | `data` |
+
+## PyTorch (libtorch)
+
+Headers: `#katela <u_guda_ha_mitshini>` = `<torch/torch.h>`
+
+| Tshivenḓa | C++ |
+|---|---|
+| `u_guda_ha_mitshini` | `torch` |
+| `Thensa` | `torch::Tensor` |
+| `ita_thensa` | `torch::tensor` |
+| `zwo_dala_nga_0` | `torch::zeros` |
+| `zwo_dala_nga_1` | `torch::ones` |
+| `thensa_nga_u_wela` | `torch::rand` |
+| `thensa_nga_u_wela_yo_dowelea` | `torch::randn` |
+| `vhea_mbeu` | `torch::manual_seed` |
+| `Tshipida_tsha_netiweke` | `torch::nn::Module` |
+| `Lwalo_lwo_livhaho` | `torch::nn::Linear` |
+| `Lwalo_lwa_vhutanganyi2d` | `torch::nn::Conv2d` |
+| `tshivusi_relu` | `torch::relu` |
+| `logo_ya_khonadzeo` | `torch::log_softmax` |
+| `ndozwo_ya_skwea` | `torch::mse_loss` |
+| `ndozwo_ya_khonadzeo` | `torch::nll_loss` |
+| `Khwiniso_SGD` | `torch::optim::SGD` |
+| `Khwiniso_Adam` | `torch::optim::Adam` |
+| `Tshishumiswa` | `torch::Device` |
+| `KHA_GPU` | `torch::kCUDA` |
+| `KHA_CPU` | `torch::kCPU` |
+| `gpu_i_hone` | `torch::cuda::is_available` |
+| `vhulunga_modele` | `torch::save` |
+| `hwala_modele` | `torch::load` |
+| `Mulindi_wa_u_sa_gudi` | `torch::NoGradGuard` |
+| `nwalisa_tshipida` | `register_module` |
+| `fhirisela_phanda` | `forward` |
+| `humela_murahu` | `backward` |
+| `phumula_u_kotama` | `zero_grad` |
+| `dzhia_khwatha` | `step` |
+| `isa_kha` | `to` |
+| `ndeme_nthihi` | `item` |
+| `vhona_sa` | `view` |
+| `shandukisa_tshivhumbeo` | `reshape` |
+| `andza_dzimatiriki` | `matmul` |
+| `tshivhalo_tsha_thensa` | `sum` |
+| `tshikalo_tsha_thensa` | `mean` |
+| `tsumbo_khulwane` | `argmax` |
+| `dzipharamitha` | `parameters` |
+| `gudisa` | `train` |
+| `sedza_modele` | `eval` |

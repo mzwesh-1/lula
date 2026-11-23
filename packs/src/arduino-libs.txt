@@ -1,0 +1,26 @@
+# Arduino libraries: Servo, Wire (I2C), SPI, EEPROM. On when the header is included.
+# Order: zu xh ss nr st tn nso ts ve af
+id: arduino-libs
+name: Arduino libraries
+
+[headers]
+Servo.h: iservo iservo iservo iservo servo servo servo servo servo servo
+Wire.h: ucingo ucingo lucingo ucingo terata terata terata waya waya kabel
+SPI.h: ibhasi_spi ibhasi_spi libhasi_spi ibhasi_spi bese_ya_spi bese_ya_spi bese_ya_spi bazi_ya_spi bisi_ya_spi spi_bus
+EEPROM.h: inkumbulo_ehlalayo inkumbulo_ehlalayo inkhumbulo_lehlalako ikhumbulo_ehlalako memori_e_dulang memori_e_nnelang memori_ye_dulago memori_leyi_tshamaka memori_i_dzulaho permanente_geheue
+
+[names]
+Servo: Iservo Iservo Iservo Iservo Seservo Seservo Seservo Xiservo Tshiservo Servomotor
+attach: xhuma qhagamshela xhuma bopha_ephinini hokela golaganya kgokaganya khomanisa tumanya koppel
+writeMicroseconds: bhala_amamayikhrosekhondi bhala_iimayikhrosekondi bhala_emamayikhrosekhondi tlola_amamayikhrosekhondi ngola_dimaekhrosekonde kwala_dimaekerosekonte ngwala_dimaekrosekhontse tsala_timaykhrosekoni nwala_maikhrosekhondo skryf_mikrosekondes
+Wire: Ucingo Ucingo Lucingo Ucingo Terata Terata Terata Waya Waya Kabel
+beginTransmission: qala_ukuthumela qala_ukuthumela cala_kutfumela thoma_ukuthumela qala_ho_romela simolola_go_romela thoma_go_romela sungula_ku_rhumela thoma_u_rumela begin_stuur
+endTransmission: qeda_ukuthumela gqiba_ukuthumela ceda_kutfumela qeda_ukuthumela qetela_ho_romela fetsa_go_romela fetša_go_romela hetisa_ku_rhumela fhedza_u_rumela klaar_stuur
+requestFrom: cela_ku cela_ku cela_ku bawa_ku kopa_ho kopa_go kgopela_go kombela_eka humbela_kha vra_van
+onReceive: uma_kutholwa xa_kufunyenwe nakutfolwa nakwamukelwa ha_ho_amohelwa fa_go_amogelwa ge_go_amogelwa loko_ku_amukeriwa musi_hu_tshi_tanganedzwa by_ontvangs
+onRequest: uma_kucelwa xa_kuceliwe nakucelwa nakubawa ha_ho_kopuwa fa_go_kopiwa ge_go_kgopelwa loko_ku_kombeliwa musi_hu_tshi_humbelwa by_versoek
+SPI: Ibhasi_spi Ibhasi_spi Libhasi_spi Ibhasi_spi Bese_ya_spi Bese_ya_spi Bese_ya_spi Bazi_ya_spi Bisi_ya_spi Spi_bus
+transfer: dlulisa dlulisa dlulisa dlulisa fetisetsa fetisetsa fetišetša hundzisa fhirisa oordra
+EEPROM: Inkumbulo_ehlalayo Inkumbulo_ehlalayo Inkhumbulo_lehlalako Ikhumbulo_ehlalako Memori_e_dulang Memori_e_nnelang Memori_ye_dulago Memori_leyi_tshamaka Memori_i_dzulaho Permanente_geheue
+put: faka_kuyo faka_kuyo faka_kuyo faka_kuyo kenya_ho_yona tsenya_mo_go_yona tsenya_go_yona nghenisa_eka_yona dzhenisa_khayo plaas_in
+update: buyekeza hlaziya vuselela vuselela ntjhafatsa ntšhafatsa mpshafatša pfuxeta vusuludza bywerk

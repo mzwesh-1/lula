@@ -1,0 +1,40 @@
+// Ukufunda komshini nge-PyTorch (libtorch): fundisa inethiwekhi ukuthi y = 2x + 1.
+// Machine learning with PyTorch's C++ API: teach a network that y = 2x + 1.
+//   export LIBTORCH=/path/to/libtorch && lula run examples/ukufunda.zu.lula
+#faka <ukufunda_komshini>
+#faka <okokufaka_nokukhipha>
+
+isakhiwo Inethiwekhi : Ingxenye_yenethiwekhi {
+    Ungqimba_oluqondile ungqimba1{lutho}, ungqimba2{lutho};
+    Inethiwekhi() {
+        ungqimba1 = bhalisa_ingxenye("ungqimba1", Ungqimba_oluqondile(1, 16));
+        ungqimba2 = bhalisa_ingxenye("ungqimba2", Ungqimba_oluqondile(16, 1));
+    }
+    Ithensa dlulisela_phambili(Ithensa x) {
+        buyisa ungqimba2->dlulisela_phambili(isivuseleli_relu(ungqimba1->dlulisela_phambili(x)));
+    }
+};
+
+inombolo okuyinhloko() {
+    setha_imbewu(42);
+    Idivayisi idivayisi = igpu_ikhona() ? KU_GPU : KU_CPU;
+    Inethiwekhi inethiwekhi;
+    inethiwekhi.yisa_ku(idivayisi);
+
+    Ithensa x = ithensa_engahleliwe({64, 1}).yisa_ku(idivayisi) * 4 - 2;
+    Ithensa y = 2 * x + 1;
+    Isithuthukisi_Adam isithuthukisi(inethiwekhi.amapharamitha(), 0.05);
+
+    jikeleza (inombolo inkathi = 1; inkathi <= 300; inkathi++) {
+        isithuthukisi.sula_ukuthambekela();
+        Ithensa ukulahlekelwa = ukulahlekelwa_kwesikwele(inethiwekhi.dlulisela_phambili(x), y);
+        ukulahlekelwa.buyela_emuva();
+        isithuthukisi.thatha_isinyathelo();
+        uma (inkathi % 100 == 0) bhala << "inkathi " << inkathi << ": ukulahlekelwa = " << ukulahlekelwa.inani_elilodwa<idesimali>() << umugqa;
+    }
+
+    Umqaphi_ongafundi umqaphi;
+    Ithensa ukuhlola = yenza_ithensa({{0.5f}}).yisa_ku(idivayisi);
+    bhala << "f(0.5) = " << inethiwekhi.dlulisela_phambili(ukuhlola).inani_elilodwa<idesimali>() << " (kufanele kube ngu-2)" << umugqa;
+    buyisa 0;
+}

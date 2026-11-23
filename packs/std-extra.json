@@ -1,0 +1,20 @@
+{
+  "id": "std-extra",
+  "name": "Standard library extras",
+  "always": true,
+  "headers": {},
+  "names": {
+    "data": {
+      "zu": "idatha",
+      "xh": "idatha",
+      "ss": "idatha",
+      "nr": "idatha",
+      "st": "datha",
+      "tn": "datha",
+      "nso": "datha",
+      "ts": "datha",
+      "ve": "datha",
+      "af": "gegewens"
+    }
+  }
+}

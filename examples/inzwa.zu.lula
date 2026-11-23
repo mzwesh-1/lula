@@ -1,0 +1,63 @@
+// Inzwa yokushisa nge-I2C: funda, khumbula, futhi ubonise. (Temperature sensor over I2C.)
+// Yakhele i-Arduino Uno:   lula arduino examples/inzwa.zu.lula --board uno
+#faka <ucingo>
+#faka <inkumbulo_ehlalayo>
+
+ngaphambili ongenaphawu8 IKHELI_LENZWA = 0x48;   // I2C address of the sensor
+ngaphambili inombolo IPHINI_LED = ILED_EYAKHIWE;
+ngaphambili inombolo IPHINI_INKINOBHO = 2;
+
+okuguquguqukayo ibhuli kucindezelwe = amanga;
+inombolo umkhawulo_wokushisa = 30;
+
+ize uma_kucindezelwa() { kucindezelwe = iqiniso; }
+
+inombolo funda_ukushisa() {
+    Ucingo.qala_ukuthumela(IKHELI_LENZWA);
+    Ucingo.bhala_ibhayithi(0x00);
+    Ucingo.qeda_ukuthumela();
+    Ucingo.cela_ku(IKHELI_LENZWA, 2);
+    uma (Ucingo.kutholakalayo() < 2) buyisa -1;
+    inombolo okuphezulu_kwebhayithi = Ucingo.funda_ibhayithi();
+    Ucingo.funda_ibhayithi();
+    buyisa okuphezulu_kwebhayithi;
+}
+
+ize qala() {
+    Isiriyeli.ukuqala(9600);
+    Ucingo.ukuqala();
+    setha_iphini(IPHINI_LED, OKUPHUMAYO);
+    setha_iphini(IPHINI_INKINOBHO, OKUNGENAYO_KUDONSELWE);
+    namathisela_ukuphazamiseka(iphini_kuya_ekuphazamisekeni(IPHINI_INKINOBHO), uma_kucindezelwa, KUYEHLA);
+    imbewu_yokungahleliwe(funda_ianalogi(0));
+    umkhawulo_wokushisa = Inkumbulo_ehlalayo.funda_ibhayithi(0);
+    uma (umkhawulo_wokushisa == 255) umkhawulo_wokushisa = 30;
+    Isiriyeli.bonisa_umugqa("Sawubona! Bhala umkhawulo omusha (isb. 28):");
+}
+
+ize phindaphinda() {
+    uma (Isiriyeli.kutholakalayo() > 0) {
+        umbhalo umyalo = Isiriyeli.funda_umbhalo_kuze('\n');
+        umyalo.sika_izikhala();
+        uma (umyalo.iqala_ngo("u")) {
+            Isiriyeli.bonisa_umugqa(umyalo.ingxenye_yombhalo(1));
+        } kungenjalo {
+            umkhawulo_wokushisa = vimbela(umyalo.kube_inombolo(), 0, 100);
+            Inkumbulo_ehlalayo.buyekeza(0, umkhawulo_wokushisa);
+            Isiriyeli.bonisa("Umkhawulo omusha: ");
+            Isiriyeli.bonisa_umugqa(umkhawulo_wokushisa);
+        }
+    }
+
+    inombolo ukushisa = funda_ukushisa();
+    inombolo ukukhanya = linganisa_kabusha(ukushisa, 0, 50, 0, 255);
+    bhala_ianalogi(IPHINI_LED, vimbela(ukukhanya, 0, 255));
+
+    uma (kucindezelwe || ukushisa > umkhawulo_wokushisa) {
+        kucindezelwe = amanga;
+        Isiriyeli.bonisa("Ukushisa: ");
+        Isiriyeli.bonisa_umugqa(ukushisa);
+        ithoni(8, 440 + khetha_ngokungahleliwe(0, 200), 100);
+    }
+    linda(500);
+}

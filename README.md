@@ -46,6 +46,50 @@ Full word lists: [docs/zu.md](docs/zu.md), [xh](docs/xh.md), [ss](docs/ss.md), [
 Your own variable, function and class names can be in any language (`inombolo amamaki = 85;`).
 Like C++ keywords, Lula words are **reserved**: you can't name a variable `iqoqo`, because it means `std::vector`.
 
+## Libraries: ROS 2, OpenCV, Eigen, CUDA, PyTorch and Arduino
+
+Lula has **library packs** with names in all ten languages. A pack switches on when you include its header,
+in your language or in English, so its words are only reserved when you use that library.
+
+| Pack | Include (isiZulu) | Example words (isiZulu → C++) | Tested here against |
+|---|---|---|---|
+| ROS 2 | `#faka <ros2>` | `Ifindo` → `rclcpp::Node`, `dala_umsakazi` → `create_publisher`, `sakaza` → `publish` | translation snapshot (ROS 2 not installable here) |
+| OpenCV | `#faka <umbono>` | `Isithombe` → `cv::Mat`, `funda_isithombe` → `imread`, `thola_izinhlaka` → `findContours` | **real OpenCV 4.6** |
+| Eigen | `#faka <amamatriki>` | `Imatriki3` → `Matrix3d`, `okuphambene` → `inverse`, `xazulula` → `solve` | **real Eigen 3.4** |
+| CUDA | `#faka <igpu>` | `umsebenzi_wegpu` → `__global__`, `inombolo_yomucu` → `threadIdx` | translation snapshot (no GPU here) |
+| PyTorch | `#faka <ukufunda_komshini>` | `Ithensa` → `torch::Tensor`, `dlulisela_phambili` → `forward` | **real libtorch 2.5: trains a network** |
+| Arduino | always on, plus `<ucingo>` (Wire), `<iservo>`, `<inkumbulo_ehlalayo>` (EEPROM), SPI | `setha_iphini`, `linganisa_kabusha` (map), `Ucingo.qala_ukuthumela` | **real AVR compiler + Arduino core → .hex** |
+
+```bash
+lula run examples/umbono.zu.lula            # OpenCV: finds and measures shapes
+lula run examples/amamatriki.zu.lula        # Eigen: solves equations, rotates a robot arm
+LIBTORCH=/path/to/libtorch lula run examples/ukufunda.zu.lula   # PyTorch: trains a small network
+lula arduino examples/inzwa.zu.lula --board uno --upload /dev/ttyUSB0   # build a .hex and flash it
+```
+
+`lula build` adds each library's compiler flags automatically (via `pkg-config` for OpenCV and Eigen, and
+`LIBTORCH` for PyTorch). For ROS 2, translate the node into your workspace and run `colcon build`; for CUDA,
+use `--cxx nvcc -- -x cu`.
+
+**Arduino mode.** A file with `setup`/`loop` and no `main` is an Arduino program. Lula then writes Arduino-style
+C++ (Arduino's own `max`, `abs` and `String`), and `lula arduino` builds it for Uno, Nano or Mega.
+
+## Error messages in your language
+
+Compiler errors and warnings, crashes and Lula's own messages are **full sentences in your language**,
+using your language's keywords. For example:
+
+```
+irobhothi.zu.lula:5:5: iphutha: kushoda u-';' noma ',' ngaphambi kuka 'bhala'
+irobhothi.zu.lula:8:7: iphutha: u-'z' akaguquki (engaguquki) futhi angeke ashintshwe
+irobhothi.zu.lula:11:5: iphutha: u-kungenjalo ngaphandle kuka-uma ngaphambi kwakhe
+Lula: uhlelo lwephukile: iphutha lezibalo (kaningi ukwahlukanisa ngo-0)
+```
+
+The catalog is [messages/catalog.txt](messages/catalog.txt). It covers about 45 of the most common GCC errors
+and warnings, linker errors, runtime crashes and uncaught exceptions, in all ten languages. Rarer compiler
+messages are shown in English, with your keywords and type names translated. Use `--msg-lang en` for English.
+
 ## Convert existing C++ (GeeksforGeeks, W3Schools, Arduino) into your language
 
 ```bash
@@ -77,7 +121,7 @@ node bin/lula.js build robot.zu.lula --cxx avr-g++ -- -mmcu=atmega328p -Os
 
 ```bash
 npm run package-extension
-code --install-extension lula-0.4.0.vsix
+code --install-extension lula-0.5.0.vsix
 ```
 
 The extension provides syntax highlighting, hover translations (hover `uma` → C++ `if`), completion, error checking when you save, a ▶ Run button, a live "Show C++" side view, "Export for Arduino", "Convert C++ to Lula", and the SASL sign-video player.

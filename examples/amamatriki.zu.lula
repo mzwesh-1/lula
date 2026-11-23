@@ -1,0 +1,33 @@
+// Amamatriki nge-Eigen: xazulula izibalo zomugqa futhi uphendule irobhothi.
+// Linear algebra with Eigen: solve equations and rotate a robot arm.
+//   lula run examples/amamatriki.zu.lula
+#faka <amamatriki>
+#faka <ijiyomethri>
+#faka <okokufaka_nokukhipha>
+#faka <izibalo>
+
+inombolo okuyinhloko() {
+    // Xazulula: A x = b
+    Imatriki3 A;
+    A << 2, 1, 0,
+         1, 3, 1,
+         0, 1, 4;
+    Ivektha3 b(3, 10, 13);
+    Ivektha3 x = A.hlukanisa_qr().xazulula(b);
+    bhala << "x = " << x.phendula_imatriki() << umugqa;
+    bhala << "isinqumo = " << A.isinqumo() << umugqa;
+
+    Imatriki3 I = A * A.okuphambene();
+    bhala << "A * A^-1 iyi-identity: " << (I.cishe_kuyalingana(Imatriki3::Ubunye()) ? "yebo" : "cha") << umugqa;
+
+    // Ama-vector: ubude, i-dot ne-cross
+    Ivektha3 u(1, 0, 0), v(0, 1, 0);
+    bhala << "u.v = " << u.umphumela_wechashazi(v) << ", u x v = " << u.umkhiqizo_wesiphambano(v).phendula_imatriki() << umugqa;
+    bhala << "ubude = " << Ivektha3(3, 4, 0).ubude_bevektha() << umugqa;
+
+    // Phendula ingalo yerobhothi ngo-90 degrees (rotate a robot arm 90 degrees about z)
+    Ingile_ne_eksisi ukujika(M_PI / 2, Ivektha3::Eksisi_Z());
+    Ivektha3 isandla = ukujika * Ivektha3(1, 0, 0);
+    bhala << "isandla = " << isandla.phendula_imatriki().uhide().sondeza().ibe_imatriki() << umugqa;
+    buyisa 0;
+}

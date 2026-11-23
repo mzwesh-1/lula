@@ -1,6 +1,6 @@
 {
   "name": "lula",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "C++ in South African languages - for robots, embedded systems and PCs",
   "license": "MIT",
   "bin": { "lula": "bin/lula.js" },
@@ -8,7 +8,8 @@
     "test": "node tests/test.js",
     "build-extension": "node scripts/build-extension.js",
     "docs": "node scripts/gen-docs.js",
-    "package-extension": "node scripts/build-extension.js && cd vscode-lula && npx -y @vscode/vsce@3.2.1 package --allow-missing-repository -o ../lula-0.4.0.vsix"
+    "packs": "node scripts/build-packs.js",
+    "package-extension": "node scripts/build-extension.js && cd vscode-lula && npx -y @vscode/vsce@3.2.1 package --allow-missing-repository -o ../lula-0.5.0.vsix"
   },
   "engines": { "node": ">=18" }
 }

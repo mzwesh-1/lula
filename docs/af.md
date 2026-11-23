@@ -446,3 +446,267 @@ Every word below can be used in `.af.lula` files. Plain English C++ keeps workin
 | `beskikbaar` | `available` |
 | `leesgreep` | `read` |
 | `skryfgreep` | `write` |
+
+# Library packs
+
+A pack switches on when you include one of its headers (in your language or in English).
+
+## Arduino libraries
+
+Headers: `#sluitin <servo>` = `<Servo.h>`, `#sluitin <kabel>` = `<Wire.h>`, `#sluitin <spi_bus>` = `<SPI.h>`, `#sluitin <permanente_geheue>` = `<EEPROM.h>`
+
+| Afrikaans | C++ |
+|---|---|
+| `Servomotor` | `Servo` |
+| `koppel` | `attach` |
+| `skryf_mikrosekondes` | `writeMicroseconds` |
+| `Kabel` | `Wire` |
+| `begin_stuur` | `beginTransmission` |
+| `klaar_stuur` | `endTransmission` |
+| `vra_van` | `requestFrom` |
+| `by_ontvangs` | `onReceive` |
+| `by_versoek` | `onRequest` |
+| `Spi_bus` | `SPI` |
+| `oordra` | `transfer` |
+| `Permanente_geheue` | `EEPROM` |
+| `plaas_in` | `put` |
+| `bywerk` | `update` |
+
+## Arduino (always on)
+
+| Afrikaans | C++ |
+|---|---|
+| `kies_lukraak` | `random` |
+| `lukraak_saad` | `randomSeed` |
+| `herskaal` | `map` |
+| `meet_puls` | `pulseIn` |
+| `pen_na_onderbreking` | `digitalPinToInterrupt` |
+| `STYGEND` | `RISING` |
+| `DALEND` | `FALLING` |
+| `VERANDER` | `CHANGE` |
+| `laat_onderbrekings_toe` | `interrupts` |
+| `keer_onderbrekings` | `noInterrupts` |
+| `lees_heelgetal` | `parseInt` |
+| `lees_desimaal` | `parseFloat` |
+| `lees_teks` | `readString` |
+| `lees_teks_tot` | `readStringUntil` |
+| `na_heelgetal` | `toInt` |
+| `na_desimaal` | `toFloat` |
+| `posisie_van` | `indexOf` |
+| `deelteks` | `substring` |
+| `knip` | `trim` |
+| `na_hoofletters` | `toUpperCase` |
+| `na_kleinletters` | `toLowerCase` |
+| `begin_met` | `startsWith` |
+| `eindig_met` | `endsWith` |
+
+## CUDA
+
+Headers: `#sluitin <gpu>` = `<cuda_runtime.h>`
+
+| Afrikaans | C++ |
+|---|---|
+| `gpu_kern` | `__global__` |
+| `op_gpu` | `__device__` |
+| `op_rekenaar` | `__host__` |
+| `gedeel_gpu` | `__shared__` |
+| `sinkroniseer_drade` | `__syncthreads` |
+| `draadnommer` | `threadIdx` |
+| `bloknommer` | `blockIdx` |
+| `blokgrootte` | `blockDim` |
+| `roostergrootte` | `gridDim` |
+| `grootte3` | `dim3` |
+| `gpu_ken_geheue_toe` | `cudaMalloc` |
+| `gpu_maak_geheue_vry` | `cudaFree` |
+| `gpu_kopieer_geheue` | `cudaMemcpy` |
+| `REKENAAR_NA_GPU` | `cudaMemcpyHostToDevice` |
+| `GPU_NA_REKENAAR` | `cudaMemcpyDeviceToHost` |
+| `gpu_wag_tot_klaar` | `cudaDeviceSynchronize` |
+| `gpu_laaste_fout` | `cudaGetLastError` |
+| `gpu_fout_teks` | `cudaGetErrorString` |
+| `Gpu_fout` | `cudaError_t` |
+| `GPU_SUKSES` | `cudaSuccess` |
+
+## Eigen
+
+Headers: `#sluitin <matrikse>` = `<Eigen/Dense>`, `#sluitin <matrikse_kern>` = `<Eigen/Core>`, `#sluitin <meetkunde>` = `<Eigen/Geometry>`
+
+| Afrikaans | C++ |
+|---|---|
+| `matrikse` | `Eigen` |
+| `Matriks` | `Eigen::MatrixXd` |
+| `Vektor` | `Eigen::VectorXd` |
+| `Matriks3` | `Eigen::Matrix3d` |
+| `Matriks4` | `Eigen::Matrix4d` |
+| `Vektor3` | `Eigen::Vector3d` |
+| `Matriks_van_tipe` | `Eigen::Matrix` |
+| `Kwaternioon` | `Eigen::Quaterniond` |
+| `Hoek_en_as` | `Eigen::AngleAxisd` |
+| `Identiteit` | `Identity` |
+| `Nul` | `Zero` |
+| `Ene` | `Ones` |
+| `Lukraak` | `Random` |
+| `transponeer` | `transpose` |
+| `omgekeerde` | `inverse` |
+| `bepaler` | `determinant` |
+| `lengte_van` | `norm` |
+| `genormaliseer` | `normalized` |
+| `puntproduk` | `dot` |
+| `kruisproduk` | `cross` |
+| `los_op` | `solve` |
+| `qr_ontbinding` | `colPivHouseholderQr` |
+| `ongeveer_gelyk` | `isApprox` |
+| `As_X` | `UnitX` |
+| `As_Y` | `UnitY` |
+| `As_Z` | `UnitZ` |
+| `as_matriks` | `matrix` |
+
+## OpenCV
+
+Headers: `#sluitin <rekenaarvisie>` = `<opencv2/opencv.hpp>`, `#sluitin <visie_kern>` = `<opencv2/core.hpp>`, `#sluitin <visie_beelde>` = `<opencv2/imgproc.hpp>`, `#sluitin <visie_vensters>` = `<opencv2/highgui.hpp>`, `#sluitin <visie_video>` = `<opencv2/videoio.hpp>`, `#sluitin <visie_objekte>` = `<opencv2/objdetect.hpp>`
+
+| Afrikaans | C++ |
+|---|---|
+| `rekenaarvisie` | `cv` |
+| `Beeld` | `cv::Mat` |
+| `lees_beeld` | `cv::imread` |
+| `stoor_beeld` | `cv::imwrite` |
+| `wys_beeld` | `cv::imshow` |
+| `wag_sleutel` | `cv::waitKey` |
+| `skep_venster` | `cv::namedWindow` |
+| `sluit_alle_vensters` | `cv::destroyAllWindows` |
+| `skakel_kleur_om` | `cv::cvtColor` |
+| `KLEUR_NA_GRYS` | `cv::COLOR_BGR2GRAY` |
+| `KLEUR_NA_HSV` | `cv::COLOR_BGR2HSV` |
+| `KLEUR_NA_RGB` | `cv::COLOR_BGR2RGB` |
+| `vervaag` | `cv::GaussianBlur` |
+| `vind_rande` | `cv::Canny` |
+| `drempel` | `cv::threshold` |
+| `DREMPEL_BINÊR` | `cv::THRESH_BINARY` |
+| `verander_beeldgrootte` | `cv::resize` |
+| `teken_reghoek` | `cv::rectangle` |
+| `teken_sirkel` | `cv::circle` |
+| `teken_lyn` | `cv::line` |
+| `skryf_op_beeld` | `cv::putText` |
+| `Punt` | `cv::Point` |
+| `Grootte` | `cv::Size` |
+| `Kleurwaarde` | `cv::Scalar` |
+| `Reghoekgebied` | `cv::Rect` |
+| `Kamera` | `cv::VideoCapture` |
+| `is_oopgemaak` | `isOpened` |
+| `rye` | `rows` |
+| `kolomme` | `cols` |
+| `kanale` | `channels` |
+| `kloon` | `clone` |
+| `kopieer_na` | `copyTo` |
+| `vind_kontoere` | `cv::findContours` |
+| `teken_kontoere` | `cv::drawContours` |
+| `kontoerarea` | `cv::contourArea` |
+| `binne_bereik` | `cv::inRange` |
+| `Klassifiseerder` | `cv::CascadeClassifier` |
+| `vind_objekte` | `detectMultiScale` |
+| `laai` | `load` |
+| `LEES_IN_KLEUR` | `cv::IMREAD_COLOR` |
+| `LEES_IN_GRYS` | `cv::IMREAD_GRAYSCALE` |
+| `EENVOUDIGE_LETTERTIPE` | `cv::FONT_HERSHEY_SIMPLEX` |
+| `Pixel` | `cv::Vec3b` |
+| `nulle_vol` | `zeros` |
+| `ene_vol` | `ones` |
+| `BUITENSTE_KONTOERE` | `cv::RETR_EXTERNAL` |
+| `EENVOUDIGE_KONTOERE` | `cv::CHAIN_APPROX_SIMPLE` |
+| `omringende_reghoek` | `cv::boundingRect` |
+| `KLEUR_8BIT_3` | `CV_8UC3` |
+| `breedte` | `width` |
+| `hoogte` | `height` |
+
+## ROS 2
+
+Headers: `#sluitin <ros2>` = `<rclcpp/rclcpp.hpp>`, `#sluitin <teksboodskap>` = `<std_msgs/msg/string.hpp>`, `#sluitin <heelgetalboodskap>` = `<std_msgs/msg/int32.hpp>`, `#sluitin <desimaalboodskap>` = `<std_msgs/msg/float64.hpp>`, `#sluitin <booleboodskap>` = `<std_msgs/msg/bool.hpp>`, `#sluitin <snelheidsbevel>` = `<geometry_msgs/msg/twist.hpp>`, `#sluitin <laserskandering>` = `<sensor_msgs/msg/laser_scan.hpp>`, `#sluitin <sensorbeeld>` = `<sensor_msgs/msg/image.hpp>`
+
+| Afrikaans | C++ |
+|---|---|
+| `ros` | `rclcpp` |
+| `begin_ros` | `rclcpp::init` |
+| `sluit_ros` | `rclcpp::shutdown` |
+| `draai_ros` | `rclcpp::spin` |
+| `draai_ros_bietjie` | `rclcpp::spin_some` |
+| `ros_leef` | `rclcpp::ok` |
+| `Nodus` | `rclcpp::Node` |
+| `Uitsaaier` | `rclcpp::Publisher` |
+| `Intekening` | `rclcpp::Subscription` |
+| `Tydhouer` | `rclcpp::TimerBase` |
+| `skep_uitsaaier` | `create_publisher` |
+| `skep_intekening` | `create_subscription` |
+| `skep_tydhouer` | `create_wall_timer` |
+| `publiseer` | `publish` |
+| `logboek` | `get_logger` |
+| `ROS_INLIGTING` | `RCLCPP_INFO` |
+| `ROS_WAARSKUWING` | `RCLCPP_WARN` |
+| `ROS_FOUT` | `RCLCPP_ERROR` |
+| `Wyser` | `SharedPtr` |
+| `gegewens` | `data` |
+| `lineêr` | `linear` |
+| `hoekig` | `angular` |
+| `afstande` | `ranges` |
+| `verklaar_parameter` | `declare_parameter` |
+| `kry_parameter` | `get_parameter` |
+| `teksboodskap` | `std_msgs::msg::String` |
+| `heelgetalboodskap` | `std_msgs::msg::Int32` |
+| `desimaalboodskap` | `std_msgs::msg::Float64` |
+| `booleboodskap` | `std_msgs::msg::Bool` |
+| `snelheidsbevel` | `geometry_msgs::msg::Twist` |
+| `laserskandering` | `sensor_msgs::msg::LaserScan` |
+| `sensorbeeld` | `sensor_msgs::msg::Image` |
+
+## Standard library extras (always on)
+
+| Afrikaans | C++ |
+|---|---|
+| `gegewens` | `data` |
+
+## PyTorch (libtorch)
+
+Headers: `#sluitin <masjienleer>` = `<torch/torch.h>`
+
+| Afrikaans | C++ |
+|---|---|
+| `masjienleer` | `torch` |
+| `Tensoor` | `torch::Tensor` |
+| `maak_tensoor` | `torch::tensor` |
+| `nulle_vol` | `torch::zeros` |
+| `ene_vol` | `torch::ones` |
+| `lukraak_tensoor` | `torch::rand` |
+| `normaal_lukraak_tensoor` | `torch::randn` |
+| `stel_saad` | `torch::manual_seed` |
+| `Netwerkmodule` | `torch::nn::Module` |
+| `Lineêre_laag` | `torch::nn::Linear` |
+| `Konvolusielaag2d` | `torch::nn::Conv2d` |
+| `aktiveer_relu` | `torch::relu` |
+| `log_waarskynlikhede` | `torch::log_softmax` |
+| `gemiddelde_kwadraatverlies` | `torch::mse_loss` |
+| `waarskynlikheidsverlies` | `torch::nll_loss` |
+| `Optimeerder_SGD` | `torch::optim::SGD` |
+| `Optimeerder_Adam` | `torch::optim::Adam` |
+| `Toestel` | `torch::Device` |
+| `OP_GPU` | `torch::kCUDA` |
+| `OP_CPU` | `torch::kCPU` |
+| `gpu_beskikbaar` | `torch::cuda::is_available` |
+| `stoor_model` | `torch::save` |
+| `laai_model` | `torch::load` |
+| `Geen_gradient_wag` | `torch::NoGradGuard` |
+| `registreer_module` | `register_module` |
+| `vorentoe` | `forward` |
+| `agtertoe` | `backward` |
+| `nul_gradiente` | `zero_grad` |
+| `neem_stap` | `step` |
+| `stuur_na` | `to` |
+| `enkelwaarde` | `item` |
+| `bekyk_as` | `view` |
+| `hervorm` | `reshape` |
+| `matriksvermenigvuldig` | `matmul` |
+| `som_van` | `sum` |
+| `gemiddeld_van` | `mean` |
+| `grootste_indeks` | `argmax` |
+| `parameterlys` | `parameters` |
+| `oefen` | `train` |
+| `evalueer` | `eval` |

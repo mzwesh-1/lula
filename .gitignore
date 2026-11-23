@@ -3,3 +3,4 @@ node_modules/
 vscode-lula/lib/
 vscode-lula/LICENSE
 examples/*/
+*.hex

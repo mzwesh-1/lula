@@ -1,0 +1,38 @@
+# Eigen (matrices and linear algebra). On when an Eigen header is included.
+# Order: zu xh ss nr st tn nso ts ve af
+id: eigen
+name: Eigen
+
+[headers]
+Eigen/Dense: amamatriki iimatriki ematriki iimatriki dimatriki dimatrikisi dimatriki timatriki dzimatriki matrikse
+Eigen/Core: amamatriki_isisekelo iimatriki_isiseko ematriki_sisekelo iimatriki_isisekelo dimatriki_motheo dimatrikisi_motheo dimatriki_motheo timatriki_masungulo dzimatriki_mutheo matrikse_kern
+Eigen/Geometry: ijiyomethri ijiyometri jiyomethri ijiyomethri jeometri jeometri jeometri jiyometiri dzhiomethri meetkunde
+
+[names]
+Eigen: amamatriki iimatriki ematriki iimatriki dimatriki dimatrikisi dimatriki timatriki dzimatriki matrikse
+Eigen::MatrixXd: Imatriki Imatriki Imatriki Imatriki Matriki Matrikisi Matriki Matriki Matiriki Matriks
+Eigen::VectorXd: Ivektha Ivektha Livektha Ivektha Vekthara Vekethara Bekthara Vhekitara Vekitha Vektor
+Eigen::Matrix3d: Imatriki3 Imatriki3 Imatriki3 Imatriki3 Matriki3 Matrikisi3 Matriki3 Matriki3 Matiriki3 Matriks3
+Eigen::Matrix4d: Imatriki4 Imatriki4 Imatriki4 Imatriki4 Matriki4 Matrikisi4 Matriki4 Matriki4 Matiriki4 Matriks4
+Eigen::Vector3d: Ivektha3 Ivektha3 Livektha3 Ivektha3 Vekthara3 Vekethara3 Bekthara3 Vhekitara3 Vekitha3 Vektor3
+Eigen::Matrix: Imatriki_yohlobo Imatriki_yohlobo Imatriki_yeluhlobo Imatriki_yohlobo Matriki_ya_mofuta Matrikisi_ya_mofuta Matriki_ya_mohuta Matriki_ya_muxaka Matiriki_ya_lushaka Matriks_van_tipe
+Eigen::Quaterniond: Ikhwatheniyoni Ikhwatheniyoni Ikhwatheniyoni Ikhwatheniyoni Kwatheniono Kwatheniono Kwatheniono Khwatheniyoni Khwathenioni Kwaternioon
+Eigen::AngleAxisd: Ingile_ne_eksisi Ikona_ne_eksisi Ingila_ne_eksisi Ingili_ne_eksisi Khutlo_le_ekese Khutlo_le_ekese Khutlo_le_ekese Engele_ni_ekisisi Khona_na_ekisisi Hoek_en_as
+Identity: Ubunye Ubunye Bunye Ubunye Bonngwe Bongwe Botee Vunwe Vhuthihi Identiteit
+Zero: Uziro Uziro Lizero Iziro Ziro Ziro Ziro Ziro Ziro Nul
+Ones: Konke_kunye Zonke_zinye Konkhe_kunye Koke_kunye Kaofela_ke_nngwe Tsotlhe_ke_nngwe Ka_moka_ke_tee Hinkwaswo_i_nwe Zwothe_ndi_nthihi Ene
+Random: Ngokungahleliwe Ngokungacwangciswanga Ngekungahleliwe Ngokungahlelwanga Ka_tsietsi Ka_tshoganyetso Ka_tšhoganetšo Hi_ku_tshuka Nga_u_wela Lukraak
+transpose: phendula_imatriki jika_imatriki phendvula_imatriki phendula_imatriki fetola_matriki fetola_matrikisi fetoša_matriki hundzuluxa_matriki shandukisa_matiriki transponeer
+inverse: okuphambene okuchaseneyo lokuphambene okuphambeneko e_fapaneng e_e_fapaneng ye_e_fapanego leswi_hambaneke zwi_fhambanaho omgekeerde
+determinant: isinqumo isigqibo sincumo isiqunto qeto tshwetso phetho xiboho phetho_ya_matiriki bepaler
+norm: ubude_bevektha ubude_bevektha budze_belivektha ubude_bevektha bolelele_ba_vekthara boleele_jwa_vekethara botelele_bja_bekthara ku_leha_ka_vhekitara vhulapfu_ha_vekitha lengte_van
+normalized: ilinganiswe ilungelelanisiwe ilinganisiwe ilinganisiwe e_lekantswe e_lekantshitswe e_lekanyeditšwe yi_ringanisiwe yo_lingananywa genormaliseer
+dot: umphumela_wechashazi imveliso_yechaphaza umkhicito_welichashati umkhiqizo_wechatjhazi sehlahiswa_sa_ntlha setlhagiswa_sa_ntlha setšweletšwa_sa_ntlha vuhumelerisi_bya_thonsi mbveledzo_ya_tshitondo puntproduk
+cross: umkhiqizo_wesiphambano imveliso_yomnqamlezo umkhicito_wesiphambano umkhiqizo_wesiphambano sehlahiswa_sa_sefapano setlhagiswa_sa_sefapaano setšweletšwa_sa_sefapano vuhumelerisi_bya_xihambano mbveledzo_ya_tshifhambano kruisproduk
+solve: xazulula sombulula xazulula rarulula rarolla rarabolola rarolla tlhantlha tandulula los_op
+colPivHouseholderQr: hlukanisa_qr ahlula_qr hlukanisa_qr ahlukanisa_qr arola_qr kgaoganya_qr aroganya_qr hambanisa_qr khethekanya_qr qr_ontbinding
+isApprox: cishe_kuyalingana phantse_ziyalingana cishe_kuyalingana pheze_kuyalingana di_batla_di_lekana di_batla_di_lekana di_nyaka_di_lekana swi_lava_ku_ringana zwi_tou_lingana ongeveer_gelyk
+UnitX: Eksisi_X Eksisi_X Eksisi_X Eksisi_X Ekese_X Ekese_X Ekese_X Ekisisi_X Ekisisi_X As_X
+UnitY: Eksisi_Y Eksisi_Y Eksisi_Y Eksisi_Y Ekese_Y Ekese_Y Ekese_Y Ekisisi_Y Ekisisi_Y As_Y
+UnitZ: Eksisi_Z Eksisi_Z Eksisi_Z Eksisi_Z Ekese_Z Ekese_Z Ekese_Z Ekisisi_Z Ekisisi_Z As_Z
+matrix: ibe_imatriki ibe_matriki ibe_matriki ibe_matriki e_be_matriki e_nne_matrikisi e_be_matriki yi_va_matriki i_vhe_matiriki as_matriks

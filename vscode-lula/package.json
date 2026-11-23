@@ -1,8 +1,8 @@
 {
   "name": "lula",
   "displayName": "Lula - C++ in South African languages",
-  "description": "Write C++ for robots, embedded systems and PCs in all 10 written official South African languages: isiZulu, isiXhosa, siSwati, isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenda, Afrikaans. Syntax highlighting, error checking, hover translations and one-click run. Includes a South African Sign Language (SASL) sign-video dictionary.",
-  "version": "0.4.0",
+  "description": "Write C++ in all 10 written official South African languages, including ROS 2, OpenCV, Eigen, CUDA, PyTorch and Arduino, with error messages in your language. Includes a South African Sign Language (SASL) sign-video dictionary.",
+  "version": "0.5.0",
   "publisher": "lula-lang",
   "license": "MIT",
   "engines": {
@@ -66,6 +66,11 @@
       {
         "command": "lula.sasl.browse",
         "title": "Lula: Browse SASL sign dictionary"
+      },
+      {
+        "command": "lula.arduino",
+        "title": "Lula: Build for Arduino board (and upload)",
+        "icon": "$(circuit-board)"
       }
     ],
     "menus": {
@@ -77,6 +82,11 @@
         },
         {
           "command": "lula.showCpp",
+          "when": "resourceExtname == .lula",
+          "group": "navigation"
+        },
+        {
+          "command": "lula.arduino",
           "when": "resourceExtname == .lula",
           "group": "navigation"
         }
@@ -134,6 +144,21 @@
           "type": "string",
           "default": "",
           "description": "Folder with your own SASL dictionary (signs.json + videos/). Empty uses the one built into the extension."
+        },
+        "lula.arduinoBoard": {
+          "type": "string",
+          "enum": [
+            "uno",
+            "nano",
+            "mega"
+          ],
+          "default": "uno",
+          "description": "Board used to check Arduino programs for errors."
+        },
+        "lula.arduinoPort": {
+          "type": "string",
+          "default": "",
+          "description": "Default serial port for uploading to an Arduino (e.g. /dev/ttyUSB0 or COM3)."
         }
       }
     },

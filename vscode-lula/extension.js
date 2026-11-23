@@ -4,7 +4,9 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { execFile } = require('child_process');
-const { translate, convert, listLanguages, loadLanguage, detectLanguage, localizeMessage } = require('./lib/translator');
+const { translate, convert, listLanguages, loadLanguage, detectLanguage, describeWord, packsFor } = require('./lib/translator');
+const M = require('./lib/messages');
+const CLI = path.join(__dirname, 'lib', 'cli.js');
 const sasl = require('./lib/sasl');
 
 const CPP_SCHEME = 'lula-cpp';
@@ -147,9 +149,10 @@ function activate(context) {
       const lang = safeLang(doc); if (!lang) return;
       const range = doc.getWordRangeAtPosition(pos); if (!range) return;
       const word = doc.getText(range);
-      const cpp = lang.keywordMap.get(word) || lang.libraryMap.get(word) || lang.directiveMap.get(word) || lang.headerMap.get(word);
-      if (!cpp) return;
-      const md = new vscode.MarkdownString(`**${word}** (${lang.name}) → C++ \`${cpp}\``);
+      const found = describeWord(word, lang.code);
+      if (!found) return;
+      const where = ['keyword', 'library', 'directive', 'header'].includes(found.source) ? '' : ` · ${found.source}`;
+      const md = new vscode.MarkdownString(`**${word}** (${lang.name}${where}) → C++ \`${found.cpp}\``);
       if (config().get('sasl.enabled') && !lang.headerMap.has(word)) {
         const found = sasl.lookup(word, lang.code, saslDir());
         if (found && found.entry) {
@@ -174,37 +177,59 @@ function activate(context) {
       for (const [w, cpp] of lang.libraryMap) {
         const it = new vscode.CompletionItem(w, vscode.CompletionItemKind.Function); it.detail = cpp; items.push(it);
       }
+      for (const p of packsFor(lang.code)) {
+        for (const [w, cpp] of p.names) {
+          const it = new vscode.CompletionItem(w, vscode.CompletionItemKind.Function); it.detail = `${cpp} · ${p.name}`; items.push(it);
+        }
+      }
       return items;
     },
   }));
 
-  // Error checking: translate, run the compiler with -fsyntax-only, show problems in the editor.
+  // Error checking: run `lula check` (or `lula arduino --check` for Arduino programs) and show its
+  // messages - already full sentences in the file's language - in the Problems panel.
+  const runCli = (args, cb) => execFile(process.execPath, [CLI, ...args], { encoding: 'utf8', env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }, maxBuffer: 16 << 20 }, cb);
   const check = doc => {
     if (doc.languageId !== 'lula' || doc.uri.scheme !== 'file' || !config().get('checkOnSave')) return;
     const lang = langOf(doc);
-    let cpp;
-    try { cpp = translate(doc.getText(), lang, { fileName: doc.fileName }).cpp; }
-    catch (e) { vscode.window.showErrorMessage(e.message); return; }
-    const tmp = path.join(os.tmpdir(), `lula-check-${process.pid}.cpp`);
-    fs.writeFileSync(tmp, cpp);
-    const args = ['-std=c++20', ...config().get('compilerArgs'), '-fsyntax-only', tmp];
-    execFile(config().get('compilerPath'), args, { encoding: 'utf8' }, (err, _out, stderr) => {
-      if (err && err.code === 'ENOENT') { diagnostics.delete(doc.uri); return; }
-      const list = [];
-      const re = /^(.*?):(\d+):(\d+): (error|warning|fatal error): (.*)$/gm;
+    let arduino = false;
+    try { arduino = translate(doc.getText(), lang).arduino; } catch (e) { vscode.window.showErrorMessage(e.message); return; }
+    const extra = config().get('compilerArgs');
+    const args = arduino
+      ? ['arduino', doc.fileName, '--lang', lang, '--check', '--board', config().get('arduinoBoard')]
+      : ['check', doc.fileName, '--lang', lang, '--cxx', config().get('compilerPath'), ...(extra.length ? ['--', ...extra] : [])];
+    runCli(args, (_err, _out, stderr) => {
+      const sev = { [M.t('sev.warning', lang)]: vscode.DiagnosticSeverity.Warning, [M.t('sev.note', lang)]: vscode.DiagnosticSeverity.Information };
+      const labels = ['sev.error', 'sev.warning', 'sev.fatal'].map(id => M.t(id, lang).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      const re = new RegExp(`^(.*?):(\\d+):(\\d+): (${labels.join('|')}): (.*)$`, 'gmu');
       const target = path.resolve(doc.fileName).replace(/\\/g, '/');
+      const list = [];
       let m;
       while ((m = re.exec(stderr || ''))) {
         if (path.resolve(m[1]).replace(/\\/g, '/') !== target) continue;
         const line = Math.max(0, +m[2] - 1), col = Math.max(0, +m[3] - 1);
         const range = doc.getWordRangeAtPosition(new vscode.Position(line, col)) || new vscode.Range(line, col, line, col + 1);
-        const sev = m[4] === 'warning' ? vscode.DiagnosticSeverity.Warning : vscode.DiagnosticSeverity.Error;
-        const d = new vscode.Diagnostic(range, localizeMessage(m[5], lang), sev);
+        const d = new vscode.Diagnostic(range, m[5], sev[m[4]] ?? vscode.DiagnosticSeverity.Error);
         d.source = 'lula'; list.push(d);
       }
       diagnostics.set(doc.uri, list);
     });
   };
+
+  // Build (and optionally upload) an Arduino program.
+  context.subscriptions.push(vscode.commands.registerCommand('lula.arduino', async () => {
+    const ed = vscode.window.activeTextEditor;
+    if (!ed || ed.document.languageId !== 'lula') return;
+    await ed.document.save();
+    const board = await vscode.window.showQuickPick(['uno', 'nano', 'mega'], { placeHolder: 'Arduino board' });
+    if (!board) return;
+    const port = await vscode.window.showInputBox({ prompt: 'Upload to port (e.g. /dev/ttyUSB0 or COM3). Leave empty to only build the .hex', value: config().get('arduinoPort') });
+    const args = [CLI, 'arduino', ed.document.fileName, '--lang', langOf(ed.document), '--board', board, ...(port ? ['--upload', port] : [])];
+    const exec = new vscode.ProcessExecution(process.execPath, args, { env: { ELECTRON_RUN_AS_NODE: '1' } });
+    const task = new vscode.Task({ type: 'lula' }, vscode.TaskScope.Workspace, `Arduino ${board}`, 'lula', exec);
+    task.presentationOptions = { reveal: vscode.TaskRevealKind.Always, clear: true };
+    vscode.tasks.executeTask(task);
+  }));
   context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(check), vscode.workspace.onDidOpenTextDocument(check));
   vscode.workspace.textDocuments.forEach(check);
 }
