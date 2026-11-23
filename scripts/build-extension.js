@@ -10,7 +10,8 @@ const LIB = path.join(EXT, 'lib');
 
 fs.rmSync(LIB, { recursive: true, force: true });
 fs.mkdirSync(path.join(LIB, 'languages'), { recursive: true });
-for (const f of ['translator.js', 'cli.js']) fs.copyFileSync(path.join(ROOT, 'src', f), path.join(LIB, f));
+for (const f of ['translator.js', 'cli.js', 'sasl.js']) fs.copyFileSync(path.join(ROOT, 'src', f), path.join(LIB, f));
+fs.cpSync(path.join(ROOT, 'sasl'), path.join(LIB, 'sasl'), { recursive: true, filter: src => !src.endsWith('.gitkeep') });
 const langs = fs.readdirSync(path.join(ROOT, 'languages')).filter(f => f.endsWith('.json'));
 for (const f of langs) fs.copyFileSync(path.join(ROOT, 'languages', f), path.join(LIB, 'languages', f));
 

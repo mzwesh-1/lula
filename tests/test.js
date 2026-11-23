@@ -89,6 +89,78 @@ for (const code of languages) {
   });
 }
 
+console.log('SASL sign-video dictionary');
+{
+  const S = require('../src/sasl');
+  const tmpDict = () => { const d = fs.mkdtempSync(path.join(os.tmpdir(), 'khanya-sasl-')); fs.writeFileSync(path.join(d, 'signs.json'), '{"version":1,"signs":{}}'); return d; };
+  // A colour-bar test clip: clearly NOT a sign, only used to exercise the pipeline.
+  const clip = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'khanya-clip-')), 'TEST-CLIP-not-a-sign.webm');
+  const hasFfmpeg = !spawnSync('ffmpeg', ['-version']).error;
+  if (hasFfmpeg) spawnSync('ffmpeg', ['-v', 'error', '-f', 'lavfi', '-i', 'testsrc=duration=1:size=320x240:rate=10', '-c:v', 'libvpx', clip]);
+  else fs.writeFileSync(clip, 'not a real video');
+
+  test('shipped dictionary is valid and contains no unreviewed entries', () => {
+    assert.deepStrictEqual(S.validate(), []);
+    for (const [c, e] of Object.entries(S.loadDictionary().signs)) assert.ok(e.consent === true && e.signer && e.license, c);
+  });
+  test('one concept links the word in every language', () => {
+    for (const [word, code] of [['uma', 'zu'], ['ukuba', 'xh'], ['haeba', 'st'], ['fa', 'tn'], ['loko', 'ts'], ['arali', 've'], ['as', 'af']])
+      assert.strictEqual(S.conceptOf(word, code), 'if', `${word} (${code})`);
+    assert.strictEqual(S.conceptOf('engeza_ekugcineni', 'zu'), 'push_back');
+    assert.strictEqual(S.conceptOf('faka', 'zu'), '#include');
+    assert.strictEqual(S.conceptOf('PHEZULU', 'zu'), 'HIGH');
+    assert.strictEqual(S.conceptOf('amamaki', 'zu'), null);
+    assert.strictEqual(S.wordsFor('while').nso, 'ge_fela');
+  });
+  test('priority concepts all exist', () => assert.deepStrictEqual(S.PRIORITY.filter(c => !S.allConcepts().includes(c)), []));
+  test('adding a sign requires consent, a named signer and a licence', () => {
+    const d = tmpDict();
+    assert.throws(() => S.addSign('if', clip, { signer: 'Test', license: 'CC-BY-4.0' }, d), /consent/);
+    assert.throws(() => S.addSign('if', clip, { license: 'CC-BY-4.0', consent: true }, d), /signer/);
+    assert.throws(() => S.addSign('if', clip, { signer: 'Test', consent: true }, d), /licence/);
+    assert.throws(() => S.addSign('not_a_concept', clip, { signer: 'T', license: 'L', consent: true }, d), /unknown concept/);
+    assert.throws(() => S.addSign('if', clip.replace('.webm', '.avi'), { signer: 'T', license: 'L', consent: true }, d), /mp4 or .webm/);
+    assert.deepStrictEqual(S.loadDictionary(d).signs, {});
+  });
+  test('add, look up from any language, validate, remove', () => {
+    const d = tmpDict();
+    S.addSign('#include', clip, { signer: 'Test Signer', license: 'CC-BY-4.0', consent: true, gloss: 'TEST' }, d);
+    assert.ok(fs.existsSync(path.join(d, 'videos', 'directive-include.webm')));
+    const r = S.lookup('faka', 'zu', d);
+    assert.strictEqual(r.concept, '#include');
+    assert.strictEqual(r.entry.signer, 'Test Signer');
+    assert.strictEqual(S.lookup('kenyelletsa', 'st', d).video, r.video);
+    assert.deepStrictEqual(S.validate(d), []);
+    assert.strictEqual(S.status(d).recorded, 1);
+    fs.rmSync(r.video);
+    assert.match(S.validate(d).join(), /video file missing/);
+    assert.ok(S.removeSign('#include', d));
+    assert.deepStrictEqual(S.loadDictionary(d).signs, {});
+  });
+  test('hosted (https) videos are accepted', () => {
+    const d = tmpDict();
+    S.addSign('if', 'https://example.org/sasl/if.mp4', { signer: 'T', license: 'CC-BY-4.0', consent: true }, d);
+    assert.strictEqual(S.lookup('uma', 'zu', d).video, 'https://example.org/sasl/if.mp4');
+    assert.deepStrictEqual(S.validate(d), []);
+  });
+  test('player HTML escapes text and shows credit, or says no sign yet', () => {
+    const html = S.playerHtml({ concept: 'if', word: 'uma', entry: { gloss: 'IF', signer: '<b>x</b>', license: 'CC-BY-4.0' }, videoSrc: 'a.webm', words: { zu: 'uma' } });
+    assert.match(html, /<video id="sign" src="a.webm"/);
+    assert.match(html, /&lt;b&gt;x&lt;\/b&gt;/);
+    assert.ok(!html.includes('<b>x</b>'));
+    assert.match(S.playerHtml({ concept: 'if', entry: null }), /No SASL sign has been recorded/);
+  });
+  test('CLI: sasl add refuses without --consent, then works with it', () => {
+    const d = tmpDict();
+    let r = spawnSync(process.execPath, [CLI, 'sasl', 'add', 'if', clip, '--signer', 'T', '--license', 'CC-BY-4.0', '--dict', d], { encoding: 'utf8' });
+    assert.notStrictEqual(r.status, 0); assert.match(r.stderr, /consent/);
+    r = spawnSync(process.execPath, [CLI, 'sasl', 'add', 'if', clip, '--signer', 'T', '--license', 'CC-BY-4.0', '--consent', '--dict', d], { encoding: 'utf8' });
+    assert.strictEqual(r.status, 0, r.stderr);
+    r = spawnSync(process.execPath, [CLI, 'sasl', 'show', 'ukuba', '--lang', 'xh', '--dict', d], { encoding: 'utf8' });
+    assert.match(r.stdout, /ukuba -> C\+\+ if/); assert.match(r.stdout, /Signed by T/);
+  });
+}
+
 console.log('end-to-end (needs g++)');
 const hasGpp = !spawnSync('g++', ['--version']).error;
 function run(args) { return spawnSync(process.execPath, [CLI, ...args], { encoding: 'utf8' }); }

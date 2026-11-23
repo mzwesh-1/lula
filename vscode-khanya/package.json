@@ -1,8 +1,8 @@
 {
   "name": "khanya",
   "displayName": "Khanya - C++ in South African languages",
-  "description": "Write C++ for robots, embedded systems and PCs in all 10 written official South African languages: isiZulu, isiXhosa, siSwati, isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenda, Afrikaans. Syntax highlighting, error checking, hover translations and one-click run.",
-  "version": "0.3.0",
+  "description": "Write C++ for robots, embedded systems and PCs in all 10 written official South African languages: isiZulu, isiXhosa, siSwati, isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenda, Afrikaans. Syntax highlighting, error checking, hover translations and one-click run. Includes a South African Sign Language (SASL) sign-video dictionary.",
+  "version": "0.4.0",
   "publisher": "khanya-lang",
   "license": "MIT",
   "engines": {
@@ -57,6 +57,15 @@
       {
         "command": "khanya.convertFromCpp",
         "title": "Khanya: Convert C++ to Khanya (isiZulu, Afrikaans, ...)"
+      },
+      {
+        "command": "khanya.sasl.show",
+        "title": "Khanya: Show SASL sign for word under cursor",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "khanya.sasl.browse",
+        "title": "Khanya: Browse SASL sign dictionary"
       }
     ],
     "menus": {
@@ -76,6 +85,11 @@
         {
           "command": "khanya.convertFromCpp",
           "when": "resourceLangId == cpp || resourceLangId == c || resourceLangId == khanya",
+          "group": "khanya"
+        },
+        {
+          "command": "khanya.sasl.show",
+          "when": "resourceLangId == khanya",
           "group": "khanya"
         }
       ]
@@ -105,8 +119,31 @@
           "type": "string",
           "default": "zu",
           "description": "Language used when the file name has no language code (robot.kh instead of robot.zu.kh)."
+        },
+        "khanya.sasl.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Offer South African Sign Language (SASL) sign videos when hovering keywords."
+        },
+        "khanya.sasl.showMissing": {
+          "type": "boolean",
+          "default": false,
+          "description": "Also mention in the hover when no SASL sign has been recorded for a word yet."
+        },
+        "khanya.sasl.dictionaryPath": {
+          "type": "string",
+          "default": "",
+          "description": "Folder with your own SASL dictionary (signs.json + videos/). Empty uses the one built into the extension."
         }
       }
-    }
+    },
+    "keybindings": [
+      {
+        "command": "khanya.sasl.show",
+        "key": "ctrl+alt+s",
+        "mac": "cmd+alt+s",
+        "when": "editorTextFocus && editorLangId == khanya"
+      }
+    ]
   }
 }

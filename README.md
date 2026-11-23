@@ -75,10 +75,27 @@ node bin/khanya.js build robot.zu.kh --cxx avr-g++ -- -mmcu=atmega328p -Os
 
 ```bash
 npm run package-extension
-code --install-extension khanya-0.3.0.vsix
+code --install-extension khanya-0.4.0.vsix
 ```
 
-The extension provides syntax highlighting, hover translations (hover `uma` → C++ `if`), completion, error checking when you save, a ▶ Run button, a live "Show C++" side view, "Export for Arduino" and "Convert C++ to Khanya".
+The extension provides syntax highlighting, hover translations (hover `uma` → C++ `if`), completion, error checking when you save, a ▶ Run button, a live "Show C++" side view, "Export for Arduino", "Convert C++ to Khanya", and the SASL sign-video player.
+
+## 🤟 South African Sign Language (SASL) sign-video dictionary
+
+Hover any keyword in VS Code (`uma`, `ukuba`, `haeba`, `as`, ...) and click **🤟 Show SASL sign**, or press
+`Ctrl+Alt+S`. A panel opens beside your code with the sign video, slow-motion buttons, credit for the signer,
+and the same word in all ten languages. One recording per concept serves every language.
+**Khanya: Browse SASL sign dictionary** lists every sign.
+
+The dictionary starts **empty on purpose**. Signs must come from Deaf SASL signers, and many programming
+concepts don't have an established sign yet. Read [sasl/README.md](sasl/README.md) for the recording guide,
+consent rules and how to add signs. [sasl/RECORDING_LIST.md](sasl/RECORDING_LIST.md) lists the 49 priority
+concepts and all 299 concepts, with the word for each one in every language.
+
+```bash
+node bin/khanya.js sasl status
+node bin/khanya.js sasl add if recordings/if.mp4 --signer "Name" --license CC-BY-4.0 --consent
+```
 
 ## Adding a language
 
@@ -90,4 +107,4 @@ Every local word must be **one token** (use `_` instead of spaces) and must not 
 
 All the word tables are **drafts** that need review by native speakers and educators, so the words feel natural and consistent. Tshivenḓa words are currently written without the ḓ ḽ ṅ ṋ ṱ marks, so they're easier to type on ordinary keyboards.
 
-**South African Sign Language** is a visual language, so it can't be typed as source code. A planned option is a sign-video dictionary in the editor, where hovering a keyword shows the SASL sign.
+**South African Sign Language**: see below.

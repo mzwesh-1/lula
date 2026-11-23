@@ -5,6 +5,7 @@ const os = require('os');
 const path = require('path');
 const { execFile } = require('child_process');
 const { translate, convert, listLanguages, loadLanguage, detectLanguage, localizeMessage } = require('./lib/translator');
+const sasl = require('./lib/sasl');
 
 const CPP_SCHEME = 'khanya-cpp';
 const cppViews = new Map(); // virtual doc uri -> source uri
@@ -12,6 +13,36 @@ const cppViews = new Map(); // virtual doc uri -> source uri
 function config() { return vscode.workspace.getConfiguration('khanya'); }
 function langOf(doc) { return detectLanguage(doc.fileName) || config().get('defaultLanguage') || 'zu'; }
 function safeLang(doc) { try { return loadLanguage(langOf(doc)); } catch { return null; } }
+function saslDir() {
+  const custom = config().get('sasl.dictionaryPath');
+  return custom && fs.existsSync(path.join(custom, 'signs.json')) ? custom : sasl.defaultDir();
+}
+function saslCommandLink(args, label) {
+  return `[${label}](command:khanya.sasl.show?${encodeURIComponent(JSON.stringify([args]))})`;
+}
+let saslPanel = null;
+function showSign(context, { word, lang }) {
+  const dir = saslDir();
+  const found = sasl.lookup(word, lang, dir);
+  if (!found) { vscode.window.showInformationMessage(`Khanya: '${word}' is not a Khanya keyword or library name.`); return; }
+  const videosDir = vscode.Uri.file(path.join(dir, 'videos'));
+  if (!saslPanel) {
+    saslPanel = vscode.window.createWebviewPanel('khanyaSasl', 'SASL', { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
+      { enableScripts: true, localResourceRoots: [videosDir] });
+    saslPanel.onDidDispose(() => { saslPanel = null; }, null, context.subscriptions);
+  }
+  const wv = saslPanel.webview;
+  let videoSrc;
+  if (found.entry) videoSrc = /^https:/i.test(found.video) ? found.video : wv.asWebviewUri(vscode.Uri.file(found.video)).toString();
+  let langName = '';
+  try { langName = lang ? loadLanguage(lang).name : ''; } catch { /* unknown language */ }
+  saslPanel.title = `SASL: ${word}`;
+  wv.html = sasl.playerHtml({
+    concept: found.concept, word, langName, entry: found.entry, videoSrc, words: sasl.wordsFor(found.concept),
+    cspSource: wv.cspSource, nonce: require('crypto').randomBytes(16).toString('hex'),
+  });
+  saslPanel.reveal(vscode.ViewColumn.Beside, true);
+}
 
 function activate(context) {
   const diagnostics = vscode.languages.createDiagnosticCollection('khanya');
@@ -87,6 +118,29 @@ function activate(context) {
     }
   }));
 
+  // SASL sign-video dictionary.
+  context.subscriptions.push(vscode.commands.registerCommand('khanya.sasl.show', (args) => {
+    if (args && args.word) return showSign(context, args);
+    const ed = vscode.window.activeTextEditor;
+    if (!ed) return;
+    const range = ed.document.getWordRangeAtPosition(ed.selection.active);
+    if (!range) return;
+    showSign(context, { word: ed.document.getText(range), lang: ed.document.languageId === 'khanya' ? langOf(ed.document) : null });
+  }));
+  context.subscriptions.push(vscode.commands.registerCommand('khanya.sasl.browse', async () => {
+    const dir = saslDir();
+    const dict = sasl.loadDictionary(dir);
+    const ed = vscode.window.activeTextEditor;
+    const lang = ed && ed.document.languageId === 'khanya' ? langOf(ed.document) : config().get('defaultLanguage');
+    const st = sasl.status(dir);
+    const items = sasl.allConcepts().map(c => {
+      const w = sasl.wordsFor(c)[lang] || c;
+      return { label: `${dict.signs[c] ? '🤟' : '○'} ${w}`, description: c, detail: dict.signs[c] ? `Signed by ${dict.signs[c].signer}` : 'Not recorded yet', concept: c, word: w };
+    }).sort((a, b) => (b.label.startsWith('🤟') - a.label.startsWith('🤟')) || a.word.localeCompare(b.word));
+    const pick = await vscode.window.showQuickPick(items, { placeHolder: `SASL dictionary: ${st.recorded} of ${st.total} signs recorded`, matchOnDescription: true });
+    if (pick) showSign(context, { word: pick.word, lang: pick.word === pick.concept ? null : lang });
+  }));
+
   // Hover: show the C++ meaning of a word.
   context.subscriptions.push(vscode.languages.registerHoverProvider('khanya', {
     provideHover(doc, pos) {
@@ -95,7 +149,17 @@ function activate(context) {
       const word = doc.getText(range);
       const cpp = lang.keywordMap.get(word) || lang.libraryMap.get(word) || lang.directiveMap.get(word) || lang.headerMap.get(word);
       if (!cpp) return;
-      return new vscode.Hover(new vscode.MarkdownString(`**${word}** (${lang.name}) → C++ \`${cpp}\``), range);
+      const md = new vscode.MarkdownString(`**${word}** (${lang.name}) → C++ \`${cpp}\``);
+      if (config().get('sasl.enabled') && !lang.headerMap.has(word)) {
+        const found = sasl.lookup(word, lang.code, saslDir());
+        if (found && found.entry) {
+          md.appendMarkdown(`\n\n${saslCommandLink({ word, lang: lang.code }, '🤟 Show SASL sign')}`);
+          md.isTrusted = { enabledCommands: ['khanya.sasl.show'] };
+        } else if (found && config().get('sasl.showMissing')) {
+          md.appendMarkdown('\n\n🤟 _No SASL sign recorded yet_');
+        }
+      }
+      return new vscode.Hover(md, range);
     },
   }));
 

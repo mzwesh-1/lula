@@ -14,6 +14,11 @@ Usage:
   khanya run <file.zu.kh> [options] [-- compiler flags]
   khanya check <file.zu.kh>                        Check for errors only
   khanya convert <file> --to <zu|af|cpp> [-o out]  Convert C++ -> Khanya, or between languages
+  khanya sasl status | check | list [-o file]       SASL sign-video dictionary
+  khanya sasl show <word> [--lang zu]               Which sign a word uses
+  khanya sasl add <concept> <video.mp4|https-url> --signer "Name" --license CC-BY-4.0 --consent
+                  [--gloss IF] [--region Gauteng] [--reviewed-by "Name"] [--note "..."]
+  khanya sasl remove <concept>
   khanya keywords [zu|af|...]                      Show the keyword table
   khanya languages                                  List languages
 
@@ -39,6 +44,14 @@ function parseArgs(argv) {
     else if (a === '--cxx') args.cxx = argv[++i];
     else if (a === '--to') args.to = argv[++i];
     else if (a === '--no-defaults') args.noDefaults = true;
+    else if (a === '--signer') args.signer = argv[++i];
+    else if (a === '--license') args.license = argv[++i];
+    else if (a === '--consent') args.consent = true;
+    else if (a === '--gloss') args.gloss = argv[++i];
+    else if (a === '--region') args.region = argv[++i];
+    else if (a === '--reviewed-by') args.reviewedBy = argv[++i];
+    else if (a === '--note') args.note = argv[++i];
+    else if (a === '--dict') args.dict = argv[++i];
     else if (a === '-h' || a === '--help') args.help = true;
     else args._.push(a);
   }
@@ -82,6 +95,65 @@ function compile(args, { syntaxOnly = false, outPath } = {}) {
   return exe;
 }
 
+function sasl(args) {
+  const S = require('./sasl');
+  const dir = args.dict ? path.resolve(args.dict) : S.defaultDir();
+  const sub = args._[1];
+  try {
+    switch (sub) {
+      case 'status': {
+        const st = S.status(dir);
+        console.log(`SASL signs recorded: ${st.recorded} / ${st.total} concepts`);
+        console.log(`Priority signs:      ${st.priorityRecorded} / ${st.priorityTotal}`);
+        if (st.neededPriority.length) console.log(`Next to record:      ${st.neededPriority.slice(0, 12).join(', ')}${st.neededPriority.length > 12 ? ', ...' : ''}`);
+        break;
+      }
+      case 'check': {
+        const problems = S.validate(dir);
+        if (problems.length) { console.error(problems.join('\n')); process.exit(1); }
+        console.log('SASL dictionary OK');
+        break;
+      }
+      case 'list': {
+        const md = S.recordingList(dir);
+        if (args.out) fs.writeFileSync(args.out, md); else process.stdout.write(md + '\n');
+        break;
+      }
+      case 'show': {
+        const word = args._[2];
+        if (!word) fail('Khanya: which word? e.g. khanya sasl show uma --lang zu');
+        const r = S.lookup(word, args.lang || null, dir);
+        if (!r) fail(`Khanya: '${word}' is not a Khanya keyword or library name${args.lang ? '' : ' (add --lang zu?)'}`);
+        console.log(`${word} -> C++ ${r.concept}`);
+        console.log(r.entry ? `SASL sign: ${r.video}\nSigned by ${r.entry.signer} (${r.entry.license})` : 'No SASL sign recorded yet for this concept.');
+        break;
+      }
+      case 'add': {
+        const [concept, video] = [args._[2], args._[3]];
+        if (!concept || !video) fail('Khanya: usage: khanya sasl add <concept> <video.mp4> --signer "Name" --license CC-BY-4.0 --consent');
+        let source = video;
+        if (/\.mp4$/i.test(video) && fs.existsSync(video) && args.consent) {
+          // VS Code's built-in player may not play H.264 .mp4; .webm (VP9) always plays. Convert when ffmpeg exists.
+          const webm = path.join(os.tmpdir(), `khanya-sasl-${process.pid}.webm`);
+          const r = spawnSync('ffmpeg', ['-v', 'error', '-y', '-i', video, '-an', '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', '33', webm]);
+          if (!r.error && r.status === 0) { source = webm; console.log('Converted to .webm so it plays in VS Code.'); }
+          else console.log('Warning: could not convert to .webm (is ffmpeg installed?). Some VS Code versions cannot play .mp4.');
+        }
+        S.addSign(concept, source, { signer: args.signer, license: args.license, consent: !!args.consent, gloss: args.gloss,
+          region: args.region, reviewedBy: args.reviewedBy, note: args.note }, dir);
+        if (source !== video) fs.rmSync(source, { force: true });
+        console.log(`Added SASL sign for '${concept}'.`);
+        break;
+      }
+      case 'remove':
+        if (!S.removeSign(args._[2], dir)) fail(`Khanya: no SASL sign recorded for '${args._[2]}'`);
+        console.log(`Removed SASL sign for '${args._[2]}'.`);
+        break;
+      default: fail('Khanya: sasl commands: status, check, list, show, add, remove');
+    }
+  } catch (e) { fail(e.message); }
+}
+
 function main(argv) {
   const args = parseArgs(argv);
   const cmd = args._[0];
@@ -112,6 +184,7 @@ function main(argv) {
       break;
     }
     case 'check': compile(args, { syntaxOnly: true }); process.stderr.write('Khanya: OK\n'); break;
+    case 'sasl': sasl(args); break;
     case 'run': {
       const exe = compile(args);
       const r = spawnSync(exe, [], { stdio: 'inherit' });
