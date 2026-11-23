@@ -1,4 +1,4 @@
-// alles.af.kh - "Alles": 'n program wat byna alles in C++ gebruik, in Afrikaans.
+// alles.af.lula - "Alles": 'n program wat byna alles in C++ gebruik, in Afrikaans.
 // A tour of the whole language in Afrikaans: everything from the W3Schools / GeeksforGeeks C++ tutorials.
 #sluitin <invoeruitvoer>
 #sluitin <teks>
@@ -22,7 +22,7 @@
 
 #definieer WEERGAWE 1
 #asgedefinieer WEERGAWE
-#definieer BOODSKAP "Khanya v1"
+#definieer BOODSKAP "Lula v1"
 #anders
 #definieer BOODSKAP "?"
 #eindeas

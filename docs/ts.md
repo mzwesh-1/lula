@@ -1,8 +1,8 @@
-# Khanya: Xitsonga reference
+# Lula: Xitsonga reference
 
 > draft - needs review by Xitsonga speakers
 
-Every word below can be used in `.ts.kh` files. Plain English C++ keeps working too.
+Every word below can be used in `.ts.lula` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

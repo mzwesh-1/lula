@@ -1,7 +1,7 @@
 // Irobhothi elilula: khanyisa i-LED futhi ugweme izithiyo.
 // A simple robot: blink an LED and stop the motor when an obstacle is near.
-// Translate for Arduino:  khanya translate irobhothi.zu.kh -o irobhothi/irobhothi.ino
-// Or build directly:      khanya build irobhothi.zu.kh --cxx avr-g++ -- -mmcu=atmega328p ...
+// Translate for Arduino:  lula translate irobhothi.zu.lula -o irobhothi/irobhothi.ino
+// Or build directly:      lula build irobhothi.zu.lula --cxx avr-g++ -- -mmcu=atmega328p ...
 
 ngaphambili inombolo IPHINI_LED   = 13;
 ngaphambili inombolo IPHINI_MOTHA = 9;

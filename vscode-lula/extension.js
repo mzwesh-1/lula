@@ -7,10 +7,10 @@ const { execFile } = require('child_process');
 const { translate, convert, listLanguages, loadLanguage, detectLanguage, localizeMessage } = require('./lib/translator');
 const sasl = require('./lib/sasl');
 
-const CPP_SCHEME = 'khanya-cpp';
+const CPP_SCHEME = 'lula-cpp';
 const cppViews = new Map(); // virtual doc uri -> source uri
 
-function config() { return vscode.workspace.getConfiguration('khanya'); }
+function config() { return vscode.workspace.getConfiguration('lula'); }
 function langOf(doc) { return detectLanguage(doc.fileName) || config().get('defaultLanguage') || 'zu'; }
 function safeLang(doc) { try { return loadLanguage(langOf(doc)); } catch { return null; } }
 function saslDir() {
@@ -18,16 +18,16 @@ function saslDir() {
   return custom && fs.existsSync(path.join(custom, 'signs.json')) ? custom : sasl.defaultDir();
 }
 function saslCommandLink(args, label) {
-  return `[${label}](command:khanya.sasl.show?${encodeURIComponent(JSON.stringify([args]))})`;
+  return `[${label}](command:lula.sasl.show?${encodeURIComponent(JSON.stringify([args]))})`;
 }
 let saslPanel = null;
 function showSign(context, { word, lang }) {
   const dir = saslDir();
   const found = sasl.lookup(word, lang, dir);
-  if (!found) { vscode.window.showInformationMessage(`Khanya: '${word}' is not a Khanya keyword or library name.`); return; }
+  if (!found) { vscode.window.showInformationMessage(`Lula: '${word}' is not a Lula keyword or library name.`); return; }
   const videosDir = vscode.Uri.file(path.join(dir, 'videos'));
   if (!saslPanel) {
-    saslPanel = vscode.window.createWebviewPanel('khanyaSasl', 'SASL', { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
+    saslPanel = vscode.window.createWebviewPanel('lulaSasl', 'SASL', { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
       { enableScripts: true, localResourceRoots: [videosDir] });
     saslPanel.onDidDispose(() => { saslPanel = null; }, null, context.subscriptions);
   }
@@ -45,7 +45,7 @@ function showSign(context, { word, lang }) {
 }
 
 function activate(context) {
-  const diagnostics = vscode.languages.createDiagnosticCollection('khanya');
+  const diagnostics = vscode.languages.createDiagnosticCollection('lula');
   const changed = new vscode.EventEmitter();
   context.subscriptions.push(diagnostics, changed);
 
@@ -62,9 +62,9 @@ function activate(context) {
     for (const [view, src] of cppViews) if (src === e.document.uri.toString()) changed.fire(vscode.Uri.parse(view));
   }));
 
-  context.subscriptions.push(vscode.commands.registerCommand('khanya.showCpp', async () => {
+  context.subscriptions.push(vscode.commands.registerCommand('lula.showCpp', async () => {
     const ed = vscode.window.activeTextEditor;
-    if (!ed || ed.document.languageId !== 'khanya') return;
+    if (!ed || ed.document.languageId !== 'lula') return;
     const uri = vscode.Uri.parse(`${CPP_SCHEME}:${path.basename(ed.document.fileName)}.cpp`);
     cppViews.set(uri.toString(), ed.document.uri.toString());
     const doc = await vscode.workspace.openTextDocument(uri);
@@ -72,66 +72,66 @@ function activate(context) {
     vscode.window.showTextDocument(doc, { viewColumn: vscode.ViewColumn.Beside, preview: true, preserveFocus: true });
   }));
 
-  context.subscriptions.push(vscode.commands.registerCommand('khanya.run', async () => {
+  context.subscriptions.push(vscode.commands.registerCommand('lula.run', async () => {
     const ed = vscode.window.activeTextEditor;
-    if (!ed || ed.document.languageId !== 'khanya') return;
+    if (!ed || ed.document.languageId !== 'lula') return;
     await ed.document.save();
     const cli = path.join(__dirname, 'lib', 'cli.js');
     const args = [cli, 'run', ed.document.fileName, '--lang', langOf(ed.document), '--cxx', config().get('compilerPath')];
     const extra = config().get('compilerArgs');
     if (extra.length) args.push('--', ...extra);
     const exec = new vscode.ProcessExecution(process.execPath, args, { env: { ELECTRON_RUN_AS_NODE: '1' } });
-    const task = new vscode.Task({ type: 'khanya' }, vscode.TaskScope.Workspace, path.basename(ed.document.fileName), 'khanya', exec);
+    const task = new vscode.Task({ type: 'lula' }, vscode.TaskScope.Workspace, path.basename(ed.document.fileName), 'lula', exec);
     task.presentationOptions = { reveal: vscode.TaskRevealKind.Always, focus: true, clear: true };
     vscode.tasks.executeTask(task);
   }));
 
-  context.subscriptions.push(vscode.commands.registerCommand('khanya.exportArduino', async () => {
+  context.subscriptions.push(vscode.commands.registerCommand('lula.exportArduino', async () => {
     const ed = vscode.window.activeTextEditor;
-    if (!ed || ed.document.languageId !== 'khanya') return;
-    const base = path.basename(ed.document.fileName).replace(/(\.[a-z]{2,3})?\.kh$/i, '');
+    if (!ed || ed.document.languageId !== 'lula') return;
+    const base = path.basename(ed.document.fileName).replace(/(\.[a-z]{2,3})?\.lula$/i, '');
     const dir = path.join(path.dirname(ed.document.fileName), base);
     fs.mkdirSync(dir, { recursive: true });
     const out = path.join(dir, `${base}.ino`);
     fs.writeFileSync(out, translate(ed.document.getText(), langOf(ed.document), { fileName: ed.document.fileName }).cpp);
-    vscode.window.showInformationMessage(`Khanya: wrote ${out} - open it in the Arduino IDE or PlatformIO.`);
+    vscode.window.showInformationMessage(`Lula: wrote ${out} - open it in the Arduino IDE or PlatformIO.`);
   }));
 
-  // Convert the open C++ file (or the selection) into a Khanya language.
-  context.subscriptions.push(vscode.commands.registerCommand('khanya.convertFromCpp', async () => {
+  // Convert the open C++ file (or the selection) into a Lula language.
+  context.subscriptions.push(vscode.commands.registerCommand('lula.convertFromCpp', async () => {
     const ed = vscode.window.activeTextEditor;
     if (!ed) return;
     const pick = await vscode.window.showQuickPick(
       listLanguages().map(l => ({ label: l.name, description: l.code, code: l.code })), { placeHolder: 'Convert to which language?' });
     if (!pick) return;
-    const from = ed.document.languageId === 'khanya' ? langOf(ed.document) : 'cpp';
+    const from = ed.document.languageId === 'lula' ? langOf(ed.document) : 'cpp';
     const text = ed.selection.isEmpty ? ed.document.getText() : ed.document.getText(ed.selection);
     const result = convert(text, from, pick.code);
     if (ed.document.uri.scheme === 'file') {
       const base = ed.document.fileName.replace(/(\.[a-z]{2,3})?\.(kh|cpp|cc|cxx|ino|h|hpp)$/i, '');
-      const target = vscode.Uri.file(`${base}.${pick.code}.kh`);
+      const target = vscode.Uri.file(`${base}.${pick.code}.lula`);
       await vscode.workspace.fs.writeFile(target, Buffer.from(result, 'utf8'));
       vscode.window.showTextDocument(target);
     } else {
-      const doc = await vscode.workspace.openTextDocument({ language: 'khanya', content: result });
+      const doc = await vscode.workspace.openTextDocument({ language: 'lula', content: result });
       vscode.window.showTextDocument(doc);
     }
   }));
 
   // SASL sign-video dictionary.
-  context.subscriptions.push(vscode.commands.registerCommand('khanya.sasl.show', (args) => {
+  context.subscriptions.push(vscode.commands.registerCommand('lula.sasl.show', (args) => {
     if (args && args.word) return showSign(context, args);
     const ed = vscode.window.activeTextEditor;
     if (!ed) return;
     const range = ed.document.getWordRangeAtPosition(ed.selection.active);
     if (!range) return;
-    showSign(context, { word: ed.document.getText(range), lang: ed.document.languageId === 'khanya' ? langOf(ed.document) : null });
+    showSign(context, { word: ed.document.getText(range), lang: ed.document.languageId === 'lula' ? langOf(ed.document) : null });
   }));
-  context.subscriptions.push(vscode.commands.registerCommand('khanya.sasl.browse', async () => {
+  context.subscriptions.push(vscode.commands.registerCommand('lula.sasl.browse', async () => {
     const dir = saslDir();
     const dict = sasl.loadDictionary(dir);
     const ed = vscode.window.activeTextEditor;
-    const lang = ed && ed.document.languageId === 'khanya' ? langOf(ed.document) : config().get('defaultLanguage');
+    const lang = ed && ed.document.languageId === 'lula' ? langOf(ed.document) : config().get('defaultLanguage');
     const st = sasl.status(dir);
     const items = sasl.allConcepts().map(c => {
       const w = sasl.wordsFor(c)[lang] || c;
@@ -142,7 +142,7 @@ function activate(context) {
   }));
 
   // Hover: show the C++ meaning of a word.
-  context.subscriptions.push(vscode.languages.registerHoverProvider('khanya', {
+  context.subscriptions.push(vscode.languages.registerHoverProvider('lula', {
     provideHover(doc, pos) {
       const lang = safeLang(doc); if (!lang) return;
       const range = doc.getWordRangeAtPosition(pos); if (!range) return;
@@ -154,7 +154,7 @@ function activate(context) {
         const found = sasl.lookup(word, lang.code, saslDir());
         if (found && found.entry) {
           md.appendMarkdown(`\n\n${saslCommandLink({ word, lang: lang.code }, '🤟 Show SASL sign')}`);
-          md.isTrusted = { enabledCommands: ['khanya.sasl.show'] };
+          md.isTrusted = { enabledCommands: ['lula.sasl.show'] };
         } else if (found && config().get('sasl.showMissing')) {
           md.appendMarkdown('\n\n🤟 _No SASL sign recorded yet_');
         }
@@ -164,7 +164,7 @@ function activate(context) {
   }));
 
   // Completion: offer keywords of the file's language with their C++ meaning.
-  context.subscriptions.push(vscode.languages.registerCompletionItemProvider('khanya', {
+  context.subscriptions.push(vscode.languages.registerCompletionItemProvider('lula', {
     provideCompletionItems(doc) {
       const lang = safeLang(doc); if (!lang) return [];
       const items = [];
@@ -180,12 +180,12 @@ function activate(context) {
 
   // Error checking: translate, run the compiler with -fsyntax-only, show problems in the editor.
   const check = doc => {
-    if (doc.languageId !== 'khanya' || doc.uri.scheme !== 'file' || !config().get('checkOnSave')) return;
+    if (doc.languageId !== 'lula' || doc.uri.scheme !== 'file' || !config().get('checkOnSave')) return;
     const lang = langOf(doc);
     let cpp;
     try { cpp = translate(doc.getText(), lang, { fileName: doc.fileName }).cpp; }
     catch (e) { vscode.window.showErrorMessage(e.message); return; }
-    const tmp = path.join(os.tmpdir(), `khanya-check-${process.pid}.cpp`);
+    const tmp = path.join(os.tmpdir(), `lula-check-${process.pid}.cpp`);
     fs.writeFileSync(tmp, cpp);
     const args = ['-std=c++20', ...config().get('compilerArgs'), '-fsyntax-only', tmp];
     execFile(config().get('compilerPath'), args, { encoding: 'utf8' }, (err, _out, stderr) => {
@@ -200,7 +200,7 @@ function activate(context) {
         const range = doc.getWordRangeAtPosition(new vscode.Position(line, col)) || new vscode.Range(line, col, line, col + 1);
         const sev = m[4] === 'warning' ? vscode.DiagnosticSeverity.Warning : vscode.DiagnosticSeverity.Error;
         const d = new vscode.Diagnostic(range, localizeMessage(m[5], lang), sev);
-        d.source = 'khanya'; list.push(d);
+        d.source = 'lula'; list.push(d);
       }
       diagnostics.set(doc.uri, list);
     });

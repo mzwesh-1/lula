@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const EXT = path.join(ROOT, 'vscode-khanya');
+const EXT = path.join(ROOT, 'vscode-lula');
 const LIB = path.join(EXT, 'lib');
 
 fs.rmSync(LIB, { recursive: true, force: true });
@@ -16,15 +16,15 @@ const langs = fs.readdirSync(path.join(ROOT, 'languages')).filter(f => f.endsWit
 for (const f of langs) fs.copyFileSync(path.join(ROOT, 'languages', f), path.join(LIB, 'languages', f));
 
 const SCOPES = {
-  control: 'keyword.control.khanya',
-  types: 'storage.type.khanya',
-  modifiers: 'storage.modifier.khanya',
-  oop: 'keyword.other.khanya',
-  casts: 'keyword.operator.cast.khanya',
-  constants: 'constant.language.khanya',
-  operators: 'keyword.operator.word.khanya',
-  library: 'support.function.khanya',
-  arduino: 'support.constant.arduino.khanya',
+  control: 'keyword.control.lula',
+  types: 'storage.type.lula',
+  modifiers: 'storage.modifier.lula',
+  oop: 'keyword.other.lula',
+  casts: 'keyword.operator.cast.lula',
+  constants: 'constant.language.lula',
+  operators: 'keyword.operator.word.lula',
+  library: 'support.function.lula',
+  arduino: 'support.constant.arduino.lula',
 };
 const words = Object.fromEntries(Object.keys(SCOPES).map(k => [k, new Set()]));
 const directives = new Set('include define undef ifdef ifndef if else elif elifdef elifndef endif error warning pragma line'.split(' '));
@@ -49,32 +49,32 @@ const B = '(?<![\\p{L}\\p{N}_])', E = '(?![\\p{L}\\p{N}_])';
 
 const grammar = {
   $schema: 'https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json',
-  name: 'Khanya',
-  scopeName: 'source.khanya',
+  name: 'Lula',
+  scopeName: 'source.lula',
   patterns: [
     { include: '#comments' },
     { include: '#preprocessor' },
     { include: '#strings' },
     ...Object.keys(SCOPES).map(cat => ({ name: SCOPES[cat], match: `${B}(?:${alt(words[cat])})${E}` })),
-    { name: 'constant.numeric.khanya', match: "\\b(?:0[xX][0-9a-fA-F']+|0[bB][01']+|\\d[\\d']*\\.?[\\d']*(?:[eE][+-]?\\d+)?)[uUlLfF]*\\b" },
-    { name: 'entity.name.function.khanya', match: `[\\p{L}_][\\p{L}\\p{N}_]*(?=\\s*\\()` },
+    { name: 'constant.numeric.lula', match: "\\b(?:0[xX][0-9a-fA-F']+|0[bB][01']+|\\d[\\d']*\\.?[\\d']*(?:[eE][+-]?\\d+)?)[uUlLfF]*\\b" },
+    { name: 'entity.name.function.lula', match: `[\\p{L}_][\\p{L}\\p{N}_]*(?=\\s*\\()` },
   ],
   repository: {
     comments: { patterns: [
-      { name: 'comment.line.double-slash.khanya', match: '//.*$' },
-      { name: 'comment.block.khanya', begin: '/\\*', end: '\\*/' },
+      { name: 'comment.line.double-slash.lula', match: '//.*$' },
+      { name: 'comment.block.lula', begin: '/\\*', end: '\\*/' },
     ] },
     preprocessor: { patterns: [
       { match: `^\\s*(#\\s*(?:${alt(includeWords)}))\\s*(<[^>]*>|"[^"]*")`,
-        captures: { 1: { name: 'keyword.control.directive.khanya' }, 2: { name: 'string.quoted.other.lt-gt.include.khanya' } } },
-      { name: 'keyword.control.directive.khanya', match: `^\\s*#\\s*(?:${alt(directives)})${E}` },
+        captures: { 1: { name: 'keyword.control.directive.lula' }, 2: { name: 'string.quoted.other.lt-gt.include.lula' } } },
+      { name: 'keyword.control.directive.lula', match: `^\\s*#\\s*(?:${alt(directives)})${E}` },
     ] },
     strings: { patterns: [
-      { name: 'string.quoted.raw.khanya', begin: '(?:u8|u|U|L)?R"([^()\\\\\\s"]{0,16})\\(', end: '\\)\\1"' },
-      { name: 'string.quoted.double.khanya', begin: '(?:u8|u|U|L)?"', end: '"', patterns: [{ name: 'constant.character.escape.khanya', match: '\\\\.' }] },
-      { name: 'string.quoted.single.khanya', begin: "(?:u8|u|U|L)?'", end: "'", patterns: [{ name: 'constant.character.escape.khanya', match: '\\\\.' }] },
+      { name: 'string.quoted.raw.lula', begin: '(?:u8|u|U|L)?R"([^()\\\\\\s"]{0,16})\\(', end: '\\)\\1"' },
+      { name: 'string.quoted.double.lula', begin: '(?:u8|u|U|L)?"', end: '"', patterns: [{ name: 'constant.character.escape.lula', match: '\\\\.' }] },
+      { name: 'string.quoted.single.lula', begin: "(?:u8|u|U|L)?'", end: "'", patterns: [{ name: 'constant.character.escape.lula', match: '\\\\.' }] },
     ] },
   },
 };
-fs.writeFileSync(path.join(EXT, 'syntaxes', 'khanya.tmLanguage.json'), JSON.stringify(grammar, null, 2));
+fs.writeFileSync(path.join(EXT, 'syntaxes', 'lula.tmLanguage.json'), JSON.stringify(grammar, null, 2));
 console.log(`Built extension lib/ and grammar for: ${langs.map(f => f.replace('.json', '')).join(', ')}`);

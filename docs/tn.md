@@ -1,8 +1,8 @@
-# Khanya: Setswana reference
+# Lula: Setswana reference
 
 > draft - needs review by Setswana speakers
 
-Every word below can be used in `.tn.kh` files. Plain English C++ keeps working too.
+Every word below can be used in `.tn.lula` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

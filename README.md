@@ -1,4 +1,6 @@
-# Khanya ✨
+# Lula ✨
+
+*Lula* means "easy" in isiZulu and isiXhosa.
 
 **C++ in South African languages.** Write programs for robots, Arduino, embedded systems and PCs in **all ten written official South African languages**, with the full speed of C++.
 
@@ -11,26 +13,26 @@ inombolo okuyinhloko() {                 heelgetal hoof() {
 
 ## How it works and why it's as fast as C++
 
-Khanya translates your program, word for word, into standard C++ and then uses a real C++ compiler (g++, clang, avr-g++, arm-none-eabi-g++, ESP32 toolchains). Because the final program *is* C++, there is no slowdown. It also runs on any chip that has a C++ compiler and works with every C++ and Arduino library.
+Lula translates your program, word for word, into standard C++ and then uses a real C++ compiler (g++, clang, avr-g++, arm-none-eabi-g++, ESP32 toolchains). Because the final program *is* C++, there is no slowdown. It also runs on any chip that has a C++ compiler and works with every C++ and Arduino library.
 
 - Only whole keywords are translated. Text inside strings and comments, numbers and header names are never changed.
 - Normal English C++ still works, so you can mix it in or paste existing code.
-- Compiler errors point to **your `.kh` file and line**, and the code they quote uses **your language's keywords**.
+- Compiler errors point to **your `.lula` file and line**, and the code they quote uses **your language's keywords**.
 
 ## What's covered: the whole language, in all 10 written official languages
 
 | Code | Language | File name | `if` / `return` / print |
 |---|---|---|---|
-| `zu` | isiZulu | `robot.zu.kh` | `uma` / `buyisa` / `bhala` |
-| `xh` | isiXhosa | `robot.xh.kh` | `ukuba` / `buyisa` / `bhala` |
-| `ss` | siSwati | `robot.ss.kh` | `nangabe` / `buyisa` / `bhala` |
-| `nr` | isiNdebele | `robot.nr.kh` | `nangabe` / `buyisa` / `tlola` |
-| `st` | Sesotho | `robot.st.kh` | `haeba` / `kgutlisa` / `ngola` |
-| `tn` | Setswana | `robot.tn.kh` | `fa` / `busa` / `kwala` |
-| `nso` | Sepedi | `robot.nso.kh` | `ge` / `bušetša` / `ngwala` |
-| `ts` | Xitsonga | `robot.ts.kh` | `loko` / `vuyisa` / `tsala` |
-| `ve` | Tshivenḓa | `robot.ve.kh` | `arali` / `vhuisa` / `nwala` |
-| `af` | Afrikaans | `robot.af.kh` | `as` / `terug` / `skryf` |
+| `zu` | isiZulu | `robot.zu.lula` | `uma` / `buyisa` / `bhala` |
+| `xh` | isiXhosa | `robot.xh.lula` | `ukuba` / `buyisa` / `bhala` |
+| `ss` | siSwati | `robot.ss.lula` | `nangabe` / `buyisa` / `bhala` |
+| `nr` | isiNdebele | `robot.nr.lula` | `nangabe` / `buyisa` / `tlola` |
+| `st` | Sesotho | `robot.st.lula` | `haeba` / `kgutlisa` / `ngola` |
+| `tn` | Setswana | `robot.tn.lula` | `fa` / `busa` / `kwala` |
+| `nso` | Sepedi | `robot.nso.lula` | `ge` / `bušetša` / `ngwala` |
+| `ts` | Xitsonga | `robot.ts.lula` | `loko` / `vuyisa` / `tsala` |
+| `ve` | Tshivenḓa | `robot.ve.lula` | `arali` / `vhuisa` / `nwala` |
+| `af` | Afrikaans | `robot.af.lula` | `as` / `terug` / `skryf` |
 
 English is C++ itself. Plain C++ keeps working in every language.
 
@@ -38,54 +40,54 @@ Every language covers all **96 C++ keywords** (up to C++20), all **15 preprocess
 I/O, files, containers, algorithms, math, strings, smart pointers, exceptions, threads, fixed-width ints, `.push_back()`-style members, and `pinMode`/`digitalWrite`/`Serial`.
 The test suite enforces this: a language that's missing even one word fails.
 
-Full word lists: [docs/zu.md](docs/zu.md), [xh](docs/xh.md), [ss](docs/ss.md), [nr](docs/nr.md), [st](docs/st.md), [tn](docs/tn.md), [nso](docs/nso.md), [ts](docs/ts.md), [ve](docs/ve.md), [af](docs/af.md). Or run `khanya keywords xh`.
-`examples/konke.zu.kh` and `examples/alles.af.kh` use almost every feature of C++ in one program.
+Full word lists: [docs/zu.md](docs/zu.md), [xh](docs/xh.md), [ss](docs/ss.md), [nr](docs/nr.md), [st](docs/st.md), [tn](docs/tn.md), [nso](docs/nso.md), [ts](docs/ts.md), [ve](docs/ve.md), [af](docs/af.md). Or run `lula keywords xh`.
+`examples/konke.zu.lula` and `examples/alles.af.lula` use almost every feature of C++ in one program.
 
 Your own variable, function and class names can be in any language (`inombolo amamaki = 85;`).
-Like C++ keywords, Khanya words are **reserved**: you can't name a variable `iqoqo`, because it means `std::vector`.
+Like C++ keywords, Lula words are **reserved**: you can't name a variable `iqoqo`, because it means `std::vector`.
 
 ## Convert existing C++ (GeeksforGeeks, W3Schools, Arduino) into your language
 
 ```bash
-node bin/khanya.js convert program.cpp --to zu -o program.zu.kh
-node bin/khanya.js convert program.zu.kh --to af -o program.af.kh    # between languages
+node bin/lula.js convert program.cpp --to zu -o program.zu.lula
+node bin/lula.js convert program.zu.lula --to af -o program.af.lula    # between languages
 ```
 
-Keywords, library names, headers and member functions are all converted. Your own names, strings and comments stay as they are. If a C++ program has its own `count` variable, it's kept as `count` and not turned into `std::count`. In VS Code, right-click a C++ file and choose **Khanya: Convert C++ to Khanya**.
+Keywords, library names, headers and member functions are all converted. Your own names, strings and comments stay as they are. If a C++ program has its own `count` variable, it's kept as `count` and not turned into `std::count`. In VS Code, right-click a C++ file and choose **Lula: Convert C++ to Lula**.
 
 ## Quick start
 
 ```bash
-node bin/khanya.js run examples/sawubona.zu.kh
-node bin/khanya.js keywords zu        # see every isiZulu keyword
+node bin/lula.js run examples/sawubona.zu.lula
+node bin/lula.js keywords zu        # see every isiZulu keyword
 ```
 
-File names carry the language: `program.zu.kh` (isiZulu) or `program.af.kh` (Afrikaans).
+File names carry the language: `program.zu.lula` (isiZulu) or `program.af.lula` (Afrikaans).
 
 ### Robots and embedded
 
 ```bash
 # Arduino IDE / PlatformIO: export a sketch
-node bin/khanya.js translate examples/irobhothi.zu.kh -o irobhothi/irobhothi.ino
+node bin/lula.js translate examples/irobhothi.zu.lula -o irobhothi/irobhothi.ino
 # Or compile straight to a microcontroller toolchain
-node bin/khanya.js build robot.zu.kh --cxx avr-g++ -- -mmcu=atmega328p -Os
+node bin/lula.js build robot.zu.lula --cxx avr-g++ -- -mmcu=atmega328p -Os
 ```
 
 ## VS Code extension
 
 ```bash
 npm run package-extension
-code --install-extension khanya-0.4.0.vsix
+code --install-extension lula-0.4.0.vsix
 ```
 
-The extension provides syntax highlighting, hover translations (hover `uma` → C++ `if`), completion, error checking when you save, a ▶ Run button, a live "Show C++" side view, "Export for Arduino", "Convert C++ to Khanya", and the SASL sign-video player.
+The extension provides syntax highlighting, hover translations (hover `uma` → C++ `if`), completion, error checking when you save, a ▶ Run button, a live "Show C++" side view, "Export for Arduino", "Convert C++ to Lula", and the SASL sign-video player.
 
 ## 🤟 South African Sign Language (SASL) sign-video dictionary
 
 Hover any keyword in VS Code (`uma`, `ukuba`, `haeba`, `as`, ...) and click **🤟 Show SASL sign**, or press
 `Ctrl+Alt+S`. A panel opens beside your code with the sign video, slow-motion buttons, credit for the signer,
 and the same word in all ten languages. One recording per concept serves every language.
-**Khanya: Browse SASL sign dictionary** lists every sign.
+**Lula: Browse SASL sign dictionary** lists every sign.
 
 The dictionary starts **empty on purpose**. Signs must come from Deaf SASL signers, and many programming
 concepts don't have an established sign yet. Read [sasl/README.md](sasl/README.md) for the recording guide,
@@ -93,8 +95,8 @@ consent rules and how to add signs. [sasl/RECORDING_LIST.md](sasl/RECORDING_LIST
 concepts and all 299 concepts, with the word for each one in every language.
 
 ```bash
-node bin/khanya.js sasl status
-node bin/khanya.js sasl add if recordings/if.mp4 --signer "Name" --license CC-BY-4.0 --consent
+node bin/lula.js sasl status
+node bin/lula.js sasl add if recordings/if.mp4 --signer "Name" --license CC-BY-4.0 --consent
 ```
 
 ## Adding a language

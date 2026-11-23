@@ -1,8 +1,8 @@
-# Khanya: Afrikaans reference
+# Lula: Afrikaans reference
 
 > draft - needs review by Afrikaans speakers
 
-Every word below can be used in `.af.kh` files. Plain English C++ keeps working too.
+Every word below can be used in `.af.lula` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

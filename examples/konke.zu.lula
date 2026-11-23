@@ -1,4 +1,4 @@
-// konke.zu.kh - "Konke": uhlelo olusebenzisa cishe yonke into ye-C++ ngesiZulu.
+// konke.zu.lula - "Konke": uhlelo olusebenzisa cishe yonke into ye-C++ ngesiZulu.
 // A tour of the whole language in isiZulu: everything from the W3Schools / GeeksforGeeks C++ tutorials.
 #faka <okokufaka_nokukhipha>
 #faka <umbhalo>
@@ -22,7 +22,7 @@
 
 #chaza UHLOBO 1
 #uma_kuchaziwe UHLOBO
-#chaza UMLAYEZO "Khanya v1"
+#chaza UMLAYEZO "Lula v1"
 #kungenjalo
 #chaza UMLAYEZO "?"
 #qeda_uma

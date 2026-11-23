@@ -1,9 +1,9 @@
 {
-  "name": "khanya",
-  "displayName": "Khanya - C++ in South African languages",
+  "name": "lula",
+  "displayName": "Lula - C++ in South African languages",
   "description": "Write C++ for robots, embedded systems and PCs in all 10 written official South African languages: isiZulu, isiXhosa, siSwati, isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenda, Afrikaans. Syntax highlighting, error checking, hover translations and one-click run. Includes a South African Sign Language (SASL) sign-video dictionary.",
   "version": "0.4.0",
-  "publisher": "khanya-lang",
+  "publisher": "lula-lang",
   "license": "MIT",
   "engines": {
     "vscode": "^1.80.0"
@@ -14,95 +14,95 @@
   ],
   "main": "./extension.js",
   "activationEvents": [
-    "onLanguage:khanya",
+    "onLanguage:lula",
     "onLanguage:cpp",
-    "onCommand:khanya.convertFromCpp"
+    "onCommand:lula.convertFromCpp"
   ],
   "contributes": {
     "languages": [
       {
-        "id": "khanya",
+        "id": "lula",
         "aliases": [
-          "Khanya",
-          "khanya"
+          "Lula",
+          "lula"
         ],
         "extensions": [
-          ".kh"
+          ".lula"
         ],
         "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
       {
-        "language": "khanya",
-        "scopeName": "source.khanya",
-        "path": "./syntaxes/khanya.tmLanguage.json"
+        "language": "lula",
+        "scopeName": "source.lula",
+        "path": "./syntaxes/lula.tmLanguage.json"
       }
     ],
     "commands": [
       {
-        "command": "khanya.run",
-        "title": "Khanya: Qalisa / Run",
+        "command": "lula.run",
+        "title": "Lula: Qalisa / Run",
         "icon": "$(play)"
       },
       {
-        "command": "khanya.showCpp",
-        "title": "Khanya: Bonisa i-C++ / Show C++",
+        "command": "lula.showCpp",
+        "title": "Lula: Bonisa i-C++ / Show C++",
         "icon": "$(code)"
       },
       {
-        "command": "khanya.exportArduino",
-        "title": "Khanya: Export for Arduino (.ino)"
+        "command": "lula.exportArduino",
+        "title": "Lula: Export for Arduino (.ino)"
       },
       {
-        "command": "khanya.convertFromCpp",
-        "title": "Khanya: Convert C++ to Khanya (isiZulu, Afrikaans, ...)"
+        "command": "lula.convertFromCpp",
+        "title": "Lula: Convert C++ to Lula (isiZulu, Afrikaans, ...)"
       },
       {
-        "command": "khanya.sasl.show",
-        "title": "Khanya: Show SASL sign for word under cursor",
+        "command": "lula.sasl.show",
+        "title": "Lula: Show SASL sign for word under cursor",
         "icon": "$(eye)"
       },
       {
-        "command": "khanya.sasl.browse",
-        "title": "Khanya: Browse SASL sign dictionary"
+        "command": "lula.sasl.browse",
+        "title": "Lula: Browse SASL sign dictionary"
       }
     ],
     "menus": {
       "editor/title": [
         {
-          "command": "khanya.run",
-          "when": "resourceExtname == .kh",
+          "command": "lula.run",
+          "when": "resourceExtname == .lula",
           "group": "navigation"
         },
         {
-          "command": "khanya.showCpp",
-          "when": "resourceExtname == .kh",
+          "command": "lula.showCpp",
+          "when": "resourceExtname == .lula",
           "group": "navigation"
         }
       ],
       "editor/context": [
         {
-          "command": "khanya.convertFromCpp",
-          "when": "resourceLangId == cpp || resourceLangId == c || resourceLangId == khanya",
-          "group": "khanya"
+          "command": "lula.convertFromCpp",
+          "when": "resourceLangId == cpp || resourceLangId == c || resourceLangId == lula",
+          "group": "lula"
         },
         {
-          "command": "khanya.sasl.show",
-          "when": "resourceLangId == khanya",
-          "group": "khanya"
+          "command": "lula.sasl.show",
+          "when": "resourceLangId == lula",
+          "group": "lula"
         }
       ]
     },
     "configuration": {
-      "title": "Khanya",
+      "title": "Lula",
       "properties": {
-        "khanya.compilerPath": {
+        "lula.compilerPath": {
           "type": "string",
           "default": "g++",
           "description": "C++ compiler. For embedded targets use e.g. avr-g++ or arm-none-eabi-g++."
         },
-        "khanya.compilerArgs": {
+        "lula.compilerArgs": {
           "type": "array",
           "items": {
             "type": "string"
@@ -110,27 +110,27 @@
           "default": [],
           "description": "Extra compiler flags (e.g. -mmcu=atmega328p)."
         },
-        "khanya.checkOnSave": {
+        "lula.checkOnSave": {
           "type": "boolean",
           "default": true,
           "description": "Check for errors when the file is saved."
         },
-        "khanya.defaultLanguage": {
+        "lula.defaultLanguage": {
           "type": "string",
           "default": "zu",
-          "description": "Language used when the file name has no language code (robot.kh instead of robot.zu.kh)."
+          "description": "Language used when the file name has no language code (robot.lula instead of robot.zu.lula)."
         },
-        "khanya.sasl.enabled": {
+        "lula.sasl.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Offer South African Sign Language (SASL) sign videos when hovering keywords."
         },
-        "khanya.sasl.showMissing": {
+        "lula.sasl.showMissing": {
           "type": "boolean",
           "default": false,
           "description": "Also mention in the hover when no SASL sign has been recorded for a word yet."
         },
-        "khanya.sasl.dictionaryPath": {
+        "lula.sasl.dictionaryPath": {
           "type": "string",
           "default": "",
           "description": "Folder with your own SASL dictionary (signs.json + videos/). Empty uses the one built into the extension."
@@ -139,10 +139,10 @@
     },
     "keybindings": [
       {
-        "command": "khanya.sasl.show",
+        "command": "lula.sasl.show",
         "key": "ctrl+alt+s",
         "mac": "cmd+alt+s",
-        "when": "editorTextFocus && editorLangId == khanya"
+        "when": "editorTextFocus && editorLangId == lula"
       }
     ]
   }

@@ -1,8 +1,8 @@
-# Khanya: isiZulu reference
+# Lula: isiZulu reference
 
 > draft - needs review by isiZulu speakers
 
-Every word below can be used in `.zu.kh` files. Plain English C++ keeps working too.
+Every word below can be used in `.zu.lula` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

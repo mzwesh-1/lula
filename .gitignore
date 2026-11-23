@@ -1,5 +1,5 @@
 node_modules/
 *.vsix
-vscode-khanya/lib/
-vscode-khanya/LICENSE
+vscode-lula/lib/
+vscode-lula/LICENSE
 examples/*/

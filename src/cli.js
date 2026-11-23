@@ -6,32 +6,32 @@ const crypto = require('crypto');
 const { spawnSync } = require('child_process');
 const { translate, convert, listLanguages, loadLanguage, detectLanguage, localizeMessage } = require('./translator');
 
-const HELP = `Khanya - C++ in South African languages
+const HELP = `Lula - C++ in South African languages
 
 Usage:
-  khanya translate <file.zu.kh> [-o out.cpp]       Write the C++ translation
-  khanya build <file.zu.kh> [-o program] [options] [-- compiler flags]
-  khanya run <file.zu.kh> [options] [-- compiler flags]
-  khanya check <file.zu.kh>                        Check for errors only
-  khanya convert <file> --to <zu|af|cpp> [-o out]  Convert C++ -> Khanya, or between languages
-  khanya sasl status | check | list [-o file]       SASL sign-video dictionary
-  khanya sasl show <word> [--lang zu]               Which sign a word uses
-  khanya sasl add <concept> <video.mp4|https-url> --signer "Name" --license CC-BY-4.0 --consent
+  lula translate <file.zu.lula> [-o out.cpp]       Write the C++ translation
+  lula build <file.zu.lula> [-o program] [options] [-- compiler flags]
+  lula run <file.zu.lula> [options] [-- compiler flags]
+  lula check <file.zu.lula>                        Check for errors only
+  lula convert <file> --to <zu|af|cpp> [-o out]  Convert C++ -> Lula, or between languages
+  lula sasl status | check | list [-o file]       SASL sign-video dictionary
+  lula sasl show <word> [--lang zu]               Which sign a word uses
+  lula sasl add <concept> <video.mp4|https-url> --signer "Name" --license CC-BY-4.0 --consent
                   [--gloss IF] [--region Gauteng] [--reviewed-by "Name"] [--note "..."]
-  khanya sasl remove <concept>
-  khanya keywords [zu|af|...]                      Show the keyword table
-  khanya languages                                  List languages
+  lula sasl remove <concept>
+  lula keywords [zu|af|...]                      Show the keyword table
+  lula languages                                  List languages
 
 Options:
-  --lang <code>     Language (default: from file name, e.g. robot.zu.kh)
+  --lang <code>     Language (default: from file name, e.g. robot.zu.lula)
   --cxx <compiler>  C++ compiler (default: g++). For robots/embedded use e.g.
                     avr-g++, arm-none-eabi-g++, xtensa-esp32-elf-g++
   --no-defaults     Do not add the default flags (-std=c++20 -O2)
 
 Examples:
-  khanya run examples/sawubona.zu.kh
-  khanya build robot.zu.kh --cxx avr-g++ -- -mmcu=atmega328p -Os
-  khanya translate robot.zu.kh -o robot/robot.ino     (open in Arduino IDE)
+  lula run examples/sawubona.zu.lula
+  lula build robot.zu.lula --cxx avr-g++ -- -mmcu=atmega328p -Os
+  lula translate robot.zu.lula -o robot/robot.ino     (open in Arduino IDE)
 `;
 
 function parseArgs(argv) {
@@ -61,20 +61,20 @@ function parseArgs(argv) {
 function fail(msg) { process.stderr.write(msg + '\n'); process.exit(1); }
 
 function translateFile(file, langOpt) {
-  if (!file) fail('Khanya: no input file given. Try: khanya --help');
-  if (!fs.existsSync(file)) fail(`Khanya: file not found: ${file}`);
+  if (!file) fail('Lula: no input file given. Try: lula --help');
+  if (!fs.existsSync(file)) fail(`Lula: file not found: ${file}`);
   const lang = langOpt || detectLanguage(file);
-  if (!lang) fail(`Khanya: cannot tell the language of '${file}'. Name it like program.zu.kh or pass --lang zu`);
+  if (!lang) fail(`Lula: cannot tell the language of '${file}'. Name it like program.zu.lula or pass --lang zu`);
   const source = fs.readFileSync(file, 'utf8');
   const { cpp } = translate(source, lang, { fileName: path.resolve(file) });
   return { cpp, lang };
 }
 
 function tempCpp(file, cpp) {
-  const dir = path.join(os.tmpdir(), 'khanya');
+  const dir = path.join(os.tmpdir(), 'lula');
   fs.mkdirSync(dir, { recursive: true });
   const hash = crypto.createHash('sha1').update(path.resolve(file)).digest('hex').slice(0, 10);
-  const base = path.basename(file).replace(/\.[a-z]{2,3}\.kh$/i, '').replace(/\.kh$/i, '');
+  const base = path.basename(file).replace(/\.[a-z]{2,3}\.lula$/i, '').replace(/\.lula$/i, '');
   const cppPath = path.join(dir, `${base}-${hash}.cpp`);
   fs.writeFileSync(cppPath, cpp);
   return { dir, base, hash, cppPath };
@@ -84,12 +84,12 @@ function compile(args, { syntaxOnly = false, outPath } = {}) {
   const file = args._[1];
   const { cpp, lang } = translateFile(file, args.lang);
   const tmp = tempCpp(file, cpp);
-  const cxx = args.cxx || process.env.KHANYA_CXX || 'g++';
+  const cxx = args.cxx || process.env.LULA_CXX || 'g++';
   const flags = args.noDefaults ? [] : ['-std=c++20', '-O2'];
   const exe = outPath || path.join(tmp.dir, tmp.base + '-' + tmp.hash + (process.platform === 'win32' ? '.exe' : ''));
   const cmd = [...flags, ...args.extra, tmp.cppPath, ...(syntaxOnly ? ['-fsyntax-only'] : ['-o', exe])];
   const r = spawnSync(cxx, cmd, { encoding: 'utf8' });
-  if (r.error) fail(`Khanya: could not start compiler '${cxx}': ${r.error.message}`);
+  if (r.error) fail(`Lula: could not start compiler '${cxx}': ${r.error.message}`);
   if (r.stderr) process.stderr.write(localizeMessage(r.stderr, lang));
   if (r.status !== 0) process.exit(r.status || 1);
   return exe;
@@ -121,20 +121,20 @@ function sasl(args) {
       }
       case 'show': {
         const word = args._[2];
-        if (!word) fail('Khanya: which word? e.g. khanya sasl show uma --lang zu');
+        if (!word) fail('Lula: which word? e.g. lula sasl show uma --lang zu');
         const r = S.lookup(word, args.lang || null, dir);
-        if (!r) fail(`Khanya: '${word}' is not a Khanya keyword or library name${args.lang ? '' : ' (add --lang zu?)'}`);
+        if (!r) fail(`Lula: '${word}' is not a Lula keyword or library name${args.lang ? '' : ' (add --lang zu?)'}`);
         console.log(`${word} -> C++ ${r.concept}`);
         console.log(r.entry ? `SASL sign: ${r.video}\nSigned by ${r.entry.signer} (${r.entry.license})` : 'No SASL sign recorded yet for this concept.');
         break;
       }
       case 'add': {
         const [concept, video] = [args._[2], args._[3]];
-        if (!concept || !video) fail('Khanya: usage: khanya sasl add <concept> <video.mp4> --signer "Name" --license CC-BY-4.0 --consent');
+        if (!concept || !video) fail('Lula: usage: lula sasl add <concept> <video.mp4> --signer "Name" --license CC-BY-4.0 --consent');
         let source = video;
         if (/\.mp4$/i.test(video) && fs.existsSync(video) && args.consent) {
           // VS Code's built-in player may not play H.264 .mp4; .webm (VP9) always plays. Convert when ffmpeg exists.
-          const webm = path.join(os.tmpdir(), `khanya-sasl-${process.pid}.webm`);
+          const webm = path.join(os.tmpdir(), `lula-sasl-${process.pid}.webm`);
           const r = spawnSync('ffmpeg', ['-v', 'error', '-y', '-i', video, '-an', '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', '33', webm]);
           if (!r.error && r.status === 0) { source = webm; console.log('Converted to .webm so it plays in VS Code.'); }
           else console.log('Warning: could not convert to .webm (is ffmpeg installed?). Some VS Code versions cannot play .mp4.');
@@ -146,10 +146,10 @@ function sasl(args) {
         break;
       }
       case 'remove':
-        if (!S.removeSign(args._[2], dir)) fail(`Khanya: no SASL sign recorded for '${args._[2]}'`);
+        if (!S.removeSign(args._[2], dir)) fail(`Lula: no SASL sign recorded for '${args._[2]}'`);
         console.log(`Removed SASL sign for '${args._[2]}'.`);
         break;
-      default: fail('Khanya: sasl commands: status, check, list, show, add, remove');
+      default: fail('Lula: sasl commands: status, check, list, show, add, remove');
     }
   } catch (e) { fail(e.message); }
 }
@@ -168,22 +168,22 @@ function main(argv) {
     }
     case 'build': {
       const file = args._[1] || '';
-      const def = file.replace(/\.[a-z]{2,3}\.kh$/i, '').replace(/\.kh$/i, '') + (process.platform === 'win32' ? '.exe' : '');
+      const def = file.replace(/\.[a-z]{2,3}\.lula$/i, '').replace(/\.lula$/i, '') + (process.platform === 'win32' ? '.exe' : '');
       const exe = compile(args, { outPath: path.resolve(args.out || def) });
-      process.stderr.write(`Khanya: built ${exe}\n`);
+      process.stderr.write(`Lula: built ${exe}\n`);
       break;
     }
     case 'convert': {
       const file = args._[1];
-      if (!file || !fs.existsSync(file)) fail(`Khanya: file not found: ${file || ''}`);
-      if (!args.to) fail('Khanya: say which language to convert to, e.g. --to zu');
+      if (!file || !fs.existsSync(file)) fail(`Lula: file not found: ${file || ''}`);
+      if (!args.to) fail('Lula: say which language to convert to, e.g. --to zu');
       const from = args.lang || (/\.(c|cc|cpp|cxx|h|hpp|ino)$/i.test(file) ? 'cpp' : detectLanguage(file));
-      if (!from) fail(`Khanya: cannot tell the language of '${file}'. Pass --lang zu or --lang cpp`);
+      if (!from) fail(`Lula: cannot tell the language of '${file}'. Pass --lang zu or --lang cpp`);
       const result = convert(fs.readFileSync(file, 'utf8'), from, args.to);
       if (args.out) fs.writeFileSync(args.out, result); else process.stdout.write(result);
       break;
     }
-    case 'check': compile(args, { syntaxOnly: true }); process.stderr.write('Khanya: OK\n'); break;
+    case 'check': compile(args, { syntaxOnly: true }); process.stderr.write('Lula: OK\n'); break;
     case 'sasl': sasl(args); break;
     case 'run': {
       const exe = compile(args);
@@ -211,7 +211,7 @@ function main(argv) {
       }
       break;
     }
-    default: fail(`Khanya: unknown command '${cmd}'. Try: khanya --help`);
+    default: fail(`Lula: unknown command '${cmd}'. Try: lula --help`);
   }
 }
 

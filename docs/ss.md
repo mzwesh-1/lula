@@ -1,8 +1,8 @@
-# Khanya: siSwati reference
+# Lula: siSwati reference
 
 > draft - needs review by siSwati speakers
 
-Every word below can be used in `.ss.kh` files. Plain English C++ keeps working too.
+Every word below can be used in `.ss.lula` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

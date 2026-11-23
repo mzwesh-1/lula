@@ -1,8 +1,8 @@
-# Khanya: Sesotho reference
+# Lula: Sesotho reference
 
 > draft - needs review by Sesotho speakers
 
-Every word below can be used in `.st.kh` files. Plain English C++ keeps working too.
+Every word below can be used in `.st.lula` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 
