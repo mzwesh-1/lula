@@ -1,0 +1,148 @@
+// Isabelomali sanyanga zonke: umhlahlandlela wemali ngesiZulu.
+// A monthly budget planner in isiZulu, using the 50/30/20 rule:
+//   Izidingo (needs) 50%, Izifiso (wants) 30%, Ukonga (savings) 20%.
+// Imali igcinwa njengamasenti aphelele, ngakho ayikho isenti elahlekayo.
+// Money is kept in whole cents, so no cent is ever lost to rounding.
+//   soga run examples/isabelomali.zu.soga
+#faka <okokufaka_nokukhipha>
+#faka <umbhalo>
+#faka <iqoqo>
+#faka <amasu>
+#faka <izinombolo_ezinosayizi>
+
+uhlu isigaba Uhlobo { Izidingo, Izifiso, Ukonga };
+
+isakhiwo Into {
+    umbhalo igama;
+    inombolo64 amasenti;
+    Uhlobo umkhakha;
+};
+
+// R18 500,00 - indlela yaseNingizimu Afrika (isikhala nokhefana)
+umbhalo ngamarandi(inombolo64 amasenti) {
+    ibhuli kuyanciphisa = amasenti < 0;
+    uma (kuyanciphisa) amasenti = -amasenti;
+    umbhalo amarandi = kumbhalo(amasenti / 100);
+    jikeleza (inombolo i = guqula<inombolo>(amarandi.ubude()) - 3; i > 0; i -= 3) {
+        amarandi.faka_phakathi(i, " ");
+    }
+    umbhalo osele = kumbhalo(amasenti % 100);
+    uma (osele.ubude() < 2) osele = "0" + osele;
+    buyisa (kuyanciphisa ? "-R" : "R") + amarandi + "," + osele;
+}
+
+// 34,5% - iphesenti lenani elithile
+umbhalo iphesenti(inombolo64 ingxenye_yemali, inombolo64 konke) {
+    uma (konke == 0) buyisa "0,0%";
+    inombolo64 kwinkulungwane = ingxenye_yemali * 1000 / konke;
+    buyisa kumbhalo(kwinkulungwane / 10) + "," + kumbhalo(kwinkulungwane % 10) + "%";
+}
+
+umbhalo kwesobunxele(umbhalo umusho, inombolo ubude_obufunwayo) {
+    ngenkathi (guqula<inombolo>(umusho.ubude()) < ubude_obufunwayo) umusho.namathisela(" ");
+    buyisa umusho;
+}
+
+umbhalo kwesokudla(umbhalo umusho, inombolo ubude_obufunwayo) {
+    ngenkathi (guqula<inombolo>(umusho.ubude()) < ubude_obufunwayo) umusho = " " + umusho;
+    buyisa umusho;
+}
+
+umbhalo igama_lohlobo(Uhlobo u) {
+    khetha (u) {
+        isimo Uhlobo::Izidingo: buyisa "Izidingo";
+        isimo Uhlobo::Izifiso:  buyisa "Izifiso";
+        isimo Uhlobo::Ukonga:   buyisa "Ukonga";
+    }
+    buyisa "?";
+}
+
+inombolo64 isamba_sohlobo(engaguquki iqoqo<Into>& izinto, Uhlobo u) {
+    inombolo64 isamba = 0;
+    jikeleza (engaguquki okuzenzakalelayo& into : izinto) {
+        uma (into.umkhakha == u) isamba += into.amasenti;
+    }
+    buyisa isamba;
+}
+
+inombolo okuyinhloko() {
+    // ---- Imali engenayo (income) ----
+    iqoqo<Into> imali_engenayo = {
+        {"Iholo", 1850000, Uhlobo::Izidingo},
+        {"Ibhizinisi elincane", 230000, Uhlobo::Izidingo},
+    };
+    // ---- Izindleko (expenses) ----
+    iqoqo<Into> izindleko = {
+        {"Irenti", 650000, Uhlobo::Izidingo},
+        {"Ukudla", 320000, Uhlobo::Izidingo},
+        {"Ugesi namanzi", 110000, Uhlobo::Izidingo},
+        {"Itekisi", 145000, Uhlobo::Izidingo},
+        {"Ukusekela umndeni", 150000, Uhlobo::Izidingo},
+        {"Ifoni nedatha", 59900, Uhlobo::Izifiso},
+        {"Ukuzijabulisa", 120000, Uhlobo::Izifiso},
+        {"Izingubo", 80000, Uhlobo::Izifiso},
+        {"Isitokofela", 100000, Uhlobo::Ukonga},
+        {"Ukonga ebhange", 150000, Uhlobo::Ukonga},
+    };
+
+    inombolo64 ingeniso = 0;
+    jikeleza (engaguquki okuzenzakalelayo& into : imali_engenayo) ingeniso += into.amasenti;
+    inombolo64 izindleko_zonke = 0;
+    jikeleza (engaguquki okuzenzakalelayo& into : izindleko) izindleko_zonke += into.amasenti;
+
+    bhala << "==============================================================" << umugqa;
+    bhala << "        ISABELOMALI SIKANOVEMBA (umthetho we-50/30/20)" << umugqa;
+    bhala << "==============================================================" << umugqa;
+    bhala << kwesobunxele("Imali engenayo:", 26) << kwesokudla(ngamarandi(ingeniso), 14) << umugqa << umugqa;
+
+    // Izindleko kusukela kwezinkulu kuya kwezincane (largest first)
+    hlela(izindleko.ukuqala(), izindleko.ukuphela(), [](engaguquki Into& a, engaguquki Into& b) {
+        buyisa a.amasenti > b.amasenti;
+    });
+    bhala << kwesobunxele("Into", 26) << kwesokudla("Imali", 14) << "   " << kwesobunxele("Uhlobo", 10) << kwesokudla("%", 8) << umugqa;
+    bhala << "--------------------------------------------------------------" << umugqa;
+    jikeleza (engaguquki okuzenzakalelayo& into : izindleko) {
+        bhala << kwesobunxele(into.igama, 26) << kwesokudla(ngamarandi(into.amasenti), 14) << "   "
+              << kwesobunxele(igama_lohlobo(into.umkhakha), 10) << kwesokudla(iphesenti(into.amasenti, ingeniso), 8) << umugqa;
+    }
+    bhala << "--------------------------------------------------------------" << umugqa;
+    bhala << kwesobunxele("Izindleko zonke", 26) << kwesokudla(ngamarandi(izindleko_zonke), 14) << umugqa << umugqa;
+
+    // ---- Umthetho we-50/30/20 ----
+    bhala << "Uhlobo        Isetshenzisiwe     Okuhlosiwe    Isimo" << umugqa;
+    iqoqo<Uhlobo> izinhlobo = {Uhlobo::Izidingo, Uhlobo::Izifiso, Uhlobo::Ukonga};
+    iqoqo<inombolo> amaphesenti_ahlosiwe = {50, 30, 20};
+    jikeleza (inombolo i = 0; i < 3; i++) {
+        inombolo64 okusetshenzisiwe = isamba_sohlobo(izindleko, izinhlobo[i]);
+        inombolo64 okuhlosiwe = ingeniso * amaphesenti_ahlosiwe[i] / 100;
+        umbhalo isimo_sohlobo;
+        uma (izinhlobo[i] == Uhlobo::Ukonga) {
+            isimo_sohlobo = okusetshenzisiwe >= okuhlosiwe ? "Kuhle!" : "Onga kabanzi";
+        } kungenjalo {
+            isimo_sohlobo = okusetshenzisiwe <= okuhlosiwe ? "Kuhle!" : "Kudlulile";
+        }
+        bhala << kwesobunxele(igama_lohlobo(izinhlobo[i]), 12) << kwesokudla(ngamarandi(okusetshenzisiwe), 14)
+              << kwesokudla(ngamarandi(okuhlosiwe), 15) << "    " << isimo_sohlobo << umugqa;
+    }
+
+    // ---- Okusele nezeluleko (what is left, and advice) ----
+    inombolo64 okusele = ingeniso - izindleko_zonke;
+    bhala << umugqa << kwesobunxele("Okusele ekupheleni kwenyanga:", 30) << ngamarandi(okusele) << umugqa;
+    uma (okusele < 0) {
+        bhala << "Isexwayiso: usebenzisa imali eningi kunaleyo oyitholayo!" << umugqa;
+    } kungenjalo uma (okusele < ingeniso / 20) {
+        bhala << "Qaphela: kusele imali encane. Hlola izifiso zakho." << umugqa;
+    } kungenjalo {
+        bhala << "Kuhle! Faka okusele kwisikhwama sezimo eziphuthumayo." << umugqa;
+    }
+
+    // Isikhwama sezimo eziphuthumayo: izinyanga ezi-3 zezidingo (emergency fund = 3 months of needs)
+    inombolo64 umgomo = isamba_sohlobo(izindleko, Uhlobo::Izidingo) * 3;
+    inombolo64 ukonga_kwenyanga = isamba_sohlobo(izindleko, Uhlobo::Ukonga) + (okusele > 0 ? okusele : 0);
+    uma (ukonga_kwenyanga > 0) {
+        inombolo64 izinyanga = (umgomo + ukonga_kwenyanga - 1) / ukonga_kwenyanga;
+        bhala << "Isikhwama sezimo eziphuthumayo (" << ngamarandi(umgomo) << ") sizogcwala ezinyangeni ezingu-"
+              << izinyanga << "." << umugqa;
+    }
+    buyisa 0;
+}
