@@ -85,7 +85,7 @@ maintainer=Mzwandile Zulu
 sentence=Write Arduino sketches in isiZulu, isiXhosa, siSwati, isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenda and Afrikaans.
 paragraph=Add #include <isiZulu.h> (or your language) as the first line and write setup, loop, pinMode, digitalWrite, Serial and more in your home language.
 category=Other
-url=https://github.com/mzwesh-1/lula
+url=https://github.com/mzwesh-1/soga-arduino
 architectures=*
 includes=Soga.h
 `);
@@ -102,6 +102,7 @@ for (const [code, file] of LANGS) {
   const body = code === 'zu' ? light : WIRING + ascii(T.fromCpp(lightCpp, code).replace(/^[ \t]*\/\/.*\n/gm, '').replace(/[ \t]*\/\/.*$/gm, '').replace(/\n{3,}/g, '\n\n').replace(/\n\s*\n(\s*})/g, '\n$1').replace(/^\s+/, ''));
   fs.writeFileSync(path.join(exDir, name, `${name}.ino`), `#include <${file}.h>\n\n${body}`);
 }
+fs.copyFileSync(path.join(ROOT, 'LICENSE'), path.join(OUT, 'LICENSE'));
 fs.writeFileSync(path.join(OUT, 'README.md'), `# Soga for Arduino IDE
 
 Write Arduino sketches in your home language. Install this library (Sketch -> Include Library ->
@@ -129,5 +130,7 @@ Headers: ${LANGS.map(([, f]) => `\`${f}.h\``).join(', ')}.
 - On AVR boards (Uno, Nano, Mega), write accented words without the accents (\`tsa\` for \`tša\`); both are defined.
 - Compiler errors are shown in English in Arduino IDE. For errors in your language, use Soga in VS Code.
 - The words are a draft that native speakers are still reviewing.
+
+This library is generated from the Soga language project: https://github.com/mzwesh-1/lula
 `);
 console.log(`Soga Arduino library -> ${path.relative(ROOT, OUT)} (${LANGS.length} languages)`);

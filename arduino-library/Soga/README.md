@@ -25,3 +25,5 @@ Headers: `isiZulu.h`, `isiXhosa.h`, `siSwati.h`, `isiNdebele.h`, `Sesotho.h`, `S
 - On AVR boards (Uno, Nano, Mega), write accented words without the accents (`tsa` for `tša`); both are defined.
 - Compiler errors are shown in English in Arduino IDE. For errors in your language, use Soga in VS Code.
 - The words are a draft that native speakers are still reviewing.
+
+This library is generated from the Soga language project: https://github.com/mzwesh-1/lula
