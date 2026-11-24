@@ -386,7 +386,7 @@ function localizeMessage(text, langCode) {
     for (const [local, cpp] of lang.headerMap) add(`<${cpp}>`, `<${local}>`);
     for (const p of packsFor(langCode)) for (const [local, cpp] of p.headers) add(`<${cpp}>`, `<${local}>`);
     const names = [...reverse.keys()].sort((a, b) => b.length - a.length).map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-    const re = names.length ? new RegExp(`(?<![\\p{L}\\p{N}_:])(${names.join('|')})(?![\\p{L}\\p{N}_])`, 'gu') : null;
+    const re = names.length ? new RegExp(`(?<![\\p{L}\\p{N}_])(?<!(?<!:):)(${names.join('|')})(?![\\p{L}\\p{N}_])`, 'gu') : null;
     reverseCache.set(langCode, { reverse, re });
   }
   const { reverse, re } = reverseCache.get(langCode);

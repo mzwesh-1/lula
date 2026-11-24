@@ -1,0 +1,16 @@
+// LCD1602 nesibali-sikhathi ngesiZulu (Soga ku-VS Code). RS -> 7, E -> 8, D4-D7 -> 9-12
+#faka <isikrini_sombhalo>
+
+Isikrini_sombhalo isikrini(7, 8, 9, 10, 11, 12);
+
+ize qala() {
+    isikrini.ukuqala(16, 2);               // izinhlamvu eziyi-16, imigqa emi-2
+    isikrini.bonisa("Sawubona Mhlaba!");
+}
+
+ize phindaphinda() {
+    isikrini.setha_ikhesa(0, 1);           // ikholomu 0, umugqa 1
+    isikrini.bonisa("Imizuzwana: ");
+    isikrini.bonisa(amamilisekhondi() / 1000);
+    linda(200);
+}

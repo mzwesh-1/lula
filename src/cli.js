@@ -263,7 +263,7 @@ function arduino(args) {
   if (res.error) fail(`Soga: ${M.t('cli.no_arduino_cli', msgLang)}`);
   // Keep what matters to the learner; drop arduino-cli's own bookkeeping (platform tables, "Error during build").
   const noise = l => /^(Used (library|platform)|Error during build|Compilation error|Error during Upload)\b/.test(l) || /^\S+ +\d[\w.-]* +\//.test(l);
-  const show = text => (text ? M.localizeArduinoOutput(T.mapSketchPaths(text.replace(/\x1b\[[0-9;]*m/g, ''), sk.ino, sogaFile), msgLang)
+  const show = text => (text ? M.localizeArduinoOutput(T.mapSketchPaths(text.replace(/\x1b\[[0-9;]*m/g, ''), sk.ino, sogaFile, fs.readFileSync(file, 'utf8')), msgLang)
     .split('\n').filter(l => !noise(l)).join('\n').replace(/\n{3,}/g, '\n\n') : '');
   const compilerOut = show(res.stderr), toolOut = show(res.stdout);
   // arduino-cli prints compiler errors on stderr and sizes / upload progress on stdout

@@ -24,6 +24,8 @@ inombolo okuyinhloko() {
 - **Ten languages.** All 96 C++ keywords, the standard library, header names and member functions in each written official South African language. Plain English C++ also keeps working.
 - **Errors as you type, in your language.** Full sentences such as `iphutha: kushoda u-';' ngaphambi kuka 'bhala'`, on the right line, with **quick fixes** (add a missing `;`, add a missing `#faka`, "did you mean").
 - **A full language server:** smart completion and snippets, hover explanations (`jikeleza` → C++ `for`), go to definition, find references, rename across files, outline, parameter hints, semantic colouring, Format Document.
+- **The whole Arduino starter kit:** servo, stepper, LCD1602, HC-SR04, PIR, DHT11, MPU-6050, RC522 RFID, DS3231 clock, IR remote, keypad, rotary encoder, MAX7219, 7-segment displays, buzzers, relay and L293D motors, all in your language.
+- **Arduino IDE too:** install the Soga library and start a sketch with `#include <isiZulu.h>` (or your language).
 - **Every Arduino-compatible board:** Uno, Nano, Mega, Leonardo, Uno R4, Nano 33 IoT/BLE, Raspberry Pi Pico, ESP32, ESP8266, STM32 and more. Click the board name in the status bar to choose a board, then **Soga: Build / upload**.
 - **Libraries in your language:** ROS 2, OpenCV, Eigen, CUDA, PyTorch (libtorch), Servo, Wire, SPI and EEPROM.
 - **Convert C++ into Soga.** Right-click any C++ file → **Soga: Convert C++ to Soga**.

@@ -204,12 +204,55 @@ function writeSketch(dir, base, cppWithoutLineDirective) {
 }
 
 /** Rewrite messages about the generated sketch so they point at the user's .soga file. */
-function mapSketchPaths(text, ino, sogaFile) {
+function mapSketchPaths(text, ino, sogaFile, sogaSource) {
   if (!text) return text;
   const variants = new Set([ino, ino.replace(/\\/g, '/'), ino + '.cpp']);
   let out = text;
   for (const v of variants) out = out.split(v + '.cpp').join(sogaFile).split(v).join(sogaFile);
-  return out;
+  return sogaSource == null ? out : showOwnCode(out, sogaFile, sogaSource);
+}
+
+/**
+ * arduino-cli compiles a copy of the sketch, so GCC quotes the translated C++ line under an error.
+ * Put the user's own line back (same tokens, other words) and move the ^ to the same token.
+ */
+function showOwnCode(text, sogaFile, sogaSource) {
+  const { tokenize } = require('./translator');
+  const src = sogaSource.split('\n').map(l => l.replace(/\r$/, ''));
+  const lines = text.split('\n');
+  for (let i = 0; i + 2 < lines.length + 1; i++) {
+    const m = /^(.*):(\d+):(\d+): /.exec(lines[i]);
+    if (!m || m[1] !== sogaFile || !src[m[2] - 1]) continue;
+    const own = src[m[2] - 1], col = Number(m[3]) - 1;
+    // GCC 9+:  "   12 | code" + "      |   ^~~"     GCC 7/8:  "code" + "   ^~~"
+    const nu = /^(\s*\d+ \| )(.*)$/.exec(lines[i + 1] || ''), nc = /^(\s*\| )([ ~^]*\^[ ~^]*)$/.exec(lines[i + 2] || '');
+    const old = !nu && /^ [ ~^]*\^[ ~^]*$/.test(lines[i + 2] || '');
+    if (!(nu && nc) && !old) continue;
+    // GCC 7/8 put one space before the quoted line and the caret
+    const cpp = nu ? nu[2] : lines[i + 1].slice(1), pre = nu ? nu[1] : ' ';
+    const caretPre = nc ? nc[1] : ' ', marks = nc ? nc[2] : lines[i + 2].slice(1);
+    const sig = line => { const r = []; let o = 0; for (const t of tokenize(line)) { if (!/^\s+$/.test(t.text)) r.push([o, t.text.length]); o += t.text.length; } return r; };
+    const pa = sig(cpp), pb = sig(own);
+    if (pa.length !== pb.length) continue;
+    // Move every ^ and ~ to the same token in the user's line; a ~ range covers whole tokens.
+    const out = [];
+    let lo = Infinity, hi = -1, caretAt = -1;
+    for (let p = 0; p < marks.length; p++) {
+      if (marks[p] === ' ') continue;
+      const k = pa.findIndex(([o, n]) => p >= o && p < o + n);
+      if (k < 0) continue;
+      const [o, n] = pb[k];
+      if (marks[p] === '^') caretAt = o + Math.min(p - pa[k][0], n - 1);
+      lo = Math.min(lo, o); hi = Math.max(hi, o + n - 1);
+    }
+    if (caretAt < 0) continue;
+    if (!/~/.test(marks)) lo = hi = caretAt;
+    for (let p = 0; p <= Math.max(hi, caretAt); p++) out.push(p === caretAt ? '^' : p >= lo && p <= hi ? '~' : ' ');
+    const caret = caretPre + out.join('').replace(/\s+$/, '');
+    lines[i + 1] = pre + own;
+    lines[i + 2] = caret;
+  }
+  return lines.join('\n');
 }
 
 /**

@@ -754,6 +754,20 @@ ts: ntirho lowu wu lava mimpimo ya {1}, kambe ku nyikiwe {2}
 ve: mushumo uyu u ṱoḓa ndeme dza {1}, fhedzi ho ṋewa {2}
 af: hierdie funksie het {1} waardes nodig, maar {2} is gegee
 
+@e.candidates_n
+re: ^there (?:is|are) (\d+) candidates?$
+en: possible matches: {1}
+zu: okungase kufanele: {1}
+xh: okunokulingana: {1}
+ss: lokungahle kufanele: {1}
+nr: okungafanelana: {1}
+st: tse ka tshwanelang: {1}
+tn: tse di ka tshwanelang: {1}
+nso: tše di ka swanelago: {1}
+ts: leswi nga ha fambelanaka: {1}
+ve: zwi nga tshimbilelanaho: {1}
+af: moontlike passings: {1}
+
 @e.candidate
 re: ^candidate: (.+)$
 re: ^candidate \d+: (.+)$

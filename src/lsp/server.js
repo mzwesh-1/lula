@@ -221,7 +221,7 @@ async function validate(doc) {
     if (!out || out.cancelled) return;
     const later = documents.get(uri);
     if (later && later.version !== version) return;
-    connection.sendDiagnostics({ uri, version, diagnostics: [...own, ...parseCompilerOutput(out.text || '', sk.ino, doc, a, msgLang)] });
+    connection.sendDiagnostics({ uri, version, diagnostics: [...own, ...parseCompilerOutput(out.text || '', sk.ino, doc, a, msgLang, plain.cpp.split('\n'))] });
     return;
   }
   if (tr.arduino) {
@@ -270,18 +270,30 @@ async function validate(doc) {
     connection.sendDiagnostics({ uri, version, diagnostics: [...own, ...info] });
     return;
   }
-  const compiler = parseCompilerOutput(stderr.text, file, doc, a, msgLang);
+  const compiler = parseCompilerOutput(stderr.text, file, doc, a, msgLang, tr.cpp.split('\n').slice(1));   // after the #line
   connection.sendDiagnostics({ uri, version, diagnostics: [...own, ...info, ...compiler] });
 }
 
 /** GCC output (English, LC_ALL=C) -> LSP diagnostics in the user's language, with quick-fix data. */
-function parseCompilerOutput(text, file, doc, a, msgLang) {
+function parseCompilerOutput(text, file, doc, a, msgLang, cppLines) {
   const target = path.resolve(file);
   const isUser = f => { try { return path.resolve(f) === target; } catch { return false; } };
   const diags = [];
   let last = null, foreign = null, includedFromUser = null;
+  const userLines = doc.getText().split('\n');
+  // GCC counts columns in the translated C++ line; the user's words have other lengths. Same tokens, so match by index.
+  const words = line => { const r = []; let o = 0; for (const t of require('../translator').tokenize(line)) { if (!/^\s+$/.test(t.text)) r.push([o, t.text.length]); o += t.text.length; } return r; };
+  const userCol = (l, c) => {
+    if (!cppLines || cppLines[l] == null || userLines[l] == null) return c;
+    const pa = words(cppLines[l].replace(/\r$/, '')), pb = words(userLines[l].replace(/\r$/, ''));
+    if (pa.length !== pb.length) return c;
+    const k = pa.findIndex(([o, n]) => c >= o && c < o + n);
+    if (k >= 0) return pb[k][0] + Math.min(c - pa[k][0], pb[k][1] - 1);
+    const after = pa.findIndex(([o]) => o > c);   // in the spaces before a token, or after the last one
+    return after > 0 ? pb[after - 1][0] + pb[after - 1][1] + (c - pa[after - 1][0] - pa[after - 1][1]) : after === 0 ? Math.min(c, pb[0][0]) : c - (pa.length ? pa[pa.length - 1][0] + pa[pa.length - 1][1] - pb[pb.length - 1][0] - pb[pb.length - 1][1] : 0);
+  };
   const at = (line, col) => {
-    const l = Math.max(0, line - 1), c = Math.max(0, col - 1);
+    const l = Math.max(0, line - 1), c = userCol(l, Math.max(0, col - 1));
     const tok = a.sig.find(t => t.line === l && t.char <= c && c < Math.max(t.endChar, t.char + 1));
     return tok ? rangeOf(tok) : { start: { line: l, character: c }, end: { line: l, character: c + 1 } };
   };

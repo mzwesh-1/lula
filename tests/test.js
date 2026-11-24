@@ -269,6 +269,17 @@ test('Arduino IDE library: kit examples mean the same C++ in every language', ()
   }
 });
 
+test('Arduino errors quote the user\'s own line, with the caret on the same word', () => {
+  const T = require('../src/toolchain');
+  const f = '/x/a.zu.soga', src = 'ize qala() {}\n    isikrini.setha_ikhesa(0, 1, 2);';
+  // GCC 7 (AVR)
+  assert.strictEqual(T.mapSketchPaths(`/w/a.ino:2:31: error: no\n     isikrini.setCursor(0, 1, 2);\n                               ^`, '/w/a.ino', f, src),
+    `${f}:2:31: error: no\n     isikrini.setha_ikhesa(0, 1, 2);\n                                  ^`);
+  // GCC 9+ (ESP32, Pico, ...)
+  assert.strictEqual(T.mapSketchPaths(`/w/a.ino:2:23: error: no\n    2 |     isikrini.setCursor(0, 1, 2);\n      |     ~~~~~~~~~~~~~~~~~~^~~~~~~~~`, '/w/a.ino', f, src),
+    `${f}:2:23: error: no\n    2 |     isikrini.setha_ikhesa(0, 1, 2);\n      |     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~`);
+});
+
 (async () => {
 await require('./lsp.test.js')({ testAsync, ROOT });
 
