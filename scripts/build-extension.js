@@ -10,7 +10,9 @@ const LIB = path.join(EXT, 'lib');
 
 fs.rmSync(LIB, { recursive: true, force: true });
 fs.mkdirSync(path.join(LIB, 'languages'), { recursive: true });
-for (const f of ['translator.js', 'cli.js', 'sasl.js', 'messages.js']) fs.copyFileSync(path.join(ROOT, 'src', f), path.join(LIB, f));
+for (const f of ['translator.js', 'cli.js', 'sasl.js', 'messages.js', 'toolchain.js']) fs.copyFileSync(path.join(ROOT, 'src', f), path.join(LIB, f));
+fs.mkdirSync(path.join(LIB, 'lsp'), { recursive: true });
+for (const f of ['server.js', 'analysis.js']) fs.copyFileSync(path.join(ROOT, 'src', 'lsp', f), path.join(LIB, 'lsp', f));
 fs.mkdirSync(path.join(LIB, 'packs'), { recursive: true });
 for (const f of fs.readdirSync(path.join(ROOT, 'packs')).filter(f => f.endsWith('.json'))) fs.copyFileSync(path.join(ROOT, 'packs', f), path.join(LIB, 'packs', f));
 fs.mkdirSync(path.join(LIB, 'messages'), { recursive: true });
@@ -86,3 +88,13 @@ const grammar = {
 };
 fs.writeFileSync(path.join(EXT, 'syntaxes', 'lula.tmLanguage.json'), JSON.stringify(grammar, null, 2));
 console.log(`Built extension lib/ and grammar for: ${langs.map(f => f.replace('.json', '')).join(', ')}`);
+
+// Bundle the extension and the language server into single files (faster start-up in VS Code).
+const esbuild = require('esbuild');
+esbuild.buildSync({ entryPoints: [path.join(EXT, 'extension.js')], bundle: true, platform: 'node', target: 'node18', format: 'cjs',
+  external: ['vscode'], outfile: path.join(LIB, 'extension.js'), logLevel: 'warning' });
+esbuild.buildSync({ entryPoints: [path.join(ROOT, 'src', 'lsp', 'server.js')], bundle: true, platform: 'node', target: 'node18', format: 'cjs',
+  outfile: path.join(LIB, 'lsp', 'server.js'), logLevel: 'warning' });
+fs.rmSync(path.join(LIB, 'lsp', 'analysis.js'), { force: true });
+fs.copyFileSync(path.join(ROOT, 'LICENSE'), path.join(EXT, 'LICENSE'));
+console.log('Bundled lib/extension.js and lib/lsp/server.js');

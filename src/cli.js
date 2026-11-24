@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const { spawnSync } = require('child_process');
 const { translate, convert, listLanguages, loadLanguage, detectLanguage } = require('./translator');
 const M = require('./messages');
+const T = require('./toolchain');
 
 const HELP = `Lula - C++ in South African languages
 
@@ -96,33 +97,6 @@ function tempCpp(file, cpp, ext = '.cpp') {
   return { dir, base, hash, cppPath };
 }
 
-/** Compiler and linker flags for the library packs a program uses. */
-function packFlags(packs) {
-  const flags = [], notes = [];
-  const pkg = (name) => {
-    const r = spawnSync('pkg-config', ['--cflags', '--libs', name], { encoding: 'utf8' });
-    return r.status === 0 ? r.stdout.trim().split(/\s+/).filter(Boolean) : null;
-  };
-  for (const p of packs) {
-    if (p === 'opencv') { const f = pkg('opencv4') || pkg('opencv'); if (f) flags.push(...f); else notes.push(['OpenCV', 'Install OpenCV (e.g. sudo apt install libopencv-dev).']); }
-    if (p === 'eigen') { const f = pkg('eigen3'); if (f) flags.push(...f); else notes.push(['Eigen', 'Install Eigen (e.g. sudo apt install libeigen3-dev).']); }
-    if (p === 'torch') {
-      const lt = process.env.LIBTORCH;
-      if (lt) {
-        flags.push(`-I${lt}/include`, `-I${lt}/include/torch/csrc/api/include`, `-L${lt}/lib`, `-Wl,-rpath,${lt}/lib`, '-ltorch_cpu', '-lc10');
-        // Some libtorch builds (e.g. the PyPI wheels) use the old std::string ABI: match it, or nothing links.
-        const nm = spawnSync('nm', ['-DC', '--defined-only', path.join(lt, 'lib', 'libc10.so')], { encoding: 'utf8', maxBuffer: 64 << 20 });
-        const sym = (nm.stdout || '').split('\n').find(l => l.includes('torchInternalAssertFail') && l.includes('string const&'));
-        if (sym && !sym.includes('__cxx11')) flags.push('-D_GLIBCXX_USE_CXX11_ABI=0');
-      }
-      else notes.push(['PyTorch (libtorch)', 'Download libtorch from pytorch.org and set LIBTORCH=/path/to/libtorch.']);
-    }
-    if (p === 'ros2') notes.push(['ROS 2', 'Build ROS 2 nodes inside a ROS workspace: lula translate the file to src/<name>.cpp and run colcon build.']);
-    if (p === 'cuda') notes.push(['CUDA', 'Build with NVIDIA nvcc: lula build file --cxx nvcc -- -x cu']);
-  }
-  return { flags, notes };
-}
-
 function compile(args, { syntaxOnly = false, outPath } = {}) {
   const file = args._[1];
   const r = translateFile(file, args);
@@ -134,16 +108,13 @@ function compile(args, { syntaxOnly = false, outPath } = {}) {
     process.exit(1);
   }
   const tmp = tempCpp(file, r.cpp);
-  const { flags: libFlags, notes } = packFlags(r.packs);
+  const { flags: libFlags, notes } = T.packFlags(r.packs);
   for (const [name, how] of notes) process.stderr.write(`Lula: ${M.t('cli.pack_hint', msgLang, name, how)}\n`);
   const flags = args.noDefaults ? [] : ['-std=c++20', '-O2'];
   const exe = outPath || path.join(tmp.dir, tmp.base + '-' + tmp.hash + (process.platform === 'win32' ? '.exe' : ''));
-  // Library headers are system headers: warnings inside OpenCV/Eigen/... are not the learner's problem.
-  const libIncludes = libFlags.filter(f => f.startsWith('-I')).flatMap(f => ['-isystem', f.slice(2)]);
-  const libDefines = libFlags.filter(f => f.startsWith('-D'));
-  const libLinks = libFlags.filter(f => !f.startsWith('-I') && !f.startsWith('-D'));
-  const cmd = [...flags, '-fdiagnostics-color=never', ...libDefines, ...libIncludes, ...args.extra, tmp.cppPath, ...(syntaxOnly ? ['-fsyntax-only'] : ['-o', exe, ...libLinks])];
-  const out = spawnSync(cxx, cmd, { encoding: 'utf8', env: { ...process.env, LC_ALL: 'C', LANG: 'C', LANGUAGE: '' } });
+  const lib = T.splitLibFlags(libFlags);
+  const cmd = [...flags, '-fdiagnostics-color=never', ...lib.defines, ...lib.includes, ...args.extra, tmp.cppPath, ...(syntaxOnly ? ['-fsyntax-only'] : ['-o', exe, ...lib.links])];
+  const out = spawnSync(cxx, cmd, { encoding: 'utf8', env: T.C_ENV });
   if (out.error) fail(`Lula: ${M.t('cli.compiler_missing', msgLang, cxx)}`);
   if (out.stderr) process.stderr.write(M.localizeDiagnostics(out.stderr, r.lang === msgLang ? r.lang : msgLang));
   if (out.status !== 0) process.exit(out.status || 1);
@@ -170,69 +141,37 @@ function runProgram(exe, lang) {
   });
 }
 
-// ---- Arduino boards -------------------------------------------------------------------------
-const BOARDS = {
-  uno: { mcu: 'atmega328p', variant: 'standard', define: 'ARDUINO_AVR_UNO', f: '16000000L' },
-  nano: { mcu: 'atmega328p', variant: 'eightanaloginputs', define: 'ARDUINO_AVR_NANO', f: '16000000L' },
-  mega: { mcu: 'atmega2560', variant: 'mega', define: 'ARDUINO_AVR_MEGA2560', f: '16000000L' },
-};
-function findArduinoCore() {
-  const candidates = [process.env.ARDUINO_AVR_CORE, '/usr/share/arduino/hardware/arduino/avr',
-    path.join(os.homedir(), '.arduino15/packages/arduino/hardware/avr')].filter(Boolean);
-  for (const c of candidates) {
-    if (fs.existsSync(path.join(c, 'cores/arduino/Arduino.h'))) return c;
-    if (fs.existsSync(c)) { // ~/.arduino15/.../avr/<version>
-      for (const v of fs.readdirSync(c).sort().reverse()) if (fs.existsSync(path.join(c, v, 'cores/arduino/Arduino.h'))) return path.join(c, v);
-    }
-  }
-  return null;
-}
-
+// ---- Arduino ----------------------------------------------------------------------------------
 function arduino(args) {
   const file = args._[1];
-  const board = BOARDS[args.board || 'uno'];
-  if (!board) fail(`Lula: unknown board '${args.board}'. Boards: ${Object.keys(BOARDS).join(', ')}`);
+  const boardName = args.board || 'uno';
+  if (!T.BOARDS[boardName]) fail(`Lula: unknown board '${boardName}'. Boards: ${Object.keys(T.BOARDS).join(', ')}`);
   const r = translateFile(file, { ...args, target: 'arduino' });
-  const core = findArduinoCore();
-  if (!core) fail('Lula: Arduino AVR core not found. Install it (sudo apt install arduino-core-avr gcc-avr avr-libc, or the Arduino IDE) or set ARDUINO_AVR_CORE.');
+  const core = T.findArduinoCore();
+  if (!core) fail('Lula: Arduino AVR core not found. Install the Arduino IDE (and the "Arduino AVR Boards" package), or sudo apt install arduino-core-avr gcc-avr avr-libc, or set ARDUINO_AVR_CORE.');
+  const gpp = T.findTool('avr-g++'), gcc = T.findTool('avr-gcc');
+  if (!gpp || !gcc) fail(`Lula: ${M.t('cli.compiler_missing', msgLang, 'avr-g++')} (Arduino IDE, or: sudo apt install gcc-avr avr-libc)`);
   const tmp = tempCpp(file, '#include <Arduino.h>\n' + r.cpp);
-  const build = path.join(tmp.dir, `${tmp.base}-${tmp.hash}-${args.board || 'uno'}`);
+  const setup = T.arduinoSetup(core, boardName, r.cpp);
+  const build = path.join(tmp.dir, `${tmp.base}-${tmp.hash}-${boardName}`);
   fs.rmSync(build, { recursive: true, force: true });
   fs.mkdirSync(build, { recursive: true });
-  const common = [`-mmcu=${board.mcu}`, `-DF_CPU=${board.f}`, '-DARDUINO=10806', `-D${board.define}`, '-DARDUINO_ARCH_AVR', '-Os',
-    '-ffunction-sections', '-fdata-sections', '-fdiagnostics-color=never'];
-  const inc = [`-I${core}/cores/arduino`, `-I${core}/variants/${board.variant}`];
-  // Libraries shipped with the core (Wire, SPI, EEPROM, SoftwareSerial, ...): used when their header is included.
-  const included = new Set((r.cpp.match(/#\s*include\s*<([^>]+)>/g) || []).map(h => h.replace(/.*<|>/g, '')));
-  const libSources = [];
-  const libRoot = path.join(core, 'libraries');
-  if (fs.existsSync(libRoot)) {
-    for (const lib of fs.readdirSync(libRoot)) {
-      const src = path.join(libRoot, lib, 'src');
-      if (!fs.existsSync(src) || !fs.readdirSync(src).some(h => included.has(h))) continue;
-      inc.push(`-I${src}`);
-      const walk = d => { for (const f of fs.readdirSync(d)) { const p = path.join(d, f); if (fs.statSync(p).isDirectory()) { inc.push(`-I${p}`); walk(p); } else if (/\.(c|cpp)$/.test(f)) libSources.push(p); } };
-      walk(src);
-    }
-  }
-  const env = { ...process.env, LC_ALL: 'C', LANG: 'C', LANGUAGE: '' };
   const cc = (src, obj) => {
-    const isCpp = /\.cpp$/.test(src);
-    const tool = isCpp ? 'avr-g++' : (/\.S$/.test(src) ? 'avr-gcc' : 'avr-gcc');
-    const lang = isCpp ? ['-std=gnu++11', '-fno-exceptions', '-fno-threadsafe-statics'] : (/\.S$/.test(src) ? ['-x', 'assembler-with-cpp'] : ['-std=gnu11']);
-    return spawnSync(tool, ['-c', ...common, ...lang, ...inc, src, '-o', obj], { encoding: 'utf8', env });
+    const isCpp = /\.cpp$/.test(src), isAsm = /\.S$/.test(src);
+    const tool = isCpp ? gpp : gcc;
+    const flags = isCpp ? setup.cppFlags : (isAsm ? ['-x', 'assembler-with-cpp'] : ['-std=gnu11']);
+    return spawnSync(tool.cmd, ['-c', ...setup.common, ...flags, ...setup.inc, src, '-o', obj], { encoding: 'utf8', env: T.C_ENV });
   };
   // 1. The user's program: errors shown in their language.
   const mainObj = path.join(build, 'program.o');
   let res = cc(tmp.cppPath, mainObj);
-  if (res.error) fail(`Lula: ${M.t('cli.compiler_missing', msgLang, 'avr-g++')} (sudo apt install gcc-avr avr-libc)`);
   if (res.stderr) process.stderr.write(M.localizeDiagnostics(res.stderr, msgLang));
   if (res.status !== 0) process.exit(res.status || 1);
   if (args.check) { process.stderr.write(`Lula: ${M.t('cli.ok', msgLang)}\n`); return; }
   // 2. The Arduino core and libraries.
-  const coreDir = path.join(core, 'cores/arduino');
+  const coreDir = path.join(core, 'cores', 'arduino');
   const objs = [mainObj];
-  const sources = [...fs.readdirSync(coreDir).filter(f => /\.(c|cpp|S)$/.test(f)).map(f => path.join(coreDir, f)), ...libSources];
+  const sources = [...fs.readdirSync(coreDir).filter(f => /\.(c|cpp|S)$/.test(f)).map(f => path.join(coreDir, f)), ...setup.libSources];
   sources.forEach((src, k) => {
     const obj = path.join(build, `${k}-${path.basename(src)}.o`);
     const out = cc(src, obj);
@@ -241,18 +180,21 @@ function arduino(args) {
   });
   // 3. Link and make the .hex file.
   const elf = path.join(build, 'program.elf');
-  res = spawnSync('avr-gcc', [`-mmcu=${board.mcu}`, '-Os', '-Wl,--gc-sections', ...objs, '-o', elf, '-lm'], { encoding: 'utf8', env });
+  res = spawnSync(gcc.cmd, [`-mmcu=${setup.board.mcu}`, '-Os', '-Wl,--gc-sections', ...objs, '-o', elf, '-lm'], { encoding: 'utf8', env: T.C_ENV });
   if (res.stderr) process.stderr.write(M.localizeDiagnostics(res.stderr, msgLang));
   if (res.status !== 0) process.exit(res.status || 1);
   const hex = path.resolve(args.out || file.replace(/(\.[a-z]{2,3})?\.lula$/i, '') + '.hex');
-  res = spawnSync('avr-objcopy', ['-O', 'ihex', '-R', '.eeprom', elf, hex], { encoding: 'utf8' });
+  const objcopy = T.findTool('avr-objcopy');
+  res = spawnSync(objcopy ? objcopy.cmd : 'avr-objcopy', ['-O', 'ihex', '-R', '.eeprom', elf, hex], { encoding: 'utf8' });
   if (res.status !== 0) fail(`Lula: avr-objcopy failed: ${res.stderr || res.error}`);
-  const size = spawnSync('avr-size', [elf], { encoding: 'utf8' }).stdout || '';
-  process.stderr.write(`Lula: ${M.t('cli.built', msgLang, hex)}\n${size}`);
+  const size = T.findTool('avr-size');
+  const sizeOut = size ? (spawnSync(size.cmd, [elf], { encoding: 'utf8' }).stdout || '') : '';
+  process.stderr.write(`Lula: ${M.t('cli.built', msgLang, hex)}\n${sizeOut}`);
   if (args.upload) {
-    const up = spawnSync('avrdude', ['-p', board.mcu, '-c', board.mcu === 'atmega2560' ? 'wiring' : 'arduino', '-P', args.upload,
-      '-b', board.mcu === 'atmega2560' ? '115200' : '115200', '-D', '-U', `flash:w:${hex}:i`], { stdio: 'inherit' });
-    if (up.error) fail('Lula: avrdude not found (sudo apt install avrdude)');
+    const dude = T.findTool('avrdude');
+    if (!dude) fail('Lula: avrdude not found (install the Arduino IDE, or: sudo apt install avrdude)');
+    const up = spawnSync(dude.cmd, [...dude.args, '-p', setup.board.mcu, '-c', setup.board.programmer, '-P', args.upload,
+      '-b', setup.board.baud, '-D', '-U', `flash:w:${hex}:i`], { stdio: 'inherit' });
     process.exit(up.status ?? 1);
   }
 }

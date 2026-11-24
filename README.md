@@ -121,10 +121,32 @@ node bin/lula.js build robot.zu.lula --cxx avr-g++ -- -mmcu=atmega328p -Os
 
 ```bash
 npm run package-extension
-code --install-extension lula-0.5.0.vsix
+code --install-extension lula-0.6.0.vsix
 ```
 
 The extension provides syntax highlighting, hover translations (hover `uma` → C++ `if`), completion, error checking when you save, a ▶ Run button, a live "Show C++" side view, "Export for Arduino", "Convert C++ to Lula", and the SASL sign-video player.
+
+## Language server (VS Code and other editors)
+
+Lula ships a full **Language Server Protocol** server (`src/lsp/server.js`). The VS Code extension starts it
+automatically, and any LSP editor (Neovim, Emacs, Sublime, Zed, ...) can run it with `node src/lsp/server.js --stdio`.
+Everything it says is in the language of the file you are editing.
+
+| Feature | What it does |
+|---|---|
+| Errors as you type | Lula's own checks instantly; then the real compiler (GCC, or AVR for Arduino files) after a short pause, as full sentences in your language |
+| Quick fixes | add a missing `#faka <...>`, add a missing `;`, apply "did you mean", rename a name that is a reserved Lula word |
+| Completion | keywords, snippets (`uma`, `jikeleza`, `qala` + `phindaphinda`, ...), your own names in scope, members after `.`, header names after `#faka <`, library words (choosing an OpenCV/ROS/... word adds its `#faka` for you) |
+| Hover | the C++ meaning of every Lula word, and the declaration of your own names |
+| Go to definition, find references, highlight | scope-aware (shadowed names are told apart), across all `.lula` files in the workspace |
+| Rename | across files, and it refuses names that are Lula words |
+| Outline and workspace symbols | classes, members, functions, enums, namespaces, macros |
+| Parameter hints | for your own functions |
+| Semantic colouring | your functions, classes, variables, parameters and constants |
+| Format Document | fixes indentation |
+| C++ hints (optional) | shows the C++ meaning after each Lula word (`lula.inlayHints.cppNames`) |
+
+`tests/lsp.test.js` drives the server over the real protocol (stdio) and checks every feature above.
 
 ## 🤟 South African Sign Language (SASL) sign-video dictionary
 

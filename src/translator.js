@@ -397,5 +397,5 @@ function localizeMessage(text, langCode) {
 
 module.exports = {
   tokenize, translate, fromCpp, convert, loadLanguage, listLanguages, detectLanguage, localizeMessage,
-  loadPacks, packsFor, describeWord, bareName,
+  loadPacks, packsFor, describeWord, bareName, contextFor,
 };

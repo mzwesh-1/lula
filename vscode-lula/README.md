@@ -2,6 +2,7 @@
 
 Write C++ in all 10 written official South African languages.
 
+- A full language server: errors as you type, quick fixes, smart completion, go to definition, find references, rename, outline, parameter hints, semantic colouring, Format Document
 - Syntax highlighting for all Lula languages
 - Hover a keyword to see its C++ meaning
 - Keyword completion

@@ -3,10 +3,11 @@ const vscode = require('vscode');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { execFile } = require('child_process');
-const { translate, convert, listLanguages, loadLanguage, detectLanguage, describeWord, packsFor } = require('./lib/translator');
-const M = require('./lib/messages');
-const CLI = path.join(__dirname, 'lib', 'cli.js');
+const { LanguageClient, TransportKind } = require('vscode-languageclient/node');
+const { translate, convert, listLanguages, loadLanguage, detectLanguage } = require('./lib/translator');
+// Works both unbundled (extension.js next to lib/) and bundled (lib/extension.js)
+const LIB = fs.existsSync(path.join(__dirname, 'cli.js')) ? __dirname : path.join(__dirname, 'lib');
+const CLI = path.join(LIB, 'cli.js');
 const sasl = require('./lib/sasl');
 
 const CPP_SCHEME = 'lula-cpp';
@@ -46,10 +47,29 @@ function showSign(context, { word, lang }) {
   saslPanel.reveal(vscode.ViewColumn.Beside, true);
 }
 
+let client = null;
+
+/** Start the Lula language server: errors as you type, completion, hover, go to definition, rename, ... */
+function startLanguageServer(context) {
+  const module = context.asAbsolutePath(path.join('lib', 'lsp', 'server.js'));
+  const serverOptions = {
+    run: { module, transport: TransportKind.ipc },
+    debug: { module, transport: TransportKind.ipc, options: { execArgv: ['--nolazy', '--inspect=6009'] } },
+  };
+  const clientOptions = {
+    documentSelector: [{ scheme: 'file', language: 'lula' }, { scheme: 'untitled', language: 'lula' }],
+    synchronize: { configurationSection: 'lula', fileEvents: vscode.workspace.createFileSystemWatcher('**/*.lula') },
+    outputChannelName: 'Lula',
+  };
+  client = new LanguageClient('lula', 'Lula', serverOptions, clientOptions);
+  client.start();
+  context.subscriptions.push({ dispose: () => client && client.stop() });
+}
+
 function activate(context) {
-  const diagnostics = vscode.languages.createDiagnosticCollection('lula');
+  startLanguageServer(context);
   const changed = new vscode.EventEmitter();
-  context.subscriptions.push(diagnostics, changed);
+  context.subscriptions.push(changed);
 
   // Read-only "show the C++" view that updates as you type.
   context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(CPP_SCHEME, {
@@ -143,78 +163,24 @@ function activate(context) {
     if (pick) showSign(context, { word: pick.word, lang: pick.word === pick.concept ? null : lang });
   }));
 
-  // Hover: show the C++ meaning of a word.
+  // SASL: the language server explains words; this adds the sign-video link to the same hover.
   context.subscriptions.push(vscode.languages.registerHoverProvider('lula', {
     provideHover(doc, pos) {
+      if (!config().get('sasl.enabled')) return;
       const lang = safeLang(doc); if (!lang) return;
       const range = doc.getWordRangeAtPosition(pos); if (!range) return;
       const word = doc.getText(range);
-      const found = describeWord(word, lang.code);
+      if (lang.headerMap.has(word)) return;
+      const found = sasl.lookup(word, lang.code, saslDir());
       if (!found) return;
-      const where = ['keyword', 'library', 'directive', 'header'].includes(found.source) ? '' : ` · ${found.source}`;
-      const md = new vscode.MarkdownString(`**${word}** (${lang.name}${where}) → C++ \`${found.cpp}\``);
-      if (config().get('sasl.enabled') && !lang.headerMap.has(word)) {
-        const found = sasl.lookup(word, lang.code, saslDir());
-        if (found && found.entry) {
-          md.appendMarkdown(`\n\n${saslCommandLink({ word, lang: lang.code }, '🤟 Show SASL sign')}`);
-          md.isTrusted = { enabledCommands: ['lula.sasl.show'] };
-        } else if (found && config().get('sasl.showMissing')) {
-          md.appendMarkdown('\n\n🤟 _No SASL sign recorded yet_');
-        }
+      if (found.entry) {
+        const md = new vscode.MarkdownString(saslCommandLink({ word, lang: lang.code }, '🤟 SASL'));
+        md.isTrusted = { enabledCommands: ['lula.sasl.show'] };
+        return new vscode.Hover(md, range);
       }
-      return new vscode.Hover(md, range);
+      if (config().get('sasl.showMissing')) return new vscode.Hover(new vscode.MarkdownString('🤟 _SASL: —_'), range);
     },
   }));
-
-  // Completion: offer keywords of the file's language with their C++ meaning.
-  context.subscriptions.push(vscode.languages.registerCompletionItemProvider('lula', {
-    provideCompletionItems(doc) {
-      const lang = safeLang(doc); if (!lang) return [];
-      const items = [];
-      for (const [w, cpp] of lang.keywordMap) {
-        const it = new vscode.CompletionItem(w, vscode.CompletionItemKind.Keyword); it.detail = cpp; items.push(it);
-      }
-      for (const [w, cpp] of lang.libraryMap) {
-        const it = new vscode.CompletionItem(w, vscode.CompletionItemKind.Function); it.detail = cpp; items.push(it);
-      }
-      for (const p of packsFor(lang.code)) {
-        for (const [w, cpp] of p.names) {
-          const it = new vscode.CompletionItem(w, vscode.CompletionItemKind.Function); it.detail = `${cpp} · ${p.name}`; items.push(it);
-        }
-      }
-      return items;
-    },
-  }));
-
-  // Error checking: run `lula check` (or `lula arduino --check` for Arduino programs) and show its
-  // messages - already full sentences in the file's language - in the Problems panel.
-  const runCli = (args, cb) => execFile(process.execPath, [CLI, ...args], { encoding: 'utf8', env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }, maxBuffer: 16 << 20 }, cb);
-  const check = doc => {
-    if (doc.languageId !== 'lula' || doc.uri.scheme !== 'file' || !config().get('checkOnSave')) return;
-    const lang = langOf(doc);
-    let arduino = false;
-    try { arduino = translate(doc.getText(), lang).arduino; } catch (e) { vscode.window.showErrorMessage(e.message); return; }
-    const extra = config().get('compilerArgs');
-    const args = arduino
-      ? ['arduino', doc.fileName, '--lang', lang, '--check', '--board', config().get('arduinoBoard')]
-      : ['check', doc.fileName, '--lang', lang, '--cxx', config().get('compilerPath'), ...(extra.length ? ['--', ...extra] : [])];
-    runCli(args, (_err, _out, stderr) => {
-      const sev = { [M.t('sev.warning', lang)]: vscode.DiagnosticSeverity.Warning, [M.t('sev.note', lang)]: vscode.DiagnosticSeverity.Information };
-      const labels = ['sev.error', 'sev.warning', 'sev.fatal'].map(id => M.t(id, lang).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-      const re = new RegExp(`^(.*?):(\\d+):(\\d+): (${labels.join('|')}): (.*)$`, 'gmu');
-      const target = path.resolve(doc.fileName).replace(/\\/g, '/');
-      const list = [];
-      let m;
-      while ((m = re.exec(stderr || ''))) {
-        if (path.resolve(m[1]).replace(/\\/g, '/') !== target) continue;
-        const line = Math.max(0, +m[2] - 1), col = Math.max(0, +m[3] - 1);
-        const range = doc.getWordRangeAtPosition(new vscode.Position(line, col)) || new vscode.Range(line, col, line, col + 1);
-        const d = new vscode.Diagnostic(range, m[5], sev[m[4]] ?? vscode.DiagnosticSeverity.Error);
-        d.source = 'lula'; list.push(d);
-      }
-      diagnostics.set(doc.uri, list);
-    });
-  };
 
   // Build (and optionally upload) an Arduino program.
   context.subscriptions.push(vscode.commands.registerCommand('lula.arduino', async () => {
@@ -230,9 +196,7 @@ function activate(context) {
     task.presentationOptions = { reveal: vscode.TaskRevealKind.Always, clear: true };
     vscode.tasks.executeTask(task);
   }));
-  context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(check), vscode.workspace.onDidOpenTextDocument(check));
-  vscode.workspace.textDocuments.forEach(check);
 }
 
-function deactivate() {}
+function deactivate() { return client ? client.stop() : undefined; }
 module.exports = { activate, deactivate };

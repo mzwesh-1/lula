@@ -2,17 +2,17 @@
   "name": "lula",
   "displayName": "Lula - C++ in South African languages",
   "description": "Write C++ in all 10 written official South African languages, including ROS 2, OpenCV, Eigen, CUDA, PyTorch and Arduino, with error messages in your language. Includes a South African Sign Language (SASL) sign-video dictionary.",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "publisher": "lula-lang",
   "license": "MIT",
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.82.0"
   },
   "categories": [
     "Programming Languages",
     "Education"
   ],
-  "main": "./extension.js",
+  "main": "./lib/extension.js",
   "activationEvents": [
     "onLanguage:lula",
     "onLanguage:cpp",
@@ -120,11 +120,6 @@
           "default": [],
           "description": "Extra compiler flags (e.g. -mmcu=atmega328p)."
         },
-        "lula.checkOnSave": {
-          "type": "boolean",
-          "default": true,
-          "description": "Check for errors when the file is saved."
-        },
         "lula.defaultLanguage": {
           "type": "string",
           "default": "zu",
@@ -159,6 +154,41 @@
           "type": "string",
           "default": "",
           "description": "Default serial port for uploading to an Arduino (e.g. /dev/ttyUSB0 or COM3)."
+        },
+        "lula.diagnostics.onType": {
+          "type": "boolean",
+          "default": true,
+          "description": "Check for errors while you type (not only when you save)."
+        },
+        "lula.diagnostics.delay": {
+          "type": "number",
+          "default": 600,
+          "minimum": 100,
+          "description": "How long to wait after you stop typing before checking (milliseconds)."
+        },
+        "lula.messageLanguage": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "en",
+            "zu",
+            "xh",
+            "ss",
+            "nr",
+            "st",
+            "tn",
+            "nso",
+            "ts",
+            "ve",
+            "af"
+          ],
+          "description": "Language of error messages. 'auto' uses the file's language."
+        },
+        "lula.inlayHints.cppNames": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show the C++ meaning next to each Lula word (useful when learning)."
         }
       }
     },
@@ -169,6 +199,24 @@
         "mac": "cmd+alt+s",
         "when": "editorTextFocus && editorLangId == lula"
       }
+    ],
+    "semanticTokenScopes": [
+      {
+        "language": "lula",
+        "scopes": {
+          "property": [
+            "variable.other.property.lula"
+          ],
+          "macro": [
+            "entity.name.function.preprocessor.lula"
+          ]
+        }
+      }
     ]
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12"
   }
 }

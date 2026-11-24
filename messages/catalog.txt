@@ -1004,3 +1004,199 @@ nso: boleng bja mathomo
 ts: nkoka wo sungula
 ve: ndeme ya u thoma
 af: 'n beginwaarde
+
+# ---- language server (VS Code) -----------------------------------------------------------
+@lsp.reserved_name
+en: {1} is a Lula word (it means {2}), so it cannot be your own name. Choose another name, for example {3}
+zu: u-{1} ligama le-Lula (lisho {2}), ngakho angeke kube igama lakho. Khetha elinye, isibonelo {3}
+xh: u-{1} ligama le-Lula (lithetha {2}), ngoko alinakuba ligama lakho. Khetha elinye, umzekelo {3}
+ss: {1} libito le-Lula (lisho {2}), ngako angeke kube libito lakho. Khetsa lelinye, sibonelo {3}
+nr: u-{1} libizo le-Lula (litjho {2}), ngalokho angeze kube libizo lakho. Khetha elinye, isibonelo {3}
+st: {1} ke lentswe la Lula (le bolela {2}), ka hona e ke ke ya eba lebitso la hao. Kgetha le leng, mohlala {3}
+tn: {1} ke lefoko la Lula (le kaya {2}), ka jalo e ka se nne leina la gago. Tlhopha le lengwe, sekai {3}
+nso: {1} ke lentšu la Lula (le hlaloša {2}), ka gona e ka se be leina la gago. Kgetha le lengwe, mohlala {3}
+ts: {1} i rito ra Lula (ri vula {2}), hikwalaho a ri nge vi vito ra wena. Hlawula rin'wana, xikombiso {3}
+ve: {1} ndi ipfi la Lula (li amba {2}), nga zwenezwo a li nga vhi dzina ḽaṋu. Nangani ḽiṅwe, tsumbo {3}
+af: {1} is 'n Lula-woord (dit beteken {2}), dus kan dit nie jou eie naam wees nie. Kies 'n ander naam, byvoorbeeld {3}
+
+@lsp.cannot_rename
+en: only your own names can be renamed
+zu: amagama akho kuphela angaqanjwa kabusha
+xh: ngamagama akho kuphela anokuthiywa ngokutsha
+ss: emabito akho kuphela langetsiwa kabusha
+nr: amabizo wakho kwaphela angathiywa butjha
+st: ke mabitso a hao feela a ka rewang botjha
+tn: ke maina a gago fela a a ka teewang sešwa
+nso: ke maina a gago fela ao a ka rewago lefsa
+ts: i mavito ya wena ntsena lama nga thyiwaka nakambe
+ve: ndi madzina aṋu fhedzi ane a nga ṱhogomelwa hafhu
+af: net jou eie name kan hernoem word
+
+@lsp.rename_reserved
+en: {1} is a Lula word and cannot be used as a name
+zu: u-{1} ligama le-Lula futhi angeke lisetshenziswe njengegama lakho
+xh: u-{1} ligama le-Lula kwaye alinakusetyenziswa njengegama
+ss: {1} libito le-Lula futsi angeke lisetjentiswe njengelibito
+nr: u-{1} libizo le-Lula begodu angeze lisetjenziswe njengebizo
+st: {1} ke lentswe la Lula mme le ke ke la sebediswa e le lebitso
+tn: {1} ke lefoko la Lula mme le ka se dirisiwe jaaka leina
+nso: {1} ke lentšu la Lula gomme le ka se šomišwe bjalo ka leina
+ts: {1} i rito ra Lula naswona a ri nge tirhisiwi tanihi vito
+ve: {1} ndi ipfi la Lula nahone a li nga shumiswi sa dzina
+af: {1} is 'n Lula-woord en kan nie as naam gebruik word nie
+
+@lsp.rename_invalid
+en: {1} is not a valid name: use letters, digits and _, and do not start with a digit
+zu: u-{1} akulona igama elivumelekile: sebenzisa izinhlamvu, izinombolo no-_, ungaqali ngenombolo
+xh: u-{1} asilogama livumelekileyo: sebenzisa oonobumba, amanani no-_, ungaqali ngenani
+ss: {1} akusilo libito lelivumelekile: sebentisa tinhlavu, tinombolo na-_, ungacali ngenombolo
+nr: u-{1} akusilo ibizo elivumelekileko: sebenzisa iinhlamvu, iinomboro no-_, ungathomi ngenomboro
+st: {1} hase lebitso le lokileng: sebedisa ditlhaku, dinomoro le _, o se ke wa qala ka nomoro
+tn: {1} ga se leina le le siameng: dirisa ditlhaka, dinomore le _, o se ka wa simolola ka nomore
+nso: {1} ga se leina le le lokilego: šomiša ditlhaka, dinomoro le _, o se thome ka nomoro
+ts: {1} a hi vito leri amukelekaka: tirhisa maletere, tinomboro na _, u nga sunguli hi nomboro
+ve: {1} a si dzina ḽo teaho: shumisani maledere, nomboro na _, ni songo thoma nga nomboro
+af: {1} is nie 'n geldige naam nie: gebruik letters, syfers en _, en moenie met 'n syfer begin nie
+
+@lsp.fix_include
+en: Add #{1} <{2}>
+zu: Engeza #{1} <{2}>
+xh: Yongeza #{1} <{2}>
+ss: Engeta #{1} <{2}>
+nr: Engeza #{1} <{2}>
+st: Eketsa #{1} <{2}>
+tn: Oketsa #{1} <{2}>
+nso: Oketša #{1} <{2}>
+ts: Engetela #{1} <{2}>
+ve: Engedzani #{1} <{2}>
+af: Voeg #{1} <{2}> by
+
+@lsp.fix_replace
+en: Change to {1}
+zu: Shintsha kube ngu-{1}
+xh: Tshintsha ube ngu-{1}
+ss: Shintsha kube ngu-{1}
+nr: Tjhugulula kube ngu-{1}
+st: Fetola e be {1}
+tn: Fetola e nne {1}
+nso: Fetoša e be {1}
+ts: Cinca yi va {1}
+ve: Shandukisani i vhe {1}
+af: Verander na {1}
+
+@lsp.fix_semicolon
+en: Add the missing ;
+zu: Engeza u-; oshodayo
+xh: Yongeza u-; olahlekileyo
+ss: Engeta ; losweleka
+nr: Engeza u-; otlhogekako
+st: Eketsa ; e haellang
+tn: Oketsa ; e e tlhaelang
+nso: Oketša ; ye e hlaelago
+ts: Engetela ; leyi pfumalekaka
+ve: Engedzani ; i shayaho
+af: Voeg die ontbrekende ; by
+
+@lsp.fix_rename
+en: Rename to {1}
+zu: Qamba kabusha kube ngu-{1}
+xh: Thiya ngokutsha ube ngu-{1}
+ss: Etsa libito lelisha {1}
+nr: Thiya butjha kube ngu-{1}
+st: Rea botjha e be {1}
+tn: Taya sešwa e nne {1}
+nso: Rea lefsa e be {1}
+ts: Thya nakambe yi va {1}
+ve: Ṱhogomelani hafhu i vhe {1}
+af: Hernoem na {1}
+
+@lsp.kind.function
+en: function
+zu: umsebenzi
+xh: umsebenzi
+ss: umsebenti
+nr: umsebenzi
+st: mosebetsi
+tn: tiro
+nso: mošomo
+ts: ntirho
+ve: mushumo
+af: funksie
+
+@lsp.kind.method
+en: member function
+zu: umsebenzi welungu
+xh: umsebenzi welungu
+ss: umsebenti welilunga
+nr: umsebenzi welunga
+st: mosebetsi wa setho
+tn: tiro ya leloko
+nso: mošomo wa leloko
+ts: ntirho wa xirho
+ve: mushumo wa tshirado
+af: lidfunksie
+
+@lsp.kind.variable
+en: variable
+zu: isiguquguquki
+xh: isiguquguquki
+ss: sigucuguculi
+nr: isitjhugululi
+st: se fetohang
+tn: se se fetogang
+nso: seo se fetogago
+ts: lexi cincaka
+ve: tshishanduki
+af: veranderlike
+
+@lsp.kind.parameter
+en: parameter
+zu: ipharamitha
+xh: iparamitha
+ss: iphalamitha
+nr: ipharamitha
+st: paramethara
+tn: paramethara
+nso: paramethara
+ts: paramitha
+ve: pharamitha
+af: parameter
+
+@lsp.kind.field
+en: member
+zu: ilungu
+xh: ilungu
+ss: lilunga
+nr: ilunga
+st: setho
+tn: leloko
+nso: leloko
+ts: xirho
+ve: tshirado
+af: lid
+
+@lsp.kind.enumMember
+en: member of {kw:enum}
+zu: ilungu lika-{kw:enum}
+xh: ilungu le-{kw:enum}
+ss: lilunga le-{kw:enum}
+nr: ilunga le-{kw:enum}
+st: setho sa {kw:enum}
+tn: leloko la {kw:enum}
+nso: leloko la {kw:enum}
+ts: xirho xa {kw:enum}
+ve: tshirado tsha {kw:enum}
+af: lid van {kw:enum}
+
+@lsp.declared_in
+en: declared in {1}
+zu: imenyezelwe ku-{1}
+xh: ibhengezwe ku-{1}
+ss: imenyetelwe ku-{1}
+nr: imenyezelwe ku-{1}
+st: e phatlaladitswe ho {1}
+tn: e boletswe mo {1}
+nso: e tsebišitšwe go {1}
+ts: yi tivisiwile eka {1}
+ve: yo divhadzwa kha {1}
+af: verklaar in {1}

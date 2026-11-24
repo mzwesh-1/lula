@@ -242,4 +242,12 @@ if (hasGpp) {
 
 require('./packs_messages.test.js')({ test, ROOT, CLI });
 
+async function testAsync(name, fn) {
+  try { await fn(); passed++; console.log(`  ok   ${name}`); }
+  catch (e) { console.log(`  FAIL ${name}\n${e.stack}`); process.exitCode = 1; }
+}
+(async () => {
+await require('./lsp.test.js')({ testAsync, ROOT });
+
 console.log(`\n${passed} passed${process.exitCode ? ', some FAILED' : ''}`);
+})();
