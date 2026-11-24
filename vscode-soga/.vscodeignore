@@ -1,3 +1,4 @@
 node_modules/**
 extension.js
 .vscodeignore
+images/screenshot.png

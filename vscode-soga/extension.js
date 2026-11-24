@@ -98,7 +98,7 @@ function activate(context) {
     const ed = vscode.window.activeTextEditor;
     if (!ed || ed.document.languageId !== 'soga') return;
     await ed.document.save();
-    const cli = path.join(__dirname, 'lib', 'cli.js');
+    const cli = CLI;
     const args = [cli, 'run', ed.document.fileName, '--lang', langOf(ed.document), '--cxx', config().get('compilerPath')];
     const extra = config().get('compilerArgs');
     if (extra.length) args.push('--', ...extra);

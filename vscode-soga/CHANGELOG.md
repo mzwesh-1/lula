@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.3 (preview)
+- Fixed: the Run button failed with "there is no registered task type 'soga'", and then could not find the Soga program. Tested in VS Code 1.147.
+
 ## 0.7.2 (preview)
 - .soga files now have their own icon (the Soga </> badge) in the file list and tabs.
 
