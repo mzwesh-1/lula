@@ -3,7 +3,7 @@
   "displayName": "Soga: C++ in South African languages",
   "description": "Write C++ and Arduino code in all 10 written official South African languages: every Arduino-compatible board (Uno, Nano, Mega, Uno R4, Nano 33, ESP32, Raspberry Pi Pico, STM32, ...), ROS 2, OpenCV, Eigen, CUDA and PyTorch, with error messages in your language and a full language server. Includes a South African Sign Language (SASL) sign-video dictionary.",
   "version": "0.7.0",
-  "publisher": "soga-lang",
+  "publisher": "mzwandilezulu",
   "license": "MIT",
   "engines": {
     "vscode": "^1.82.0"
