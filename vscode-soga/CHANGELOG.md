@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.2 (preview)
+- .soga files now have their own icon (the Soga </> badge) in the file list and tabs.
+
 ## 0.7.1 (preview)
 - The extension is now simply called "Soga".
 - Also published on Open VSX (for VSCodium, Cursor and other VS Code-based editors).
