@@ -128,8 +128,21 @@ function compile(args, { syntaxOnly = false, outPath } = {}) {
 }
 
 /** Run a built program; translate uncaught-exception and crash messages, keep the program's own output. */
-function runProgram(exe, lang) {
-  const child = require('child_process').spawn(exe, [], { stdio: ['inherit', 'inherit', 'pipe'] });
+function runProgram(exe, lang, attempt = 0) {
+  // Windows can refuse to start a freshly built program for a moment (a virus scan still holds it),
+  // or block it outright (antivirus, Smart App Control). Retry a few times, then explain.
+  const cannotStart = (err) => {
+    if (attempt < 4) { setTimeout(() => runProgram(exe, lang, attempt + 1), 700 * (attempt + 1)); return; }
+    process.stderr.write(`Soga: ${M.t('cli.cannot_start', lang, exe)} (${err.code || err.message})\n`);
+    if (process.platform === 'win32') process.stderr.write(`Soga: ${M.t('cli.try_wsl', lang)}\n`);
+    process.exit(1);
+  };
+  let child;
+  try { child = require('child_process').spawn(exe, [], { stdio: ['inherit', 'inherit', 'pipe'] }); }
+  catch (err) { cannotStart(err); return; }
+  let started = false;
+  child.on('spawn', () => { started = true; });
+  child.on('error', err => { if (!started) cannotStart(err); });
   let buf = '';
   child.stderr.on('data', d => {
     buf += d.toString();
@@ -394,7 +407,15 @@ function main(argv) {
     case 'ports': ports(); break;
     case 'sasl': sasl(args); break;
     case 'run': {
-      const exe = compile(args);
+      // On Windows, build next to the .soga file (in .soga-build) instead of the Temp folder,
+      // which security software treats with extra suspicion.
+      let outPath;
+      if (process.platform === 'win32' && args._[1]) {
+        const dir = path.join(path.dirname(path.resolve(args._[1])), '.soga-build');
+        fs.mkdirSync(dir, { recursive: true });
+        outPath = path.join(dir, path.basename(args._[1]).replace(/(\.[a-z]{2,3})?\.soga$/i, '') + '.exe');
+      }
+      const exe = compile(args, { outPath });
       runProgram(exe, msgLang);
       break;
     }

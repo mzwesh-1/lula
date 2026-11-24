@@ -53,7 +53,7 @@ function showSign(context, { word, lang }) {
  * its output into a pseudo-terminal, so the output stays visible after the program ends (a plain terminal
  * closes as soon as its process exits) and works the same on Windows, macOS and Linux.
  */
-function runInTerminal(name, args) {
+function runInTerminal(name, args, command = process.execPath) {
   const title = `Soga: ${name}`;
   for (const t of vscode.window.terminals) if (t.name === title) t.dispose();
   const cp = require('child_process');
@@ -65,7 +65,7 @@ function runInTerminal(name, args) {
     onDidWrite: writeEmitter.event,
     onDidClose: closeEmitter.event,
     open: () => {
-      child = cp.spawn(process.execPath, args, { env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }, cwd: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined });
+      child = cp.spawn(command, args, { env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }, cwd: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined });
       child.stdout.on('data', d => out(d));
       child.stderr.on('data', d => out(`\x1b[31m${d}\x1b[0m`));
       child.on('error', e => out(`\r\nSoga: ${e.message}\r\n`));
@@ -142,6 +142,12 @@ function activate(context) {
     if (!ed || ed.document.languageId !== 'soga') return;
     await ed.document.save();
     const cli = CLI;
+    // Windows with Smart App Control blocks programs you build yourself: run them in WSL (Ubuntu) instead.
+    if (process.platform === 'win32' && config().get('runIn') === 'wsl') {
+      const toWsl = p => p.replace(/^([A-Za-z]):[\\/]/, (_, d) => `/mnt/${d.toLowerCase()}/`).replace(/\\/g, '/');
+      runInTerminal(`${path.basename(ed.document.fileName)} (WSL)`, ['-e', 'node', toWsl(cli), 'run', toWsl(ed.document.fileName), '--lang', langOf(ed.document)], 'wsl.exe');
+      return;
+    }
     const args = [cli, 'run', ed.document.fileName, '--lang', langOf(ed.document), '--cxx', config().get('compilerPath')];
     const extra = config().get('compilerArgs');
     if (extra.length) args.push('--', ...extra);

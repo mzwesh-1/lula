@@ -1269,3 +1269,29 @@ nso: Ga go na boto ye e kgokagantšwego. Kgokaganya boto, goba o fe phoro ya yon
 ts: A ku na bodo leyi hlanganisiweke. Hlanganisa bodo, kumbe u nyika phoro ya yona, xikombiso: --upload COM3 kumbe --upload /dev/ttyUSB0
 ve: A hu na bodo yo ṱanganywaho. Ṱanganyani bodo, kana ni ṋee phoro yayo, tsumbo: --upload COM3 kana --upload /dev/ttyUSB0
 af: Geen bord is gekoppel nie. Koppel die bord, of gee sy poort, byvoorbeeld: --upload COM3 of --upload /dev/ttyUSB0
+
+@cli.cannot_start
+en: Windows did not allow the program {1} to start. This is usually antivirus (Windows Security) or Smart App Control blocking a new program. Allow it in Windows Security → Virus & threat protection → Protection history, then run it again
+zu: IWindows ayivumelanga uhlelo {1} ukuthi luqale. Ngokuvamile yi-antivirus (Windows Security) noma i-Smart App Control evimba uhlelo olusha. Luvumele ku-Windows Security → Virus & threat protection → Protection history, bese uluqalisa futhi
+xh: IWindows ayivumelanga inkqubo {1} ukuba iqale. Ngokuqhelekileyo yi-antivirus (Windows Security) okanye i-Smart App Control ethintela inkqubo entsha. Yivumele kwi-Windows Security → Virus & threat protection → Protection history, uze uyiqalise kwakhona
+ss: IWindows ayikavumeli luhlelo {1} kutsi lucale. Kanyenti yi-antivirus (Windows Security) nome i-Smart App Control levimba luhlelo lolusha. Luvumele ku-Windows Security → Virus & threat protection → Protection history, bese uyalucalisa futsi
+nr: IWindows ayikavumeli ihlelo {1} bona lithome. Kanengi yi-antivirus (Windows Security) namkha i-Smart App Control evimba ihlelo elitjha. Livumele ku-Windows Security → Virus & threat protection → Protection history, bese ulithomisa godu
+st: Windows ha e a dumella lenaneo {1} ho qala. Hangata ke antivirus (Windows Security) kapa Smart App Control e thibelang lenaneo le letjha. Le dumelle ho Windows Security → Virus & threat protection → Protection history, ebe o le qala hape
+tn: Windows ga e a letla lenaneo {1} go simolola. Gantsi ke antivirus (Windows Security) kgotsa Smart App Control e e thibelang lenaneo le lesha. Le letle mo Windows Security → Virus & threat protection → Protection history, morago o le simolole gape
+nso: Windows ga se ya dumelela lenaneo {1} go thoma. Gantši ke antivirus (Windows Security) goba Smart App Control yeo e thibelago lenaneo le lefsa. Le dumelele go Windows Security → Virus & threat protection → Protection history, ke moka o le thome gape
+ts: Windows a yi pfumelelanga nongonoko {1} ku sungula. Hakanyingi i antivirus (Windows Security) kumbe Smart App Control leyi sivelaka nongonoko lowuntshwa. Wu pfumelele eka Windows Security → Virus & threat protection → Protection history, kutani u wu sungula nakambe
+ve: Windows a yo ngo tendela mbekanyamushumo {1} u thoma. Kanzhi ndi antivirus (Windows Security) kana Smart App Control i thivhelaho mbekanyamushumo ntswa. I tendeleni kha Windows Security → Virus & threat protection → Protection history, ni dovhe ni i thome
+af: Windows het nie toegelaat dat die program {1} begin nie. Dit is gewoonlik antivirus (Windows Security) of Smart App Control wat 'n nuwe program blokkeer. Laat dit toe in Windows Security → Virus & threat protection → Protection history, en voer dit weer uit
+
+@cli.try_wsl
+en: If Smart App Control is on, it blocks every program you build yourself. In VS Code, set the setting "Soga: Run In" to wsl to build and run your programs in WSL (Ubuntu) instead
+zu: Uma i-Smart App Control ivuliwe, ivimba zonke izinhlelo ozakhayo. Ku-VS Code, setha "Soga: Run In" kube ngu-wsl ukuze wakhe futhi uqalise izinhlelo zakho ku-WSL (Ubuntu)
+xh: Ukuba i-Smart App Control ivuliwe, ithintela zonke iinkqubo ozakhayo. Kwi-VS Code, misela "Soga: Run In" ibe ngu-wsl ukuze wakhe kwaye uqalise iinkqubo zakho kwi-WSL (Ubuntu)
+ss: Nangabe i-Smart App Control ivuliwe, ivimba tonkhe tinhlelo lotakhako. Ku-VS Code, setha "Soga: Run In" kube ngu-wsl kute wakhe futsi ucalise tinhlelo takho ku-WSL (Ubuntu)
+nr: Nangabe i-Smart App Control ivuliwe, ivimba woke amahlelo owakhako. Ku-VS Code, beka "Soga: Run In" kube ngu-wsl bona wakhe begodu uthomise amahlelo wakho ku-WSL (Ubuntu)
+st: Haeba Smart App Control e butswe, e thibela mananeo ohle ao o a ahang. Ho VS Code, beha "Soga: Run In" e be wsl ho aha le ho qala mananeo a hao ho WSL (Ubuntu)
+tn: Fa Smart App Control e butswe, e thibela mananeo otlhe a o a agang. Mo VS Code, baya "Soga: Run In" e nne wsl go aga le go simolola mananeo a gago mo WSL (Ubuntu)
+nso: Ge Smart App Control e bulegile, e thibela mananeo ka moka ao o a agago. Go VS Code, bea "Soga: Run In" e be wsl go aga le go thoma mananeo a gago go WSL (Ubuntu)
+ts: Loko Smart App Control yi pfulekile, yi sivela minongonoko hinkwayo leyi u yi akaka. Eka VS Code, veka "Soga: Run In" yi va wsl ku aka ni ku sungula minongonoko ya wena eka WSL (Ubuntu)
+ve: Arali Smart App Control yo vulwa, i thivhela mbekanyamushumo dzoṱhe dzine na dzi fhaṱa. Kha VS Code, vheani "Soga: Run In" i vhe wsl u fhaṱa na u thoma mbekanyamushumo dzaṋu kha WSL (Ubuntu)
+af: As Smart App Control aan is, blokkeer dit elke program wat jy self bou. Stel in VS Code die instelling "Soga: Run In" op wsl om jou programme eerder in WSL (Ubuntu) te bou en uit te voer

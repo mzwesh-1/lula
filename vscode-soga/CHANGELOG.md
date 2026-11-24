@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.5 (preview)
+- Windows: the built program is kept next to your file (in .soga-build) instead of the Temp folder, and Soga retries if Windows holds it for a virus scan. If Windows blocks it, Soga explains how to allow it.
+- New setting "Soga: Run In" (soga.runIn): set it to wsl to build and run programs in WSL (Ubuntu), for Windows PCs where Smart App Control blocks self-built programs.
+
 ## 0.7.4 (preview)
 - Run, Arduino Build / upload and board installs now show their output in a Soga terminal that stays open after the program ends (before, the output could disappear or not appear at all). Typing input for funda (std::cin) works.
 - Windows: programs are built statically, so they start even when g++'s DLLs are not on PATH (common with winget installs); a clear message if a program cannot start.

@@ -2,6 +2,7 @@
 *.hex
 *.uf2
 *.vsix
+.soga-build/
 examples/*/
 node_modules/
 vscode-soga/LICENSE
