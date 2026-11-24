@@ -1,6 +1,6 @@
 {
   "name": "soga",
-  "displayName": "Soga - C++ in South African languages",
+  "displayName": "Soga: C++ in South African languages",
   "description": "Write C++ and Arduino code in all 10 written official South African languages: every Arduino-compatible board (Uno, Nano, Mega, Uno R4, Nano 33, ESP32, Raspberry Pi Pico, STM32, ...), ROS 2, OpenCV, Eigen, CUDA and PyTorch, with error messages in your language and a full language server. Includes a South African Sign Language (SASL) sign-video dictionary.",
   "version": "0.7.0",
   "publisher": "soga-lang",
@@ -10,7 +10,9 @@
   },
   "categories": [
     "Programming Languages",
-    "Education"
+    "Education",
+    "Linters",
+    "Snippets"
   ],
   "main": "./lib/extension.js",
   "activationEvents": [
@@ -218,5 +220,43 @@
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12"
-  }
+  },
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#FFFFFF",
+    "theme": "light"
+  },
+  "preview": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mzwesh-1/lula.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mzwesh-1/lula/issues"
+  },
+  "homepage": "https://github.com/mzwesh-1/lula#readme",
+  "keywords": [
+    "isiZulu",
+    "isiXhosa",
+    "Afrikaans",
+    "Sesotho",
+    "Setswana",
+    "Sepedi",
+    "siSwati",
+    "isiNdebele",
+    "Xitsonga",
+    "Tshivenda",
+    "South Africa",
+    "African languages",
+    "C++",
+    "Arduino",
+    "ESP32",
+    "Raspberry Pi Pico",
+    "STM32",
+    "robotics",
+    "ROS 2",
+    "OpenCV",
+    "education",
+    "language server"
+  ]
 }
