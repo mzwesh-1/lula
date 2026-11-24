@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.1 (preview)
+- The extension is now simply called "Soga".
+- Also published on Open VSX (for VSCodium, Cursor and other VS Code-based editors).
+
 ## 0.7.0 (preview)
 - First Marketplace release.
 - Ten languages: isiZulu, isiXhosa, siSwati, isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenḓa, Afrikaans.
