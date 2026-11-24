@@ -189,6 +189,19 @@ module.exports = async function ({ testAsync, ROOT }) {
         assert.match(ds.find(x => x.severity === 1).message, /kushoda u-';'/);
       });
     }
+    if (!spawnSync('arduino-cli', ['version']).error) {
+      await testAsync('Arduino files are checked for the chosen board (ESP32) through arduino-cli', async () => {
+        conn.sendNotification('workspace/didChangeConfiguration', { settings: { lula: { arduinoBoard: 'esp32' } } });
+        const d = { uri: pathToFileURL(path.join(ws, 'esp.zu.lula')).toString(),
+          text: 'ize qala() {\n    Isiriyeli.ukuqala(115200);\n}\nize phindaphinda() {\n    linda(ijubane);\n    khanyisa();\n}\nize khanyisa() {}\n' };
+        open(d);
+        const ds = await waitDiag(d.uri, list => list.some(x => x.severity === 1), 120000);
+        const e = ds.find(x => x.severity === 1);
+        assert.match(e.message, /u-'ijubane' akakamenyezelwa lapha/);
+        assert.deepStrictEqual(e.range.start, pos(4, 10));
+        assert.strictEqual(ds.filter(x => x.severity === 1).length, 1, 'khanyisa() used before its definition is fine (Arduino prototypes)');
+      });
+    }
   } finally {
     try { await req('shutdown'); conn.sendNotification('exit'); } catch { /* ignore */ }
     child.kill();

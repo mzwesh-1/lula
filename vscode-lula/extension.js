@@ -182,20 +182,86 @@ function activate(context) {
     },
   }));
 
+  // ---- Arduino: choose a board (any board arduino-cli knows), build, upload ----------------------
+  const T = require('./lib/toolchain');
+  const boardStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 50);
+  boardStatus.command = 'lula.chooseBoard';
+  const showBoard = () => {
+    const ed = vscode.window.activeTextEditor;
+    const isLula = ed && ed.document.languageId === 'lula';
+    const info = T.boardInfo(config().get('arduinoBoard')) || { name: config().get('arduinoBoard') };
+    boardStatus.text = `$(circuit-board) ${info.name}`;
+    boardStatus.tooltip = 'Lula: Arduino board';
+    if (isLula) boardStatus.show(); else boardStatus.hide();
+  };
+  context.subscriptions.push(boardStatus, vscode.window.onDidChangeActiveTextEditor(showBoard),
+    vscode.workspace.onDidChangeConfiguration(e => { if (e.affectsConfiguration('lula.arduinoBoard')) showBoard(); }));
+  showBoard();
+
+  const runCli = (args) => new Promise(res => require('child_process').execFile(process.execPath, [CLI, ...args],
+    { encoding: 'utf8', env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' } }, (err, stdout, stderr) => res({ err, stdout, stderr })));
+
+  async function chooseBoard() {
+    const cli = T.findArduinoCli();
+    const installed = cli ? T.installedCores(cli) : new Set();
+    const plugged = cli ? T.connectedBoards(cli) : [];
+    const items = Object.entries(T.BOARD_ALIASES).map(([alias, b]) => {
+      const port = plugged.find(d => d.boards.some(x => x.fqbn === b.fqbn));
+      return { label: `${installed.has(b.core) ? '$(check)' : '$(cloud-download)'} ${b.name}`, description: port ? `$(plug) ${port.port}` : alias,
+        detail: installed.has(b.core) ? b.fqbn : `${b.fqbn} - not installed yet (choose to install)`, alias, info: b, installed: installed.has(b.core) };
+    });
+    items.push({ label: '$(edit) Other board…', description: 'vendor:architecture:board', alias: null });
+    const pick = await vscode.window.showQuickPick(items, { placeHolder: 'Arduino board for Lula', matchOnDescription: true, matchOnDetail: true });
+    if (!pick) return null;
+    let board = pick.alias;
+    if (!board) {
+      board = await vscode.window.showInputBox({ prompt: 'Full board name (FQBN), e.g. arduino:samd:mkr1000 - see "arduino-cli board listall"' });
+      if (!board) return null;
+    } else if (!pick.installed && cli) {
+      const ok = await vscode.window.showInformationMessage(`Install the board package for ${pick.info.name}? (${pick.info.core})`, 'Install');
+      if (ok !== 'Install') return null;
+      const exec = new vscode.ProcessExecution(process.execPath, [CLI, 'boards', '--install', board], { env: { ELECTRON_RUN_AS_NODE: '1' } });
+      const task = new vscode.Task({ type: 'lula' }, vscode.TaskScope.Workspace, `Install ${pick.info.name}`, 'lula', exec);
+      task.presentationOptions = { reveal: vscode.TaskRevealKind.Always, clear: true };
+      await vscode.tasks.executeTask(task);
+    }
+    await config().update('arduinoBoard', board, vscode.ConfigurationTarget.Workspace);
+    showBoard();
+    return board;
+  }
+  context.subscriptions.push(vscode.commands.registerCommand('lula.chooseBoard', chooseBoard));
+
   // Build (and optionally upload) an Arduino program.
   context.subscriptions.push(vscode.commands.registerCommand('lula.arduino', async () => {
     const ed = vscode.window.activeTextEditor;
     if (!ed || ed.document.languageId !== 'lula') return;
     await ed.document.save();
-    const board = await vscode.window.showQuickPick(['uno', 'nano', 'mega'], { placeHolder: 'Arduino board' });
+    const board = config().get('arduinoBoard') || await chooseBoard();
     if (!board) return;
-    const port = await vscode.window.showInputBox({ prompt: 'Upload to port (e.g. /dev/ttyUSB0 or COM3). Leave empty to only build the .hex', value: config().get('arduinoPort') });
+    const cli = T.findArduinoCli();
+    const plugged = cli ? T.connectedBoards(cli) : [];
+    const info = T.boardInfo(board);
+    const portItems = plugged.map(d => ({ label: `$(plug) ${d.port}`, description: d.boards.map(b => b.name).join(', ') || d.protocol, port: d.port,
+      picked: info && d.boards.some(b => b.fqbn === info.fqbn) }));
+    portItems.sort((x, y) => (y.picked ? 1 : 0) - (x.picked ? 1 : 0));
+    const choice = await vscode.window.showQuickPick([
+      ...portItems,
+      { label: '$(package) Build only', description: 'make the program file, do not upload', port: null },
+      { label: '$(edit) Type a port…', description: 'e.g. COM3 or /dev/ttyUSB0', port: 'type' },
+      { label: '$(circuit-board) Choose another board…', port: 'board' },
+    ], { placeHolder: `${info ? info.name : board}: upload to which port?` });
+    if (!choice) return;
+    if (choice.port === 'board') { await chooseBoard(); return vscode.commands.executeCommand('lula.arduino'); }
+    let port = choice.port;
+    if (port === 'type') { port = await vscode.window.showInputBox({ prompt: 'Port', value: config().get('arduinoPort') }); if (!port) return; }
+    if (port) await config().update('arduinoPort', port, vscode.ConfigurationTarget.Workspace);
     const args = [CLI, 'arduino', ed.document.fileName, '--lang', langOf(ed.document), '--board', board, ...(port ? ['--upload', port] : [])];
     const exec = new vscode.ProcessExecution(process.execPath, args, { env: { ELECTRON_RUN_AS_NODE: '1' } });
-    const task = new vscode.Task({ type: 'lula' }, vscode.TaskScope.Workspace, `Arduino ${board}`, 'lula', exec);
+    const task = new vscode.Task({ type: 'lula' }, vscode.TaskScope.Workspace, `${info ? info.name : board}${port ? ' → ' + port : ''}`, 'lula', exec);
     task.presentationOptions = { reveal: vscode.TaskRevealKind.Always, clear: true };
     vscode.tasks.executeTask(task);
   }));
+  void runCli;
 }
 
 function deactivate() { return client ? client.stop() : undefined; }

@@ -79,6 +79,23 @@ module.exports = function ({ test, ROOT, CLI }) {
     }
   } else console.log('  skip real Arduino builds (no avr-g++ / Arduino core)');
 
+  const T = require('../src/toolchain');
+  const acli = T.findArduinoCli();
+  if (acli) {
+    const cores = T.installedCores(acli);
+    for (const [alias, ext] of [['uno', '.hex'], ['mega', '.hex'], ['uno-r4-minima', '.hex'], ['nano-33-iot', '.bin'], ['nano-33-ble', '.bin'],
+      ['pico', '.uf2'], ['esp32', '.bin'], ['stm32-bluepill', '.bin']]) {
+      if (!cores.has(T.BOARD_ALIASES[alias].core)) { console.log(`  skip ${alias} (board package not installed)`); continue; }
+      test(`arduino-cli: isiZulu robot builds for ${T.BOARD_ALIASES[alias].name}`, () => {
+        const out = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'lula-board-')), 'robot' + ext);
+        const r = run(['arduino', path.join(ROOT, 'examples', 'irobhothi.zu.lula'), '--board', alias, '-o', out], { timeout: 600000 });
+        assert.strictEqual(r.status, 0, r.stderr);
+        assert.ok(fs.statSync(out).size > 500);
+        assert.match(r.stderr, /Uhlelo lusebenzisa ama-byte angu-\d+/);
+      });
+    }
+  } else console.log('  skip arduino-cli board builds (arduino-cli not installed)');
+
   console.log('real libraries');
   const pkg = name => spawnSync('pkg-config', ['--exists', name]).status === 0;
   if (pkg('opencv4')) test('OpenCV example runs against real OpenCV', () => {

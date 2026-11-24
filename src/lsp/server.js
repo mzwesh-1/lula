@@ -166,6 +166,24 @@ function scheduleValidate(doc, delay) {
   timers.set(doc.uri, setTimeout(() => validate(doc).catch(e => connection.console.error(String(e && e.stack || e))), delay));
 }
 
+let cliPath;
+function arduinoCli() { if (cliPath === undefined) cliPath = T.findArduinoCli(); return cliPath; }
+function runAsync(fn) { return new Promise(res => setImmediate(() => res(fn()))); }
+/** Run a compiler; a newer check for the same file cancels the older one. */
+function runProcess(uri, cmd, args, cwd) {
+  const prev = running.get(uri);
+  if (prev) prev.kill();
+  return new Promise(res => {
+    let out = '', child;
+    try { child = spawn(cmd, args, { env: T.C_ENV, cwd }); } catch (e) { res({ error: e }); return; }
+    running.set(uri, child);
+    child.stderr.on('data', d => { out += d; });
+    child.on('error', e => res({ error: e }));
+    child.on('close', (code, signal) => { if (running.get(uri) === child) running.delete(uri); res(signal ? { cancelled: true } : { text: out }); });
+  });
+}
+
+let info2;
 async function validate(doc) {
   const uri = doc.uri, version = doc.version;
   const lang = langOf(uri), msgLang = msgLangOf(uri);
@@ -181,6 +199,31 @@ async function validate(doc) {
   const tmp = path.join(dir, crypto.createHash('sha1').update(uri).digest('hex').slice(0, 12) + '.cpp');
   let cmd, args;
   const info = [];
+  if (tr.arduino && arduinoCli()) {
+    // Any board: ask arduino-cli for that board's exact compiler command, then check syntax only.
+    const info = T.boardInfo(settings.arduinoBoard) || T.boardInfo('uno');
+    const plain = translate(doc.getText(), lang, { target: 'arduino', lineDirective: false });
+    const key = crypto.createHash('sha1').update(uri).digest('hex').slice(0, 12);
+    const base = path.basename(file).replace(/(\.[a-z]{2,3})?\.lula$/i, '') || 'sketch';
+    const sk = T.writeSketch(path.join(os.tmpdir(), 'lula-lsp', `sketch-${key}`), base, plain.cpp);
+    const buildPath = path.join(os.tmpdir(), 'lula-lsp', `build-${key}-${info.fqbn.replace(/[^A-Za-z0-9]/g, '_')}`);
+    const c = await runAsync(() => T.arduinoSyntaxCommand(arduinoCli(), info.fqbn, sk.sketchDir, buildPath));
+    const now = documents.get(uri);
+    if (now && now.version !== version) return;
+    if (c.error) {
+      const missing = /platform not installed|not found|Platform '.*' not found/i.test(c.error);
+      info2 = [{ range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } }, severity: DiagnosticSeverity.Information, source: 'lula',
+        message: missing ? M.t('cli.core_missing', msgLang, info.name, settings.arduinoBoard) : c.error.split('\n').slice(-3).join(' ') }];
+      connection.sendDiagnostics({ uri, version, diagnostics: [...own, ...info2] });
+      return;
+    }
+    const out = await runProcess(uri, c.cmd, c.args, c.cwd);
+    if (!out || out.cancelled) return;
+    const later = documents.get(uri);
+    if (later && later.version !== version) return;
+    connection.sendDiagnostics({ uri, version, diagnostics: [...own, ...parseCompilerOutput(out.text || '', sk.ino, doc, a, msgLang)] });
+    return;
+  }
   if (tr.arduino) {
     const core = T.findArduinoCore(), gpp = T.findTool('avr-g++');
     if (!core || !gpp) {

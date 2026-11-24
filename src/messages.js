@@ -112,6 +112,15 @@ function localizeDiagnostics(text, langCode) {
   }).join('\n');
 }
 
+/** arduino-cli output: compiler messages plus the program-size lines, in the user's language. */
+function localizeArduinoOutput(text, langCode) {
+  const sized = ['cli.sketch_size', 'cli.globals'].map(id => loadCatalog().byId.get(id));
+  return localizeDiagnostics(text, langCode).split('\n').map(line => {
+    for (const e of sized) for (const re of e.patterns) { const m = re.exec(line); if (m) return t(e.id, langCode, ...m.slice(1)); }
+    return line;
+  }).join('\n');
+}
+
 /** Runtime output from the C++ library (uncaught exceptions). Other lines are the program's own and are kept. */
 function localizeRuntime(text, langCode) {
   return text.split('\n').map(line => {
@@ -131,4 +140,4 @@ function signalMessage(signal, langCode) {
   return id ? t(id, langCode) : null;
 }
 
-module.exports = { loadCatalog, t, translateMessageText, localizeDiagnostics, localizeRuntime, signalMessage, keywordWord };
+module.exports = { loadCatalog, t, translateMessageText, localizeDiagnostics, localizeArduinoOutput, localizeRuntime, signalMessage, keywordWord };

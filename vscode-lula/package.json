@@ -1,8 +1,8 @@
 {
   "name": "lula",
   "displayName": "Lula - C++ in South African languages",
-  "description": "Write C++ in all 10 written official South African languages, including ROS 2, OpenCV, Eigen, CUDA, PyTorch and Arduino, with error messages in your language. Includes a South African Sign Language (SASL) sign-video dictionary.",
-  "version": "0.6.0",
+  "description": "Write C++ and Arduino code in all 10 written official South African languages: every Arduino-compatible board (Uno, Nano, Mega, Uno R4, Nano 33, ESP32, Raspberry Pi Pico, STM32, ...), ROS 2, OpenCV, Eigen, CUDA and PyTorch, with error messages in your language and a full language server. Includes a South African Sign Language (SASL) sign-video dictionary.",
+  "version": "0.7.0",
   "publisher": "lula-lang",
   "license": "MIT",
   "engines": {
@@ -69,7 +69,12 @@
       },
       {
         "command": "lula.arduino",
-        "title": "Lula: Build for Arduino board (and upload)",
+        "title": "Lula: Build / upload to Arduino-compatible board",
+        "icon": "$(circuit-board)"
+      },
+      {
+        "command": "lula.chooseBoard",
+        "title": "Lula: Choose Arduino board (Uno, ESP32, Pico, STM32, ...)",
         "icon": "$(circuit-board)"
       }
     ],
@@ -142,13 +147,8 @@
         },
         "lula.arduinoBoard": {
           "type": "string",
-          "enum": [
-            "uno",
-            "nano",
-            "mega"
-          ],
           "default": "uno",
-          "description": "Board used to check Arduino programs for errors."
+          "markdownDescription": "Board for Arduino programs: `uno`, `nano`, `mega`, `leonardo`, `uno-r4-minima`, `uno-r4-wifi`, `nano-33-iot`, `nano-33-ble`, `pico`, `pico-w`, `pico-2`, `esp32`, `esp32-s3`, `esp32-c3`, `esp8266`, `stm32-bluepill`, `stm32-blackpill`, `nucleo-f401re`, or any full board name (FQBN) such as `arduino:samd:mkr1000`. Used for building, uploading and for checking errors as you type."
         },
         "lula.arduinoPort": {
           "type": "string",

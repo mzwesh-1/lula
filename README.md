@@ -71,8 +71,36 @@ lula arduino examples/inzwa.zu.lula --board uno --upload /dev/ttyUSB0   # build 
 `LIBTORCH` for PyTorch). For ROS 2, translate the node into your workspace and run `colcon build`; for CUDA,
 use `--cxx nvcc -- -x cu`.
 
+### Every Arduino-compatible board
+
+`lula arduino` builds through **arduino-cli**, the engine inside the Arduino IDE 2. If you have the Arduino IDE 2,
+Lula finds its arduino-cli automatically and uses the boards and libraries you already installed.
+
+| Board family | `--board` |
+|---|---|
+| Arduino Uno, Nano, Mega, Leonardo | `uno`, `nano`, `nano-old`, `mega`, `leonardo` |
+| Arduino Uno R4 | `uno-r4-minima`, `uno-r4-wifi` |
+| Arduino Nano 33 | `nano-33-iot`, `nano-33-ble` |
+| Raspberry Pi Pico | `pico`, `pico-w`, `pico-2` |
+| ESP32 / ESP8266 | `esp32`, `esp32-s3`, `esp32-c3`, `esp8266` |
+| STM32 | `stm32-bluepill`, `stm32-blackpill`, `nucleo-f401re` |
+| Anything else | the full board name, e.g. `--board arduino:samd:mkr1000` |
+
+```bash
+lula boards                      # which boards are installed, and which are plugged in
+lula boards --install esp32      # install a board package
+lula ports                       # boards connected right now
+lula arduino robot.zu.lula --board esp32 --upload        # build and upload (port found automatically)
+lula arduino robot.zu.lula --board pico -o robot.uf2     # build only
+```
+
+Errors point at your `.lula` file and line, in your language, on every board. You can call a function before it is
+defined, as in the Arduino IDE. In VS Code, click the board name in the status bar to change board, and use
+**Lula: Build / upload** to upload; errors are checked as you type with the chosen board's own compiler.
+Tested here by building for all 17 listed boards (except ESP8266); uploading to real boards still needs testing.
+
 **Arduino mode.** A file with `setup`/`loop` and no `main` is an Arduino program. Lula then writes Arduino-style
-C++ (Arduino's own `max`, `abs` and `String`), and `lula arduino` builds it for Uno, Nano or Mega.
+C++ (Arduino's own `max`, `abs` and `String`).
 
 ## Error messages in your language
 
@@ -121,7 +149,7 @@ node bin/lula.js build robot.zu.lula --cxx avr-g++ -- -mmcu=atmega328p -Os
 
 ```bash
 npm run package-extension
-code --install-extension lula-0.6.0.vsix
+code --install-extension lula-0.7.0.vsix
 ```
 
 The extension provides syntax highlighting, hover translations (hover `uma` → C++ `if`), completion, error checking when you save, a ▶ Run button, a live "Show C++" side view, "Export for Arduino", "Convert C++ to Lula", and the SASL sign-video player.

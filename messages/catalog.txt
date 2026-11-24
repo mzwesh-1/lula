@@ -1200,3 +1200,72 @@ nso: e tsebišitšwe go {1}
 ts: yi tivisiwile eka {1}
 ve: yo divhadzwa kha {1}
 af: verklaar in {1}
+
+# ---- Arduino boards (arduino-cli) ---------------------------------------------------------
+@cli.sketch_size
+re: ^Sketch uses (\d+) bytes \((\d+)%\) of program storage space\. Maximum is (\d+) bytes\.$
+en: The program uses {1} bytes ({2}%) of the board's storage (maximum {3} bytes).
+zu: Uhlelo lusebenzisa ama-byte angu-{1} ({2}%) wendawo yokugcina yebhodi (okuphezulu ngu-{3}).
+xh: Inkqubo isebenzisa ii-byte ezingu-{1} ({2}%) zendawo yokugcina yebhodi (ubuninzi ngu-{3}).
+ss: Luhlelo lusebentisa ema-byte langu-{1} ({2}%) endzawo yekugcina yelibhodi (lokuphetulu ngu-{3}).
+nr: Ihlelo lisebenzisa ama-byte angu-{1} ({2}%) wendawo yokubulunga yebhodo (okuphezulu ngu-{3}).
+st: Lenaneo le sebedisa di-byte tse {1} ({2}%) tsa sebaka sa polokelo sa boto (bonyane bo phahameng ke {3}).
+tn: Lenaneo le dirisa di-byte di le {1} ({2}%) tsa lefelo la polokelo la boto (bogolo jo bo kwa godimo ke {3}).
+nso: Lenaneo le šomiša di-byte tše {1} ({2}%) tša lefelo la polokelo la boto (bogolo bjo bo phagamego ke {3}).
+ts: Nongonoko wu tirhisa ti-byte ta {1} ({2}%) ta ndhawu yo hlayisa ya bodo (leswi tlulaka i {3}).
+ve: Mbekanyamushumo i shumisa dzi-byte dza {1} ({2}%) dza fhethu ha u vhulunga ha bodo (ntha ndi {3}).
+af: Die program gebruik {1} grepe ({2}%) van die bord se stoorplek (maksimum {3} grepe).
+
+@cli.globals
+re: ^Global variables use (\d+) bytes \((\d+)%\) of dynamic memory, leaving (\d+) bytes for local variables\. Maximum is (\d+) bytes\.$
+re: ^Global variables use (\d+) bytes \((\d+)%\) of dynamic memory, leaving (-?\d+) bytes for local variables\. Maximum is (\d+) bytes\.$
+en: Variables use {1} bytes ({2}%) of memory, leaving {3} bytes free (maximum {4} bytes).
+zu: Iziguquguquki zisebenzisa ama-byte angu-{1} ({2}%) enkumbulo, kusele ama-byte angu-{3} (okuphezulu ngu-{4}).
+xh: Izinto eziguquguqukayo zisebenzisa ii-byte ezingu-{1} ({2}%) zenkumbulo, kushiyeke ii-byte ezingu-{3} (ubuninzi ngu-{4}).
+ss: Tigucuguculi tisebentisa ema-byte langu-{1} ({2}%) enkhumbulo, kusele ema-byte langu-{3} (lokuphetulu ngu-{4}).
+nr: Iinto ezitjhugulukako zisebenzisa ama-byte angu-{1} ({2}%) wekhumbulo, kusele ama-byte angu-{3} (okuphezulu ngu-{4}).
+st: Tse fetohang di sebedisa di-byte tse {1} ({2}%) tsa memori, ho sala di-byte tse {3} (bonyane bo phahameng ke {4}).
+tn: Tse di fetogang di dirisa di-byte di le {1} ({2}%) tsa memori, go sala di-byte di le {3} (bogolo jo bo kwa godimo ke {4}).
+nso: Tšeo di fetogago di šomiša di-byte tše {1} ({2}%) tša memori, go šala di-byte tše {3} (bogolo bjo bo phagamego ke {4}).
+ts: Leswi cincaka swi tirhisa ti-byte ta {1} ({2}%) ta memori, ku sala ti-byte ta {3} (leswi tlulaka i {4}).
+ve: Zwishanduki zwi shumisa dzi-byte dza {1} ({2}%) dza memori, hu tshi sala dzi-byte dza {3} (ntha ndi {4}).
+af: Veranderlikes gebruik {1} grepe ({2}%) van die geheue, met {3} grepe oor (maksimum {4} grepe).
+
+@cli.core_missing
+en: The board package for {1} is not installed. Install it with: lula boards --install {2}
+zu: Iphakheji yebhodi ye-{1} ayifakiwe. Yifake ngokuthi: lula boards --install {2}
+xh: Ipakethe yebhodi ye-{1} ayifakwanga. Yifake ngokuthi: lula boards --install {2}
+ss: Liphakheji lelibhodi le-{1} alifakiwe. Lifake ngekutsi: lula boards --install {2}
+nr: Iphakheji yebhodo ye-{1} ayikafakwa. Yifake ngokuthi: lula boards --install {2}
+st: Sephutheloana sa boto sa {1} ha se a kenngwa. Se kenye ka: lula boards --install {2}
+tn: Sephuthelwana sa boto sa {1} ga se a tsenngwa. Se tsenye ka: lula boards --install {2}
+nso: Sephuthelwana sa boto sa {1} ga se sa tsenywa. Se tsenye ka: lula boards --install {2}
+ts: Phakeji ya bodo ya {1} a yi nghenisiwanga. Yi nghenise hi: lula boards --install {2}
+ve: Phakhedzhi ya bodo ya {1} a yo ngo dzheniswa. I dzhenisani nga: lula boards --install {2}
+af: Die bordpakket vir {1} is nie geïnstalleer nie. Installeer dit met: lula boards --install {2}
+
+@cli.no_arduino_cli
+en: arduino-cli was not found. Install the Arduino IDE 2 (it includes arduino-cli) or arduino-cli, or set ARDUINO_CLI
+zu: i-arduino-cli ayitholakalanga. Faka i-Arduino IDE 2 (inayo i-arduino-cli) noma i-arduino-cli, noma usethe u-ARDUINO_CLI
+xh: i-arduino-cli ayifumanekanga. Faka i-Arduino IDE 2 (inayo i-arduino-cli) okanye i-arduino-cli, okanye umisele u-ARDUINO_CLI
+ss: i-arduino-cli ayitfolakalanga. Faka i-Arduino IDE 2 (inayo i-arduino-cli) nome i-arduino-cli, nome usethe ARDUINO_CLI
+nr: i-arduino-cli ayifumaneki. Faka i-Arduino IDE 2 (inayo i-arduino-cli) namkha i-arduino-cli, namkha ubeke u-ARDUINO_CLI
+st: arduino-cli ha e a fumanwa. Kenya Arduino IDE 2 (e na le arduino-cli) kapa arduino-cli, kapa o behe ARDUINO_CLI
+tn: arduino-cli ga e a bonwa. Tsenya Arduino IDE 2 (e na le arduino-cli) kgotsa arduino-cli, kgotsa o baye ARDUINO_CLI
+nso: arduino-cli ga se ya hwetšwa. Tsenya Arduino IDE 2 (e na le arduino-cli) goba arduino-cli, goba o bee ARDUINO_CLI
+ts: arduino-cli a yi kumekanga. Nghenisa Arduino IDE 2 (yi na arduino-cli) kumbe arduino-cli, kumbe u veka ARDUINO_CLI
+ve: arduino-cli a yo ngo wanala. Dzhenisani Arduino IDE 2 (i na arduino-cli) kana arduino-cli, kana ni vhee ARDUINO_CLI
+af: arduino-cli is nie gevind nie. Installeer die Arduino IDE 2 (dit sluit arduino-cli in) of arduino-cli, of stel ARDUINO_CLI
+
+@cli.no_port
+en: No board is connected. Plug in the board, or give its port, for example: --upload COM3 or --upload /dev/ttyUSB0
+zu: Ayikho ibhodi exhunyiwe. Xhuma ibhodi, noma unikeze iphothi yayo, isibonelo: --upload COM3 noma --upload /dev/ttyUSB0
+xh: Akukho bhodi idityanisiweyo. Qhagamshela ibhodi, okanye unike izibuko layo, umzekelo: --upload COM3 okanye --upload /dev/ttyUSB0
+ss: Kute libhodi lelixhunyiwe. Xhuma libhodi, nome uniketele liphothi lalo, sibonelo: --upload COM3 nome --upload /dev/ttyUSB0
+nr: Ayikho ibhodo ehlanganisiweko. Hlanganisa ibhodo, namkha unikele iphothi yayo, isibonelo: --upload COM3 namkha --upload /dev/ttyUSB0
+st: Ha ho boto e hokahantsweng. Hokela boto, kapa o fane ka phoro ya yona, mohlala: --upload COM3 kapa --upload /dev/ttyUSB0
+tn: Ga go na boto e e golaganeng. Golaganya boto, kgotsa o neye phoro ya yone, sekai: --upload COM3 kgotsa --upload /dev/ttyUSB0
+nso: Ga go na boto ye e kgokagantšwego. Kgokaganya boto, goba o fe phoro ya yona, mohlala: --upload COM3 goba --upload /dev/ttyUSB0
+ts: A ku na bodo leyi hlanganisiweke. Hlanganisa bodo, kumbe u nyika phoro ya yona, xikombiso: --upload COM3 kumbe --upload /dev/ttyUSB0
+ve: A hu na bodo yo ṱanganywaho. Ṱanganyani bodo, kana ni ṋee phoro yayo, tsumbo: --upload COM3 kana --upload /dev/ttyUSB0
+af: Geen bord is gekoppel nie. Koppel die bord, of gee sy poort, byvoorbeeld: --upload COM3 of --upload /dev/ttyUSB0

@@ -15,8 +15,10 @@ Usage:
   lula build <file.zu.lula> [-o program] [options] [-- compiler flags]
   lula run <file.zu.lula> [options] [-- compiler flags]
   lula check <file.zu.lula>                        Check for errors only
-  lula arduino <file.zu.lula> [--board uno|nano|mega] [--upload /dev/ttyUSB0]
-                                                   Build an Arduino program to a .hex (and upload it)
+  lula arduino <file.zu.lula> [--board uno|esp32|pico|...] [--upload [PORT]]
+                                                   Build for an Arduino-compatible board (and upload it)
+  lula boards [--install esp32]                    Boards Lula knows; install a board package
+  lula ports                                       Boards plugged in right now
   lula convert <file> --to <zu|af|cpp> [-o out]  Convert C++ -> Lula, or between languages
   lula sasl status | check | list [-o file]       SASL sign-video dictionary
   lula sasl show <word> [--lang zu]               Which sign a word uses
@@ -54,7 +56,8 @@ function parseArgs(argv) {
     else if (a === '--pack') (args.packs = args.packs || []).push(argv[++i]);
     else if (a === '--target') args.target = argv[++i];
     else if (a === '--board') args.board = argv[++i];
-    else if (a === '--upload') args.upload = argv[++i];
+    else if (a === '--upload') args.upload = (argv[i + 1] && !argv[i + 1].startsWith('-')) ? argv[++i] : 'auto';
+    else if (a === '--install') args.install = argv[++i];
     else if (a === '--msg-lang') args.msgLang = argv[++i];
     else if (a === '--check') args.check = true;
     else if (a === '--no-defaults') args.noDefaults = true;
@@ -142,7 +145,8 @@ function runProgram(exe, lang) {
 }
 
 // ---- Arduino ----------------------------------------------------------------------------------
-function arduino(args) {
+/** Old direct AVR build (used only when arduino-cli is not available). */
+function arduinoDirect(args) {
   const file = args._[1];
   const boardName = args.board || 'uno';
   if (!T.BOARDS[boardName]) fail(`Lula: unknown board '${boardName}'. Boards: ${Object.keys(T.BOARDS).join(', ')}`);
@@ -197,6 +201,96 @@ function arduino(args) {
       '-b', setup.board.baud, '-D', '-U', `flash:w:${hex}:i`], { stdio: 'inherit' });
     process.exit(up.status ?? 1);
   }
+}
+
+
+/** Build (and upload) for any board the Arduino IDE supports, through arduino-cli. */
+function arduino(args) {
+  const file = args._[1];
+  const cli = T.findArduinoCli();
+  const info = T.boardInfo(args.board || 'uno');
+  if (!info) fail(`Lula: unknown board '${args.board}'. ${Object.keys(T.BOARD_ALIASES).join(', ')}, or a full board name such as arduino:avr:uno`);
+  if (!cli) {
+    if (['uno', 'nano', 'mega', undefined].includes(args.board)) return arduinoDirect(args);
+    fail(`Lula: ${M.t('cli.no_arduino_cli', msgLang)}`);
+  }
+  const r = translateFile(file, { ...args, target: 'arduino' }, { lineDirective: false });
+  if (!T.installedCores(cli).has(info.core)) fail(`Lula: ${M.t('cli.core_missing', msgLang, info.name, args.board || 'uno')}`);
+  const lulaFile = path.resolve(file);
+  const hash = crypto.createHash('sha1').update(lulaFile).digest('hex').slice(0, 10);
+  const base = path.basename(file).replace(/(\.[a-z]{2,3})?\.lula$/i, '');
+  const work = path.join(os.tmpdir(), 'lula', `sketch-${hash}`);
+  const sk = T.writeSketch(work, base, r.cpp);
+  const fqbnSafe = info.fqbn.replace(/[^A-Za-z0-9]/g, '_');
+  const buildPath = path.join(os.tmpdir(), 'lula', `build-${hash}-${fqbnSafe}`);
+  const outDir = path.join(os.tmpdir(), 'lula', `out-${hash}-${fqbnSafe}`);
+  fs.rmSync(outDir, { recursive: true, force: true });
+  const cmd = ['compile', '--no-color', '--fqbn', info.fqbn, '--build-path', buildPath, '--output-dir', outDir, '--warnings', 'default'];
+  let port = args.upload;
+  if (port && !args.check) {
+    if (port === 'auto' || port === true) {
+      const found = T.connectedBoards(cli);
+      const match = found.find(d => d.boards.some(b => b.fqbn === info.fqbn)) || found.find(d => d.protocol === 'serial') || found[0];
+      if (!match) fail(`Lula: ${M.t('cli.no_port', msgLang)}`);
+      port = match.port;
+    }
+    cmd.push('--upload', '-p', port);
+  }
+  cmd.push(sk.sketchDir);
+  const res = spawnSync(cli, cmd, { encoding: 'utf8', env: T.C_ENV, maxBuffer: 64 << 20 });
+  if (res.error) fail(`Lula: ${M.t('cli.no_arduino_cli', msgLang)}`);
+  // Keep what matters to the learner; drop arduino-cli's own bookkeeping (platform tables, "Error during build").
+  const noise = l => /^(Used (library|platform)|Error during build|Compilation error|Error during Upload)\b/.test(l) || /^\S+ +\d[\w.-]* +\//.test(l);
+  const show = text => (text ? M.localizeArduinoOutput(T.mapSketchPaths(text.replace(/\x1b\[[0-9;]*m/g, ''), sk.ino, lulaFile), msgLang)
+    .split('\n').filter(l => !noise(l)).join('\n').replace(/\n{3,}/g, '\n\n') : '');
+  const compilerOut = show(res.stderr), toolOut = show(res.stdout);
+  // arduino-cli prints compiler errors on stderr and sizes / upload progress on stdout
+  if (compilerOut.trim()) process.stderr.write(compilerOut.replace(/\n?Compilation error: exit status \d+\n?$/, '\n'));
+  if (res.status !== 0) { if (toolOut.trim()) process.stderr.write(toolOut); process.exit(res.status || 1); }
+  process.stderr.write(toolOut.split('\n').filter(l => !/^(Used (library|platform)|[A-Za-z0-9_.-]+ +[\d.]+ +\/)/.test(l)).join('\n').replace(/\n+$/, '\n'));
+  if (args.check) { process.stderr.write(`Lula: ${M.t('cli.ok', msgLang)}\n`); return; }
+  // The program file for the board: .hex (AVR, R4, ...), .bin (ESP32, STM32, ...), .uf2 (Pico)
+  const files = fs.existsSync(outDir) ? fs.readdirSync(outDir) : [];
+  const wantedExt = args.out ? path.extname(args.out).toLowerCase() : '';
+  const pick = files.find(f => wantedExt && f.endsWith(wantedExt) && !/with_bootloader|\.bootloader|\.partitions|merged/.test(f)) ||
+    ['.uf2', '.hex', '.bin'].map(e => files.find(f => f.endsWith(e) && !/with_bootloader|\.bootloader|\.partitions|merged/.test(f))).find(Boolean);
+  if (pick) {
+    const dest = args.out ? path.resolve(args.out) : path.resolve(path.dirname(file), `${base}${path.extname(pick)}`);
+    fs.copyFileSync(path.join(outDir, pick), dest);
+    process.stderr.write(`Lula: ${M.t('cli.built', msgLang, dest)}\n`);
+  }
+}
+
+/** lula boards: the boards Lula knows, which packages are installed, what is plugged in. */
+function boards(args) {
+  const cli = T.findArduinoCli();
+  if (!cli) fail(`Lula: ${M.t('cli.no_arduino_cli', msgLang)}`);
+  if (args.install) {
+    const info = T.boardInfo(args.install);
+    if (!info) fail(`Lula: unknown board '${args.install}'`);
+    const url = T.CORE_URLS[info.core];
+    const env = { ...process.env };
+    if (url) spawnSync(cli, ['config', 'add', 'board_manager.additional_urls', url], { stdio: 'inherit', env });
+    spawnSync(cli, ['core', 'update-index'], { stdio: 'inherit', env });
+    const r = spawnSync(cli, ['core', 'install', info.core], { stdio: 'inherit', env });
+    process.exit(r.status ?? 1);
+  }
+  const cores = T.installedCores(cli);
+  const plugged = T.connectedBoards(cli);
+  const rows = Object.entries(T.BOARD_ALIASES).map(([alias, b]) => {
+    const port = plugged.find(d => d.boards.some(x => x.fqbn === b.fqbn));
+    return `${cores.has(b.core) ? '✓' : '·'} ${alias.padEnd(16)} ${b.name.padEnd(34)} ${b.fqbn}${port ? `   ← ${port.port}` : ''}`;
+  });
+  console.log(rows.join('\n'));
+  console.log(`\n✓ = installed. Any other board: --board <fqbn> (see: ${cli} board listall)`);
+}
+
+function ports() {
+  const cli = T.findArduinoCli();
+  if (!cli) fail(`Lula: ${M.t('cli.no_arduino_cli', msgLang)}`);
+  const plugged = T.connectedBoards(cli);
+  if (!plugged.length) { console.log(M.t('cli.no_port', msgLang)); return; }
+  for (const d of plugged) console.log(`${d.port.padEnd(16)} ${d.protocol || ''}  ${d.boards.map(b => `${b.name} (${b.fqbn})`).join(', ')}`);
 }
 
 function sasl(args) {
@@ -289,6 +383,8 @@ function main(argv) {
     }
     case 'check': compile(args, { syntaxOnly: true }); process.stderr.write(`Lula: ${M.t('cli.ok', msgLang)}\n`); break;
     case 'arduino': arduino(args); break;
+    case 'boards': boards(args); break;
+    case 'ports': ports(); break;
     case 'sasl': sasl(args); break;
     case 'run': {
       const exe = compile(args);

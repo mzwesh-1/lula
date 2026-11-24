@@ -113,4 +113,129 @@ function arduinoSetup(core, boardName, cppText) {
   return { board, common, inc, libSources, cppFlags: ['-std=gnu++11', '-fno-exceptions', '-fno-threadsafe-statics'] };
 }
 
-module.exports = { C_ENV, EXE, packFlags, splitLibFlags, BOARDS, arduino15, findArduinoCore, findTool, arduinoSetup };
+// ---- arduino-cli: every board the Arduino IDE supports ------------------------------------------
+/** Friendly board names -> fully qualified board names (FQBN). Any FQBN (vendor:arch:board) also works. */
+const BOARD_ALIASES = {
+  uno: { fqbn: 'arduino:avr:uno', name: 'Arduino Uno', core: 'arduino:avr' },
+  nano: { fqbn: 'arduino:avr:nano', name: 'Arduino Nano', core: 'arduino:avr' },
+  'nano-old': { fqbn: 'arduino:avr:nano:cpu=atmega328old', name: 'Arduino Nano (old bootloader)', core: 'arduino:avr' },
+  mega: { fqbn: 'arduino:avr:mega', name: 'Arduino Mega 2560', core: 'arduino:avr' },
+  leonardo: { fqbn: 'arduino:avr:leonardo', name: 'Arduino Leonardo', core: 'arduino:avr' },
+  'uno-r4-minima': { fqbn: 'arduino:renesas_uno:minima', name: 'Arduino Uno R4 Minima', core: 'arduino:renesas_uno' },
+  'uno-r4-wifi': { fqbn: 'arduino:renesas_uno:unor4wifi', name: 'Arduino Uno R4 WiFi', core: 'arduino:renesas_uno' },
+  'nano-33-iot': { fqbn: 'arduino:samd:nano_33_iot', name: 'Arduino Nano 33 IoT', core: 'arduino:samd' },
+  'nano-33-ble': { fqbn: 'arduino:mbed_nano:nano33ble', name: 'Arduino Nano 33 BLE / BLE Sense', core: 'arduino:mbed_nano' },
+  pico: { fqbn: 'rp2040:rp2040:rpipico', name: 'Raspberry Pi Pico', core: 'rp2040:rp2040' },
+  'pico-w': { fqbn: 'rp2040:rp2040:rpipicow', name: 'Raspberry Pi Pico W', core: 'rp2040:rp2040' },
+  'pico-2': { fqbn: 'rp2040:rp2040:rpipico2', name: 'Raspberry Pi Pico 2', core: 'rp2040:rp2040' },
+  esp32: { fqbn: 'esp32:esp32:esp32', name: 'ESP32 Dev Module', core: 'esp32:esp32' },
+  'esp32-s3': { fqbn: 'esp32:esp32:esp32s3', name: 'ESP32-S3 Dev Module', core: 'esp32:esp32' },
+  'esp32-c3': { fqbn: 'esp32:esp32:esp32c3', name: 'ESP32-C3 Dev Module', core: 'esp32:esp32' },
+  esp8266: { fqbn: 'esp8266:esp8266:nodemcuv2', name: 'ESP8266 NodeMCU 1.0', core: 'esp8266:esp8266' },
+  'stm32-bluepill': { fqbn: 'STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8', name: 'STM32 Blue Pill (F103C8)', core: 'STMicroelectronics:stm32' },
+  'stm32-blackpill': { fqbn: 'STMicroelectronics:stm32:GenF4:pnum=BLACKPILL_F411CE', name: 'STM32 Black Pill (F411CE)', core: 'STMicroelectronics:stm32' },
+  'nucleo-f401re': { fqbn: 'STMicroelectronics:stm32:Nucleo_64:pnum=NUCLEO_F401RE', name: 'STM32 Nucleo-64 F401RE', core: 'STMicroelectronics:stm32' },
+};
+/** Board-manager URLs for the cores that are not built into arduino-cli. */
+const CORE_URLS = {
+  'esp32:esp32': 'https://espressif.github.io/arduino-esp32/package_esp32_index.json',
+  'esp8266:esp8266': 'https://arduino.esp8266.com/stable/package_esp8266com_index.json',
+  'rp2040:rp2040': 'https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json',
+  'STMicroelectronics:stm32': 'https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json',
+};
+
+function boardInfo(board) {
+  if (!board) return BOARD_ALIASES.uno;
+  if (BOARD_ALIASES[board]) return BOARD_ALIASES[board];
+  if (board.split(':').length >= 3) return { fqbn: board, name: board, core: board.split(':').slice(0, 2).join(':') };
+  return null;
+}
+
+/** arduino-cli: on PATH, set by ARDUINO_CLI, or the copy inside Arduino IDE 2. */
+function findArduinoCli() {
+  const candidates = [process.env.ARDUINO_CLI, 'arduino-cli'];
+  const res = path.join('resources', 'app', 'lib', 'backend', 'resources', 'arduino-cli' + EXE);
+  if (process.platform === 'win32') {
+    for (const base of [process.env.LOCALAPPDATA && path.join(process.env.LOCALAPPDATA, 'Programs'), process.env.ProgramFiles, process.env['ProgramFiles(x86)']].filter(Boolean)) {
+      candidates.push(path.join(base, 'Arduino IDE', res), path.join(base, 'arduino-ide', res));
+    }
+  } else if (process.platform === 'darwin') {
+    candidates.push('/Applications/Arduino IDE.app/Contents/Resources/app/lib/backend/resources/arduino-cli',
+      path.join(os.homedir(), 'Applications/Arduino IDE.app/Contents/Resources/app/lib/backend/resources/arduino-cli'));
+  } else {
+    candidates.push('/opt/arduino-ide/' + res, path.join(os.homedir(), 'arduino-ide', res), '/usr/share/arduino-ide/' + res);
+  }
+  for (const c of candidates.filter(Boolean)) {
+    if (c !== 'arduino-cli' && c !== process.env.ARDUINO_CLI && !fs.existsSync(c)) continue;
+    const r = spawnSync(c, ['version'], { encoding: 'utf8' });
+    if (!r.error && r.status === 0) return c;
+  }
+  return null;
+}
+
+function cliJson(cli, args) {
+  const r = spawnSync(cli, [...args, '--json'], { encoding: 'utf8', env: C_ENV, maxBuffer: 64 << 20 });
+  try { return JSON.parse(r.stdout); } catch { return null; }
+}
+/** Cores installed in arduino-cli (shared with the Arduino IDE). */
+function installedCores(cli) {
+  const j = cliJson(cli, ['core', 'list']);
+  const list = (j && (j.platforms || j)) || [];
+  return new Set((Array.isArray(list) ? list : []).map(p => p.id || (p.metadata && p.metadata.id)).filter(Boolean));
+}
+/** Boards plugged in right now: [{ port, protocol, boards: [{ name, fqbn }] }]. */
+function connectedBoards(cli) {
+  const j = cliJson(cli, ['board', 'list']);
+  const list = (j && (j.detected_ports || j)) || [];
+  return (Array.isArray(list) ? list : []).map(d => ({
+    port: d.port && d.port.address, protocol: d.port && d.port.protocol, label: d.port && d.port.label,
+    boards: (d.matching_boards || []).map(b => ({ name: b.name, fqbn: b.fqbn })),
+  })).filter(d => d.port);
+}
+
+/** Make a sketch folder from translated code. Lines match the .lula file exactly. */
+function writeSketch(dir, base, cppWithoutLineDirective) {
+  const safe = base.replace(/[^A-Za-z0-9_]/g, '_').replace(/^[^A-Za-z]/, 's$&');
+  const sketchDir = path.join(dir, safe);
+  fs.mkdirSync(sketchDir, { recursive: true });
+  const ino = path.join(sketchDir, `${safe}.ino`);
+  fs.writeFileSync(ino, cppWithoutLineDirective);
+  return { sketchDir, ino, name: safe };
+}
+
+/** Rewrite messages about the generated sketch so they point at the user's .lula file. */
+function mapSketchPaths(text, ino, lulaFile) {
+  if (!text) return text;
+  const variants = new Set([ino, ino.replace(/\\/g, '/'), ino + '.cpp']);
+  let out = text;
+  for (const v of variants) out = out.split(v + '.cpp').join(lulaFile).split(v).join(lulaFile);
+  return out;
+}
+
+/**
+ * The exact compiler command arduino-cli would use for a sketch, turned into a syntax-only check.
+ * Fast (no full build), and correct for every board. Returns { cmd, args, cwd } or { error }.
+ */
+function arduinoSyntaxCommand(cli, fqbn, sketchDir, buildPath) {
+  const r = spawnSync(cli, ['compile', '--no-color', '--only-compilation-database', '--fqbn', fqbn, '--build-path', buildPath, sketchDir],
+    { encoding: 'utf8', env: C_ENV, maxBuffer: 64 << 20 });
+  const dbFile = path.join(buildPath, 'compile_commands.json');
+  if (!fs.existsSync(dbFile)) return { error: (r.stderr || r.stdout || 'arduino-cli failed').trim() };
+  let db;
+  try { db = JSON.parse(fs.readFileSync(dbFile, 'utf8')); } catch (e) { return { error: String(e) }; }
+  const entry = db.find(e => /\.ino\.cpp$/.test(e.file));
+  if (!entry) return { error: 'no sketch entry in compile_commands.json' };
+  let argv = entry.arguments || (entry.command.match(/"[^"]*"|\S+/g) || []).map(a => a.replace(/^"|"$/g, ''));
+  const out = [];
+  for (let i = 1; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === '-o' || a === '-MF' || a === '-MT' || a === '-MQ') { i++; continue; }
+    if (a === '-MMD' || a === '-MD' || a === '-c') continue;
+    out.push(a);
+  }
+  out.push('-fsyntax-only', '-fdiagnostics-color=never');
+  return { cmd: argv[0], args: out, cwd: entry.directory };
+}
+
+module.exports = { arduinoSyntaxCommand, C_ENV, EXE, packFlags, splitLibFlags, BOARDS, arduino15, findArduinoCore, findTool, arduinoSetup,
+  BOARD_ALIASES, CORE_URLS, boardInfo, findArduinoCli, installedCores, connectedBoards, writeSketch, mapSketchPaths, cliJson };
