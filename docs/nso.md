@@ -1,8 +1,8 @@
-# Lula: Sepedi (Sesotho sa Leboa) reference
+# Soga: Sepedi (Sesotho sa Leboa) reference
 
 > draft - needs review by Sepedi speakers
 
-Every word below can be used in `.nso.lula` files. Plain English C++ keeps working too.
+Every word below can be used in `.nso.soga` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

@@ -28,8 +28,8 @@ function packFlags(packs) {
         if (sym && !sym.includes('__cxx11')) flags.push('-D_GLIBCXX_USE_CXX11_ABI=0');
       } else notes.push(['PyTorch (libtorch)', 'Download libtorch from pytorch.org and set LIBTORCH=/path/to/libtorch.']);
     }
-    if (p === 'ros2') notes.push(['ROS 2', 'Build ROS 2 nodes inside a ROS workspace: lula translate the file to src/<name>.cpp and run colcon build.']);
-    if (p === 'cuda') notes.push(['CUDA', 'Build with NVIDIA nvcc: lula build file --cxx nvcc -- -x cu']);
+    if (p === 'ros2') notes.push(['ROS 2', 'Build ROS 2 nodes inside a ROS workspace: soga translate the file to src/<name>.cpp and run colcon build.']);
+    if (p === 'cuda') notes.push(['CUDA', 'Build with NVIDIA nvcc: soga build file --cxx nvcc -- -x cu']);
   }
   return { flags, notes };
 }
@@ -193,7 +193,7 @@ function connectedBoards(cli) {
   })).filter(d => d.port);
 }
 
-/** Make a sketch folder from translated code. Lines match the .lula file exactly. */
+/** Make a sketch folder from translated code. Lines match the .soga file exactly. */
 function writeSketch(dir, base, cppWithoutLineDirective) {
   const safe = base.replace(/[^A-Za-z0-9_]/g, '_').replace(/^[^A-Za-z]/, 's$&');
   const sketchDir = path.join(dir, safe);
@@ -203,12 +203,12 @@ function writeSketch(dir, base, cppWithoutLineDirective) {
   return { sketchDir, ino, name: safe };
 }
 
-/** Rewrite messages about the generated sketch so they point at the user's .lula file. */
-function mapSketchPaths(text, ino, lulaFile) {
+/** Rewrite messages about the generated sketch so they point at the user's .soga file. */
+function mapSketchPaths(text, ino, sogaFile) {
   if (!text) return text;
   const variants = new Set([ino, ino.replace(/\\/g, '/'), ino + '.cpp']);
   let out = text;
-  for (const v of variants) out = out.split(v + '.cpp').join(lulaFile).split(v).join(lulaFile);
+  for (const v of variants) out = out.split(v + '.cpp').join(sogaFile).split(v).join(sogaFile);
   return out;
 }
 

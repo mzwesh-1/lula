@@ -1,8 +1,8 @@
-# Lula: Afrikaans reference
+# Soga: Afrikaans reference
 
 > draft - needs review by Afrikaans speakers
 
-Every word below can be used in `.af.lula` files. Plain English C++ keeps working too.
+Every word below can be used in `.af.soga` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

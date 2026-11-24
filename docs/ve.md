@@ -1,8 +1,8 @@
-# Lula: Tshivenḓa reference
+# Soga: Tshivenḓa reference
 
 > draft - needs review by Tshivenḓa speakers; words are written without the ḓ ḽ ṅ ṋ ṱ marks for easy typing
 
-Every word below can be used in `.ve.lula` files. Plain English C++ keeps working too.
+Every word below can be used in `.ve.soga` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

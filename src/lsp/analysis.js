@@ -1,7 +1,7 @@
 'use strict';
-// Lula source analysis for the language server: tokens with positions, the user's own
+// Soga source analysis for the language server: tokens with positions, the user's own
 // declarations (with scopes), and name resolution. Works in every language because it
-// reasons about the C++ meaning of each Lula word.
+// reasons about the C++ meaning of each Soga word.
 
 const { tokenize, contextFor } = require('../translator');
 
@@ -30,7 +30,7 @@ function positioned(source) {
 }
 
 /**
- * Analyse one Lula document.
+ * Analyse one Soga document.
  * @returns {{ toks, sig, ctx, decls, includes, arduino, cppOf, lineText }}
  */
 function analyse(source, langCode, opts = {}) {
@@ -40,7 +40,7 @@ function analyse(source, langCode, opts = {}) {
   sig.forEach((t, i) => { t.i = i; });
   const cppOf = t => (t && t.type === 'ident' ? (ctx.keywordMap.get(t.text) || ctx.libraryMap.get(t.text) || null) : null);
   // A word the user may declare: not a keyword, and not a library name with a namespace (std::time, cv::Mat).
-  // Plain names such as main, setup, loop or push are fine: Lula renames them consistently.
+  // Plain names such as main, setup, loop or push are fine: Soga renames them consistently.
   const declarable = t => t && t.type === 'ident' && !ctx.keywordMap.has(t.text) && !(ctx.libraryMap.get(t.text) || '').includes('::');
   const kw = t => { const c = t && t.type === 'ident' ? ctx.keywordMap.get(t.text) : null; return c || null; };
   const lines = source.split('\n');
@@ -161,7 +161,7 @@ function analyse(source, langCode, opts = {}) {
       add(next, 'typedef', { scopeStart: 0, scopeEnd: source.length, global: !inFunction(i) });
       continue;
     }
-    if (!declarable(t)) continue; // a Lula keyword or library name, not a user name
+    if (!declarable(t)) continue; // a Soga keyword or library name, not a user name
 
     // Out-of-class definition: Type Class::name(...)
     if (prev && prev.text === '::' && next && next.text === '(' && sig[i - 2] && sig[i - 2].type === 'ident' && canPrecede(sig[i - 3])) {

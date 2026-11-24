@@ -1,5 +1,5 @@
 // Inzwa yokushisa nge-I2C: funda, khumbula, futhi ubonise. (Temperature sensor over I2C.)
-// Yakhele i-Arduino Uno:   lula arduino examples/inzwa.zu.lula --board uno
+// Yakhele i-Arduino Uno:   soga arduino examples/inzwa.zu.soga --board uno
 #faka <ucingo>
 #faka <inkumbulo_ehlalayo>
 

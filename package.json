@@ -1,17 +1,17 @@
 {
-  "name": "lula",
+  "name": "soga",
   "version": "0.7.0",
   "description": "C++ in South African languages - for robots, embedded systems and PCs",
   "license": "MIT",
   "bin": {
-    "lula": "bin/lula.js"
+    "soga": "bin/soga.js"
   },
   "scripts": {
     "test": "node tests/test.js",
     "build-extension": "node scripts/build-extension.js",
     "docs": "node scripts/gen-docs.js",
     "packs": "node scripts/build-packs.js",
-    "package-extension": "node scripts/build-extension.js && cd vscode-lula && npx -y @vscode/vsce@3.2.1 package --allow-missing-repository --no-dependencies -o ../lula-0.7.0.vsix"
+    "package-extension": "node scripts/build-extension.js && cd vscode-soga && npx -y @vscode/vsce@3.2.1 package --allow-missing-repository --no-dependencies -o ../soga-0.7.0.vsix"
   },
   "engines": {
     "node": ">=18"

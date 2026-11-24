@@ -1,5 +1,5 @@
 // Hlanganisa ama-vector amabili ku-GPU nge-CUDA. (Add two vectors on the GPU with CUDA.)
-//   lula build examples/gpu.zu.lula --cxx nvcc -- -x cu
+//   soga build examples/gpu.zu.soga --cxx nvcc -- -x cu
 #include <cuda_runtime.h>
 #include <iostream>
 #include <vector>

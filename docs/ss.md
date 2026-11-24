@@ -1,8 +1,8 @@
-# Lula: siSwati reference
+# Soga: siSwati reference
 
 > draft - needs review by siSwati speakers
 
-Every word below can be used in `.ss.lula` files. Plain English C++ keeps working too.
+Every word below can be used in `.ss.soga` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

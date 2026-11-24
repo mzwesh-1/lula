@@ -1,8 +1,8 @@
-# Lula: isiXhosa reference
+# Soga: isiXhosa reference
 
 > draft - needs review by isiXhosa speakers
 
-Every word below can be used in `.xh.lula` files. Plain English C++ keeps working too.
+Every word below can be used in `.xh.soga` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

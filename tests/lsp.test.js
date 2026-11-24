@@ -10,10 +10,10 @@ const { pathToFileURL } = require('url');
 module.exports = async function ({ testAsync, ROOT }) {
   console.log('language server (LSP over stdio)');
   const rpc = require('vscode-jsonrpc/node');
-  const ws = fs.mkdtempSync(path.join(os.tmpdir(), 'lula-ws-'));
+  const ws = fs.mkdtempSync(path.join(os.tmpdir(), 'soga-ws-'));
   const write = (name, text) => { const f = path.join(ws, name); fs.writeFileSync(f, text); return { file: f, uri: pathToFileURL(f).toString(), text }; };
-  const tools = write('tools.zu.lula', '#faka <okokufaka_nokukhipha>\ninombolo engeza(inombolo a, inombolo b) {\n    buyisa a + b;\n}\n');
-  const main = write('main.zu.lula', [
+  const tools = write('tools.zu.soga', '#faka <okokufaka_nokukhipha>\ninombolo engeza(inombolo a, inombolo b) {\n    buyisa a + b;\n}\n');
+  const main = write('main.zu.soga', [
     '#faka <okokufaka_nokukhipha>',                       // 0
     'isakhiwo Irobhothi {',                               // 1
     '    inombolo ijubane;',                              // 2
@@ -34,7 +34,7 @@ module.exports = async function ({ testAsync, ROOT }) {
     '}',                                                  // 17
   ].join('\n') + '\n');
 
-  const child = spawn(process.execPath, [process.env.LULA_LSP_SERVER || path.join(ROOT, 'src', 'lsp', 'server.js'), '--stdio'], { stdio: ['pipe', 'pipe', 'inherit'] });
+  const child = spawn(process.execPath, [process.env.SOGA_LSP_SERVER || path.join(ROOT, 'src', 'lsp', 'server.js'), '--stdio'], { stdio: ['pipe', 'pipe', 'inherit'] });
   const conn = rpc.createMessageConnection(new rpc.StreamMessageReader(child.stdout), new rpc.StreamMessageWriter(child.stdin));
   const diagnostics = new Map();
   const waiters = [];
@@ -50,7 +50,7 @@ module.exports = async function ({ testAsync, ROOT }) {
   });
   conn.listen();
   const req = (method, params) => conn.sendRequest(method, params);
-  const open = (d, lang = 'lula') => conn.sendNotification('textDocument/didOpen', { textDocument: { uri: d.uri, languageId: lang, version: 1, text: d.text } });
+  const open = (d, lang = 'soga') => conn.sendNotification('textDocument/didOpen', { textDocument: { uri: d.uri, languageId: lang, version: 1, text: d.text } });
   const pos = (line, character) => ({ line, character });
   const at = (d, line, character) => ({ textDocument: { uri: d.uri }, position: pos(line, character) });
 
@@ -65,7 +65,7 @@ module.exports = async function ({ testAsync, ROOT }) {
     conn.sendNotification('initialized', {});
     open(main);
 
-    await testAsync('hover explains Lula words and your own names', async () => {
+    await testAsync('hover explains Soga words and your own names', async () => {
       let h = await req('textDocument/hover', at(main, 11, 6));
       assert.match(h.contents.value, /\*\*jikeleza\*\* \(isiZulu\) → C\+\+ `for`/);
       h = await req('textDocument/hover', at(main, 9, 8));
@@ -78,7 +78,7 @@ module.exports = async function ({ testAsync, ROOT }) {
       d = await req('textDocument/definition', at(main, 15, 14));
       assert.deepStrictEqual(d.range.start, pos(10, 13), 'outer isamba, not the one inside the loop');
       d = await req('textDocument/definition', at(main, 10, 23));
-      assert.strictEqual(d.uri, tools.uri, 'engeza is defined in tools.zu.lula');
+      assert.strictEqual(d.uri, tools.uri, 'engeza is defined in tools.zu.soga');
       assert.deepStrictEqual(d.range.start, pos(1, 9));
     });
     await testAsync('find references respects scopes (shadowed names)', async () => {
@@ -87,11 +87,11 @@ module.exports = async function ({ testAsync, ROOT }) {
       const outer = await req('textDocument/references', { ...at(main, 10, 15), context: { includeDeclaration: true } });
       assert.deepStrictEqual(outer.map(r => r.range.start.line).sort((a, b) => a - b), [10, 11, 15]);
     });
-    await testAsync('rename a field everywhere; refuse reserved Lula words in the file language', async () => {
+    await testAsync('rename a field everywhere; refuse reserved Soga words in the file language', async () => {
       const r = await req('textDocument/rename', { ...at(main, 2, 15), newName: 'isivinini' });
       const lines = r.changes[main.uri].map(e => `${e.range.start.line}:${e.range.start.character}`).sort();
       assert.deepStrictEqual(lines, ['10:34', '2:13', '3:35']);
-      await assert.rejects(req('textDocument/rename', { ...at(main, 2, 15), newName: 'uma' }), /'uma' ligama le-Lula/);
+      await assert.rejects(req('textDocument/rename', { ...at(main, 2, 15), newName: 'uma' }), /'uma' ligama le-Soga/);
       await assert.rejects(req('textDocument/rename', { ...at(main, 2, 15), newName: '9x' }), /akulona igama elivumelekile/);
       await assert.rejects(req('textDocument/prepareRename', at(main, 11, 6)), /amagama akho kuphela/);
     });
@@ -115,7 +115,7 @@ module.exports = async function ({ testAsync, ROOT }) {
       assert.ok(cv && cv.additionalTextEdits[0].newText === '#faka <umbono>\n', 'OpenCV word offers to add #faka <umbono>');
     });
     await testAsync('completion of header names after #faka <', async () => {
-      const d = { uri: pathToFileURL(path.join(ws, 'h.zu.lula')).toString(), text: '#faka <\n' };
+      const d = { uri: pathToFileURL(path.join(ws, 'h.zu.soga')).toString(), text: '#faka <\n' };
       open(d);
       const r = await req('textDocument/completion', at(d, 0, 7));
       const l = (r.items || r).map(i => i.label);
@@ -140,7 +140,7 @@ module.exports = async function ({ testAsync, ROOT }) {
       assert.ok(st.data.length >= 5 * 15);
     });
     await testAsync('format document fixes indentation', async () => {
-      const d = { uri: pathToFileURL(path.join(ws, 'fmt.zu.lula')).toString(), text: 'inombolo okuyinhloko() {\numa (1) {\n        buyisa 1;   \n  }\n      buyisa 0;\n}\n' };
+      const d = { uri: pathToFileURL(path.join(ws, 'fmt.zu.soga')).toString(), text: 'inombolo okuyinhloko() {\numa (1) {\n        buyisa 1;   \n  }\n      buyisa 0;\n}\n' };
       open(d);
       const edits = await req('textDocument/formatting', { textDocument: { uri: d.uri }, options: { tabSize: 4, insertSpaces: true } });
       const lines = d.text.split('\n');
@@ -153,9 +153,9 @@ module.exports = async function ({ testAsync, ROOT }) {
 
     if (!spawnSync('g++', ['--version']).error) {
       await testAsync('errors as you type, in the file language (isiXhosa), with quick fixes', async () => {
-        const bad = { uri: pathToFileURL(path.join(ws, 'bad.xh.lula')).toString(), text: 'inani engundoqo() {\n    inani x = 5\n    buyisa x;\n}\nize xela() {\n    bhala << 1;\n}\n' };
+        const bad = { uri: pathToFileURL(path.join(ws, 'bad.xh.soga')).toString(), text: 'inani engundoqo() {\n    inani x = 5\n    buyisa x;\n}\nize xela() {\n    bhala << 1;\n}\n' };
         open(bad);
-        const ds = await waitDiag(bad.uri, list => list.some(d => d.source === 'lula' && d.severity === 1));
+        const ds = await waitDiag(bad.uri, list => list.some(d => d.source === 'soga' && d.severity === 1));
         const semi = ds.find(d => /kulahleke u-','/.test(d.message));
         assert.ok(semi, JSON.stringify(ds.map(d => d.message)));
         assert.strictEqual(semi.range.start.line, 2);
@@ -169,12 +169,12 @@ module.exports = async function ({ testAsync, ROOT }) {
         const fixInc = actions.find(a => a.title === 'Yongeza #faka <ngeniso_nokuphuma>');
         assert.ok(fixInc, actions.map(a => a.title).join(' | '));
       });
-      await testAsync('a Lula word used as a name is explained instantly, with a rename fix', async () => {
-        const d = { uri: pathToFileURL(path.join(ws, 'res.zu.lula')).toString(), text: 'inombolo okuyinhloko() {\n    inombolo isikhathi = 5;\n    buyisa isikhathi;\n}\n' };
+      await testAsync('a Soga word used as a name is explained instantly, with a rename fix', async () => {
+        const d = { uri: pathToFileURL(path.join(ws, 'res.zu.soga')).toString(), text: 'inombolo okuyinhloko() {\n    inombolo isikhathi = 5;\n    buyisa isikhathi;\n}\n' };
         open(d);
         const ds = await waitDiag(d.uri, list => list.some(x => x.code === 'reserved-name'));
         const r = ds.find(x => x.code === 'reserved-name');
-        assert.match(r.message, /u-'isikhathi' ligama le-Lula \(lisho std::time\)/);
+        assert.match(r.message, /u-'isikhathi' ligama le-Soga \(lisho std::time\)/);
         const actions = await req('textDocument/codeAction', { textDocument: { uri: d.uri }, range: r.range, context: { diagnostics: [r] } });
         assert.strictEqual(actions[0].edit.changes[d.uri].length, 2);
         assert.strictEqual(actions[0].edit.changes[d.uri][0].newText, 'isikhathi_');
@@ -183,7 +183,7 @@ module.exports = async function ({ testAsync, ROOT }) {
     const core = ['/usr/share/arduino/hardware/arduino/avr'].find(c => fs.existsSync(path.join(c, 'cores/arduino/Arduino.h')));
     if (core && !spawnSync('avr-g++', ['--version']).error) {
       await testAsync('Arduino files are checked with the real AVR compiler', async () => {
-        const d = { uri: pathToFileURL(path.join(ws, 'robot.zu.lula')).toString(), text: 'ize qala() {\n    setha_iphini(13, OKUPHUMAYO)\n}\nize phindaphinda() {\n    linda(100);\n}\n' };
+        const d = { uri: pathToFileURL(path.join(ws, 'robot.zu.soga')).toString(), text: 'ize qala() {\n    setha_iphini(13, OKUPHUMAYO)\n}\nize phindaphinda() {\n    linda(100);\n}\n' };
         open(d);
         const ds = await waitDiag(d.uri, list => list.some(x => x.severity === 1));
         assert.match(ds.find(x => x.severity === 1).message, /kushoda u-';'/);
@@ -191,8 +191,8 @@ module.exports = async function ({ testAsync, ROOT }) {
     }
     if (!spawnSync('arduino-cli', ['version']).error) {
       await testAsync('Arduino files are checked for the chosen board (ESP32) through arduino-cli', async () => {
-        conn.sendNotification('workspace/didChangeConfiguration', { settings: { lula: { arduinoBoard: 'esp32' } } });
-        const d = { uri: pathToFileURL(path.join(ws, 'esp.zu.lula')).toString(),
+        conn.sendNotification('workspace/didChangeConfiguration', { settings: { soga: { arduinoBoard: 'esp32' } } });
+        const d = { uri: pathToFileURL(path.join(ws, 'esp.zu.soga')).toString(),
           text: 'ize qala() {\n    Isiriyeli.ukuqala(115200);\n}\nize phindaphinda() {\n    linda(ijubane);\n    khanyisa();\n}\nize khanyisa() {}\n' };
         open(d);
         const ds = await waitDiag(d.uri, list => list.some(x => x.severity === 1), 120000);

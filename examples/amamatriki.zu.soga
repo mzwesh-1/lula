@@ -1,6 +1,6 @@
 // Amamatriki nge-Eigen: xazulula izibalo zomugqa futhi uphendule irobhothi.
 // Linear algebra with Eigen: solve equations and rotate a robot arm.
-//   lula run examples/amamatriki.zu.lula
+//   soga run examples/amamatriki.zu.soga
 #faka <amamatriki>
 #faka <ijiyomethri>
 #faka <okokufaka_nokukhipha>

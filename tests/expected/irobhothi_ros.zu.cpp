@@ -1,6 +1,6 @@
 // I-node ye-ROS 2: thumela umyalo wejubane kurobhothi, ubheke inzwa ye-laser.
 // A ROS 2 node: drive a robot forward and stop when the laser sees an obstacle.
-//   lula translate examples/irobhothi_ros.zu.lula -o ~/ros2_ws/src/umshayeli/src/umshayeli.cpp
+//   soga translate examples/irobhothi_ros.zu.soga -o ~/ros2_ws/src/umshayeli/src/umshayeli.cpp
 //   colcon build   (inside your ROS 2 workspace)
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>

@@ -1,5 +1,5 @@
 'use strict';
-// Lula language server (Language Server Protocol). Works in VS Code and any LSP editor.
+// Soga language server (Language Server Protocol). Works in VS Code and any LSP editor.
 // Everything the user reads is in the language of the file they are editing.
 
 const fs = require('fs');
@@ -68,7 +68,7 @@ function analysisOf(doc) {
   return a;
 }
 
-// Workspace index: every .lula file, so names work across files.
+// Workspace index: every .soga file, so names work across files.
 const index = new Map(); // uri -> analysis (for files not open in the editor)
 function indexFile(file) {
   try {
@@ -90,14 +90,14 @@ function scanWorkspace() {
       if (e.name.startsWith('.') || e.name === 'node_modules') continue;
       const p = path.join(dir, e.name);
       if (e.isDirectory()) walk(p);
-      else if (e.name.endsWith('.lula')) { count++; indexFile(p); }
+      else if (e.name.endsWith('.soga')) { count++; indexFile(p); }
     }
   };
   for (const f of workspaceFolders) { const p = uriToPath(f.uri); if (p) walk(p); }
 }
 function allAnalyses() {
   const out = new Map(index);
-  for (const doc of documents.all()) if (doc.languageId === 'lula' || doc.uri.endsWith('.lula')) out.set(doc.uri, analysisOf(doc));
+  for (const doc of documents.all()) if (doc.languageId === 'soga' || doc.uri.endsWith('.soga')) out.set(doc.uri, analysisOf(doc));
   return out;
 }
 /** Global declarations from every other file (for names used across files). */
@@ -132,7 +132,7 @@ function kindName(kind, lang) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Diagnostics: Lula's own checks instantly, then the real compiler (GCC / AVR) after a pause
+// Diagnostics: Soga's own checks instantly, then the real compiler (GCC / AVR) after a pause
 // ---------------------------------------------------------------------------------------------
 const TYPE_KW = new Set(['int', 'float', 'double', 'char', 'bool', 'void', 'short', 'long', 'signed', 'unsigned', 'auto', 'const', 'constexpr', 'static', 'volatile']);
 
@@ -149,7 +149,7 @@ function lulaChecks(a, msgLang) {
       a.decls.some(d => d.name === prev.text && ['class', 'struct', 'enum', 'typedef'].includes(d.kind)));
     if (!typeBefore) continue;
     out.push({
-      range: rangeOf(t), severity: DiagnosticSeverity.Error, source: 'lula', code: 'reserved-name',
+      range: rangeOf(t), severity: DiagnosticSeverity.Error, source: 'soga', code: 'reserved-name',
       message: M.t('lsp.reserved_name', msgLang, `'${t.text}'`, cpp, `'${t.text}_'`),
       data: { fix: 'rename', with: `${t.text}_` },
     });
@@ -187,14 +187,14 @@ let info2;
 async function validate(doc) {
   const uri = doc.uri, version = doc.version;
   const lang = langOf(uri), msgLang = msgLangOf(uri);
-  const file = uriToPath(uri) || path.join(os.tmpdir(), 'lula-untitled.' + lang + '.lula');
+  const file = uriToPath(uri) || path.join(os.tmpdir(), 'soga-untitled.' + lang + '.soga');
   const a = analysisOf(doc);
   const own = lulaChecks(a, msgLang);
   connection.sendDiagnostics({ uri, version, diagnostics: own }); // instant feedback
 
   let tr;
   try { tr = translate(doc.getText(), lang, { fileName: file }); } catch (e) { return; }
-  const dir = path.join(os.tmpdir(), 'lula-lsp');
+  const dir = path.join(os.tmpdir(), 'soga-lsp');
   fs.mkdirSync(dir, { recursive: true });
   const tmp = path.join(dir, crypto.createHash('sha1').update(uri).digest('hex').slice(0, 12) + '.cpp');
   let cmd, args;
@@ -204,15 +204,15 @@ async function validate(doc) {
     const info = T.boardInfo(settings.arduinoBoard) || T.boardInfo('uno');
     const plain = translate(doc.getText(), lang, { target: 'arduino', lineDirective: false });
     const key = crypto.createHash('sha1').update(uri).digest('hex').slice(0, 12);
-    const base = path.basename(file).replace(/(\.[a-z]{2,3})?\.lula$/i, '') || 'sketch';
-    const sk = T.writeSketch(path.join(os.tmpdir(), 'lula-lsp', `sketch-${key}`), base, plain.cpp);
-    const buildPath = path.join(os.tmpdir(), 'lula-lsp', `build-${key}-${info.fqbn.replace(/[^A-Za-z0-9]/g, '_')}`);
+    const base = path.basename(file).replace(/(\.[a-z]{2,3})?\.soga$/i, '') || 'sketch';
+    const sk = T.writeSketch(path.join(os.tmpdir(), 'soga-lsp', `sketch-${key}`), base, plain.cpp);
+    const buildPath = path.join(os.tmpdir(), 'soga-lsp', `build-${key}-${info.fqbn.replace(/[^A-Za-z0-9]/g, '_')}`);
     const c = await runAsync(() => T.arduinoSyntaxCommand(arduinoCli(), info.fqbn, sk.sketchDir, buildPath));
     const now = documents.get(uri);
     if (now && now.version !== version) return;
     if (c.error) {
       const missing = /platform not installed|not found|Platform '.*' not found/i.test(c.error);
-      info2 = [{ range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } }, severity: DiagnosticSeverity.Information, source: 'lula',
+      info2 = [{ range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } }, severity: DiagnosticSeverity.Information, source: 'soga',
         message: missing ? M.t('cli.core_missing', msgLang, info.name, settings.arduinoBoard) : c.error.split('\n').slice(-3).join(' ') }];
       connection.sendDiagnostics({ uri, version, diagnostics: [...own, ...info2] });
       return;
@@ -227,7 +227,7 @@ async function validate(doc) {
   if (tr.arduino) {
     const core = T.findArduinoCore(), gpp = T.findTool('avr-g++');
     if (!core || !gpp) {
-      info.push({ range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } }, severity: DiagnosticSeverity.Information, source: 'lula',
+      info.push({ range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } }, severity: DiagnosticSeverity.Information, source: 'soga',
         message: M.t('cli.compiler_missing', msgLang, 'avr-g++ / Arduino IDE') });
       connection.sendDiagnostics({ uri, version, diagnostics: [...own, ...info] });
       return;
@@ -241,7 +241,7 @@ async function validate(doc) {
     for (const [name, how] of notes) {
       const inc = a.includes[0];
       info.push({ range: inc ? { start: { line: inc.line, character: inc.char }, end: { line: inc.line, character: inc.endChar } } : { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } },
-        severity: DiagnosticSeverity.Information, source: 'lula', message: M.t('cli.pack_hint', msgLang, name, how) });
+        severity: DiagnosticSeverity.Information, source: 'soga', message: M.t('cli.pack_hint', msgLang, name, how) });
     }
     fs.writeFileSync(tmp, tr.cpp);
     cmd = settings.compilerPath || 'g++';
@@ -265,7 +265,7 @@ async function validate(doc) {
   if (stderr.cancelled) return;
   if (stderr.error) {
     if (!toolNotes.has(cmd)) toolNotes.add(cmd);
-    info.push({ range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } }, severity: DiagnosticSeverity.Information, source: 'lula',
+    info.push({ range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } }, severity: DiagnosticSeverity.Information, source: 'soga',
       message: M.t('cli.compiler_missing', msgLang, cmd) });
     connection.sendDiagnostics({ uri, version, diagnostics: [...own, ...info] });
     return;
@@ -309,7 +309,7 @@ function parseCompilerOutput(text, file, doc, a, msgLang) {
     }
     const d = {
       severity: sev === 'warning' ? DiagnosticSeverity.Warning : DiagnosticSeverity.Error,
-      source: 'lula', message: localize(msg),
+      source: 'soga', message: localize(msg),
     };
     const dym = /; did you mean '([^']+)'\?/.exec(msg);
     if (dym) d.data = { fix: 'replace', with: require('../translator').localizeMessage(`'${dym[1]}'`, msgLang).slice(1, -1) };
@@ -429,7 +429,7 @@ connection.onHover(params => {
   const langName = loadLanguage(lang).name;
   if (decl) {
     const where = decl.uri !== doc.uri ? `\n\n${M.t('lsp.declared_in', msgLang, path.basename(uriToPath(decl.uri) || decl.uri))}` : '';
-    return { range: rangeOf(t), contents: { kind: MarkupKind.Markdown, value: `(${kindName(decl.kind, msgLang)}) \`${decl.name}\`\n\`\`\`lula\n${decl.detail}\n\`\`\`${where}` } };
+    return { range: rangeOf(t), contents: { kind: MarkupKind.Markdown, value: `(${kindName(decl.kind, msgLang)}) \`${decl.name}\`\n\`\`\`soga\n${decl.detail}\n\`\`\`${where}` } };
   }
   const word = t.type === 'header' ? t.text.slice(1, -1).trim() : t.text;
   const found = describeWord(word, lang) || (a.ctx.libraryMap.has(word) ? { cpp: a.ctx.libraryMap.get(word), source: 'library' } : null);
@@ -443,7 +443,7 @@ connection.onDefinition(params => {
   if (!doc) return null;
   const { decl, t, a } = findDecl(doc, params.position);
   if (decl) return { uri: decl.uri, range: declRange(decl) };
-  // #faka "file.lula" style local headers are not used by Lula; nothing else to jump to.
+  // #faka "file.soga" style local headers are not used by Soga; nothing else to jump to.
   void t; void a;
   return null;
 });
@@ -719,14 +719,14 @@ connection.onInitialize(params => {
       inlayHintProvider: true,
       semanticTokensProvider: { legend: { tokenTypes: SEMANTIC_TYPES, tokenModifiers: SEMANTIC_MODS }, full: true },
     },
-    serverInfo: { name: 'lula-language-server', version: require('../../package.json').version },
+    serverInfo: { name: 'soga-language-server', version: require('../../package.json').version },
   };
 });
 
 async function loadSettings() {
   if (!canConfigure) return;
   try {
-    const s = await connection.workspace.getConfiguration('lula');
+    const s = await connection.workspace.getConfiguration('soga');
     settings = { ...DEFAULTS, ...(s || {}), diagnostics: { ...DEFAULTS.diagnostics, ...((s && s.diagnostics) || {}) }, inlayHints: { ...DEFAULTS.inlayHints, ...((s && s.inlayHints) || {}) } };
   } catch { /* keep defaults */ }
 }
@@ -737,7 +737,7 @@ connection.onInitialized(async () => {
   for (const doc of documents.all()) scheduleValidate(doc, 0);
 });
 connection.onDidChangeConfiguration(async change => {
-  if (change && change.settings && change.settings.lula) settings = { ...DEFAULTS, ...change.settings.lula };
+  if (change && change.settings && change.settings.soga) settings = { ...DEFAULTS, ...change.settings.soga };
   else await loadSettings();
   cache.clear();
   for (const doc of documents.all()) scheduleValidate(doc, 0);
@@ -745,7 +745,7 @@ connection.onDidChangeConfiguration(async change => {
 connection.onDidChangeWatchedFiles(change => {
   for (const c of change.changes) {
     const p = uriToPath(c.uri);
-    if (!p || !p.endsWith('.lula')) continue;
+    if (!p || !p.endsWith('.soga')) continue;
     if (c.type === 3) index.delete(c.uri); else indexFile(p);
   }
 });

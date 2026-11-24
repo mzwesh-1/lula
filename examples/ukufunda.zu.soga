@@ -1,6 +1,6 @@
 // Ukufunda komshini nge-PyTorch (libtorch): fundisa inethiwekhi ukuthi y = 2x + 1.
 // Machine learning with PyTorch's C++ API: teach a network that y = 2x + 1.
-//   export LIBTORCH=/path/to/libtorch && lula run examples/ukufunda.zu.lula
+//   export LIBTORCH=/path/to/libtorch && soga run examples/ukufunda.zu.soga
 #faka <ukufunda_komshini>
 #faka <okokufaka_nokukhipha>
 

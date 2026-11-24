@@ -1,8 +1,8 @@
-# Lula: isiNdebele reference
+# Soga: isiNdebele reference
 
 > draft - needs review by isiNdebele speakers
 
-Every word below can be used in `.nr.lula` files. Plain English C++ keeps working too.
+Every word below can be used in `.nr.soga` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

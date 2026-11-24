@@ -1,5 +1,5 @@
 'use strict';
-// Generates docs/<code>.md: a complete reference of every Lula word for each language.
+// Generates docs/<code>.md: a complete reference of every Soga word for each language.
 const fs = require('fs');
 const path = require('path');
 const { listLanguages, loadLanguage, loadPacks } = require('../src/translator');
@@ -15,8 +15,8 @@ const TITLES = {
 fs.mkdirSync(path.join(ROOT, 'docs'), { recursive: true });
 for (const { code } of listLanguages()) {
   const lang = loadLanguage(code);
-  const md = [`# Lula: ${lang.name} reference`, '', `> ${lang.status}`, '',
-    `Every word below can be used in \`.${code}.lula\` files. Plain English C++ keeps working too.`, ''];
+  const md = [`# Soga: ${lang.name} reference`, '', `> ${lang.status}`, '',
+    `Every word below can be used in \`.${code}.soga\` files. Plain English C++ keeps working too.`, ''];
   const table = (title, rows, fmt = s => `\`${s}\``) => {
     md.push(`## ${title}`, '', `| ${lang.name} | C++ |`, '|---|---|');
     for (const [local, cpp] of rows) md.push(`| ${fmt(local)} | ${fmt(cpp)} |`);

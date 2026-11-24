@@ -15,7 +15,7 @@ privaat:
 
 heelgetal hoof() {
     skryf << "Hallo, Wêreld!" << nuwereël;
-    Robot r("Lula-1");
+    Robot r("Soga-1");
     r.beweeg(3);
     terug 0;
 }

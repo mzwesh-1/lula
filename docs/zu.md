@@ -1,8 +1,8 @@
-# Lula: isiZulu reference
+# Soga: isiZulu reference
 
 > draft - needs review by isiZulu speakers
 
-Every word below can be used in `.zu.lula` files. Plain English C++ keeps working too.
+Every word below can be used in `.zu.soga` files. Plain English C++ keeps working too.
 
 ## Keywords: Control flow
 

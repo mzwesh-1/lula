@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const EXT = path.join(ROOT, 'vscode-lula');
+const EXT = path.join(ROOT, 'vscode-soga');
 const LIB = path.join(EXT, 'lib');
 
 fs.rmSync(LIB, { recursive: true, force: true });
@@ -22,15 +22,15 @@ const langs = fs.readdirSync(path.join(ROOT, 'languages')).filter(f => f.endsWit
 for (const f of langs) fs.copyFileSync(path.join(ROOT, 'languages', f), path.join(LIB, 'languages', f));
 
 const SCOPES = {
-  control: 'keyword.control.lula',
-  types: 'storage.type.lula',
-  modifiers: 'storage.modifier.lula',
-  oop: 'keyword.other.lula',
-  casts: 'keyword.operator.cast.lula',
-  constants: 'constant.language.lula',
-  operators: 'keyword.operator.word.lula',
-  library: 'support.function.lula',
-  arduino: 'support.constant.arduino.lula',
+  control: 'keyword.control.soga',
+  types: 'storage.type.soga',
+  modifiers: 'storage.modifier.soga',
+  oop: 'keyword.other.soga',
+  casts: 'keyword.operator.cast.soga',
+  constants: 'constant.language.soga',
+  operators: 'keyword.operator.word.soga',
+  library: 'support.function.soga',
+  arduino: 'support.constant.arduino.soga',
 };
 const words = Object.fromEntries(Object.keys(SCOPES).map(k => [k, new Set()]));
 const directives = new Set('include define undef ifdef ifndef if else elif elifdef elifndef endif error warning pragma line'.split(' '));
@@ -59,34 +59,34 @@ const B = '(?<![\\p{L}\\p{N}_])', E = '(?![\\p{L}\\p{N}_])';
 
 const grammar = {
   $schema: 'https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json',
-  name: 'Lula',
-  scopeName: 'source.lula',
+  name: 'Soga',
+  scopeName: 'source.soga',
   patterns: [
     { include: '#comments' },
     { include: '#preprocessor' },
     { include: '#strings' },
     ...Object.keys(SCOPES).map(cat => ({ name: SCOPES[cat], match: `${B}(?:${alt(words[cat])})${E}` })),
-    { name: 'constant.numeric.lula', match: "\\b(?:0[xX][0-9a-fA-F']+|0[bB][01']+|\\d[\\d']*\\.?[\\d']*(?:[eE][+-]?\\d+)?)[uUlLfF]*\\b" },
-    { name: 'entity.name.function.lula', match: `[\\p{L}_][\\p{L}\\p{N}_]*(?=\\s*\\()` },
+    { name: 'constant.numeric.soga', match: "\\b(?:0[xX][0-9a-fA-F']+|0[bB][01']+|\\d[\\d']*\\.?[\\d']*(?:[eE][+-]?\\d+)?)[uUlLfF]*\\b" },
+    { name: 'entity.name.function.soga', match: `[\\p{L}_][\\p{L}\\p{N}_]*(?=\\s*\\()` },
   ],
   repository: {
     comments: { patterns: [
-      { name: 'comment.line.double-slash.lula', match: '//.*$' },
-      { name: 'comment.block.lula', begin: '/\\*', end: '\\*/' },
+      { name: 'comment.line.double-slash.soga', match: '//.*$' },
+      { name: 'comment.block.soga', begin: '/\\*', end: '\\*/' },
     ] },
     preprocessor: { patterns: [
       { match: `^\\s*(#\\s*(?:${alt(includeWords)}))\\s*(<[^>]*>|"[^"]*")`,
-        captures: { 1: { name: 'keyword.control.directive.lula' }, 2: { name: 'string.quoted.other.lt-gt.include.lula' } } },
-      { name: 'keyword.control.directive.lula', match: `^\\s*#\\s*(?:${alt(directives)})${E}` },
+        captures: { 1: { name: 'keyword.control.directive.soga' }, 2: { name: 'string.quoted.other.lt-gt.include.soga' } } },
+      { name: 'keyword.control.directive.soga', match: `^\\s*#\\s*(?:${alt(directives)})${E}` },
     ] },
     strings: { patterns: [
-      { name: 'string.quoted.raw.lula', begin: '(?:u8|u|U|L)?R"([^()\\\\\\s"]{0,16})\\(', end: '\\)\\1"' },
-      { name: 'string.quoted.double.lula', begin: '(?:u8|u|U|L)?"', end: '"', patterns: [{ name: 'constant.character.escape.lula', match: '\\\\.' }] },
-      { name: 'string.quoted.single.lula', begin: "(?:u8|u|U|L)?'", end: "'", patterns: [{ name: 'constant.character.escape.lula', match: '\\\\.' }] },
+      { name: 'string.quoted.raw.soga', begin: '(?:u8|u|U|L)?R"([^()\\\\\\s"]{0,16})\\(', end: '\\)\\1"' },
+      { name: 'string.quoted.double.soga', begin: '(?:u8|u|U|L)?"', end: '"', patterns: [{ name: 'constant.character.escape.soga', match: '\\\\.' }] },
+      { name: 'string.quoted.single.soga', begin: "(?:u8|u|U|L)?'", end: "'", patterns: [{ name: 'constant.character.escape.soga', match: '\\\\.' }] },
     ] },
   },
 };
-fs.writeFileSync(path.join(EXT, 'syntaxes', 'lula.tmLanguage.json'), JSON.stringify(grammar, null, 2));
+fs.writeFileSync(path.join(EXT, 'syntaxes', 'soga.tmLanguage.json'), JSON.stringify(grammar, null, 2));
 console.log(`Built extension lib/ and grammar for: ${langs.map(f => f.replace('.json', '')).join(', ')}`);
 
 // Bundle the extension and the language server into single files (faster start-up in VS Code).

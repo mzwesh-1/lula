@@ -7,7 +7,7 @@ const { spawnSync } = require('child_process');
 const { translate, listLanguages, loadLanguage, detectLanguage, localizeMessage } = require('../src/translator');
 
 const ROOT = path.join(__dirname, '..');
-const CLI = path.join(ROOT, 'bin', 'lula.js');
+const CLI = path.join(ROOT, 'bin', 'soga.js');
 let passed = 0;
 function test(name, fn) {
   try { fn(); passed++; console.log(`  ok   ${name}`); }
@@ -38,18 +38,18 @@ test('English C++ still works', () => assert.strictEqual(zu('if (true) return 0;
 test('identifiers containing keywords untouched', () => assert.strictEqual(zu('umaX ize_y'), 'umaX ize_y'));
 test('unicode identifiers', () => assert.strictEqual(af('heelgetal treë = 1; skryf << nuwereël;'), 'int treë = 1; std::cout << std::endl;'));
 test('line numbers preserved', () => {
-  const src = fs.readFileSync(path.join(ROOT, 'examples', 'sawubona.zu.lula'), 'utf8');
+  const src = fs.readFileSync(path.join(ROOT, 'examples', 'sawubona.zu.soga'), 'utf8');
   assert.strictEqual(zu(src).split('\n').length, src.split('\n').length);
 });
-test('#line directive added', () => assert.ok(translate('uma', 'zu', { fileName: '/a/b.zu.lula' }).cpp.startsWith('#line 1 "/a/b.zu.lula"\n')));
+test('#line directive added', () => assert.ok(translate('uma', 'zu', { fileName: '/a/b.zu.soga' }).cpp.startsWith('#line 1 "/a/b.zu.soga"\n')));
 test('language detection', () => {
-  assert.strictEqual(detectLanguage('robot.zu.lula'), 'zu');
-  assert.strictEqual(detectLanguage('C:\\x\\hallo.af.lula'), 'af');
-  assert.strictEqual(detectLanguage('robot.lula'), null);
+  assert.strictEqual(detectLanguage('robot.zu.soga'), 'zu');
+  assert.strictEqual(detectLanguage('C:\\x\\hallo.af.soga'), 'af');
+  assert.strictEqual(detectLanguage('robot.soga'), null);
 });
 test('error messages localized', () => assert.strictEqual(
-  localizeMessage("x.zu.lula:3:5: error: expected ';' before 'return'", 'zu'),
-  "x.zu.lula:3:5: error: expected ';' before 'buyisa'"));
+  localizeMessage("x.zu.soga:3:5: error: expected ';' before 'return'", 'zu'),
+  "x.zu.soga:3:5: error: expected ';' before 'buyisa'"));
 
 console.log('language tables (completeness)');
 const ALL_CPP_KEYWORDS = ('alignas alignof and and_eq asm auto bitand bitor bool break case catch char char8_t char16_t ' +
@@ -92,9 +92,9 @@ for (const code of languages) {
 console.log('SASL sign-video dictionary');
 {
   const S = require('../src/sasl');
-  const tmpDict = () => { const d = fs.mkdtempSync(path.join(os.tmpdir(), 'lula-sasl-')); fs.writeFileSync(path.join(d, 'signs.json'), '{"version":1,"signs":{}}'); return d; };
+  const tmpDict = () => { const d = fs.mkdtempSync(path.join(os.tmpdir(), 'soga-sasl-')); fs.writeFileSync(path.join(d, 'signs.json'), '{"version":1,"signs":{}}'); return d; };
   // A colour-bar test clip: clearly NOT a sign, only used to exercise the pipeline.
-  const clip = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'lula-clip-')), 'TEST-CLIP-not-a-sign.webm');
+  const clip = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'soga-clip-')), 'TEST-CLIP-not-a-sign.webm');
   const hasFfmpeg = !spawnSync('ffmpeg', ['-version']).error;
   if (hasFfmpeg) spawnSync('ffmpeg', ['-v', 'error', '-f', 'lavfi', '-i', 'testsrc=duration=1:size=320x240:rate=10', '-c:v', 'libvpx', clip]);
   else fs.writeFileSync(clip, 'not a real video');
@@ -165,25 +165,25 @@ console.log('end-to-end (needs g++)');
 const hasGpp = !spawnSync('g++', ['--version']).error;
 function run(args) { return spawnSync(process.execPath, [CLI, ...args], { encoding: 'utf8' }); }
 if (hasGpp) {
-  test('sawubona.zu.lula runs', () => {
-    const r = run(['run', path.join(ROOT, 'examples', 'sawubona.zu.lula')]);
+  test('sawubona.zu.soga runs', () => {
+    const r = run(['run', path.join(ROOT, 'examples', 'sawubona.zu.soga')]);
     assert.strictEqual(r.status, 0, r.stderr);
     assert.match(r.stdout, /Sawubona, Mhlaba!/);
     assert.match(r.stdout, /Isilinganiso: 82\.6667/);
   });
-  test('hallo.af.lula runs', () => {
-    const r = run(['run', path.join(ROOT, 'examples', 'hallo.af.lula')]);
+  test('hallo.af.soga runs', () => {
+    const r = run(['run', path.join(ROOT, 'examples', 'hallo.af.soga')]);
     assert.strictEqual(r.status, 0, r.stderr);
-    assert.match(r.stdout, /Lula-1 tree 3/);
+    assert.match(r.stdout, /Soga-1 tree 3/);
   });
   test('robot program compiles against mock Arduino and reacts to sensor', () => {
-    const r = run(['run', path.join(ROOT, 'examples', 'irobhothi.zu.lula'), '--target', 'host', '--',
+    const r = run(['run', path.join(ROOT, 'examples', 'irobhothi.zu.soga'), '--target', 'host', '--',
       '-include', path.join(__dirname, 'mock', 'Arduino.h')]);
     assert.strictEqual(r.status, 0, r.stderr);
     assert.strictEqual(r.stdout.trim().split('\n').join('|'),
       'pinMode(13,1)|pinMode(9,1)|analogWrite(9,200)|digitalWrite(13,1)|analogWrite(9,0)|digitalWrite(13,0)');
   });
-  for (const ex of ['konke.zu.lula', 'alles.af.lula']) {
+  for (const ex of ['konke.zu.soga', 'alles.af.soga']) {
     test(`${ex}: full-language program runs (classes, templates, containers, algorithms, exceptions, files...)`, () => {
       const r = run(['run', path.join(ROOT, 'examples', ex)]);
       assert.strictEqual(r.status, 0, r.stderr);
@@ -193,13 +193,13 @@ if (hasGpp) {
   test('C++ (GeeksforGeeks style) converted to every language gives the same output', () => {
     const { convert } = require('../src/translator');
     const cppFile = path.join(__dirname, 'fixtures', 'gfg_style.cpp');
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lula-conv-'));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'soga-conv-'));
     const exe = path.join(dir, 'orig');
     const c = spawnSync('g++', ['-std=c++20', cppFile, '-o', exe], { encoding: 'utf8' });
     assert.strictEqual(c.status, 0, c.stderr);
     const expected = spawnSync(exe, [], { encoding: 'utf8' }).stdout;
     for (const code of languages) {
-      const f = path.join(dir, `gfg.${code}.lula`);
+      const f = path.join(dir, `gfg.${code}.soga`);
       fs.writeFileSync(f, convert(fs.readFileSync(cppFile, 'utf8'), 'cpp', code));
       const r = run(['run', f]);
       assert.strictEqual(r.status, 0, `${code}: ${r.stderr}`);
@@ -208,11 +208,11 @@ if (hasGpp) {
   });
   test('full-language program converted into every SA language gives identical output', () => {
     const { convert } = require('../src/translator');
-    const src = fs.readFileSync(path.join(ROOT, 'examples', 'konke.zu.lula'), 'utf8');
-    const expected = fs.readFileSync(path.join(__dirname, 'expected', 'konke.zu.lula.out'), 'utf8');
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lula-all-'));
+    const src = fs.readFileSync(path.join(ROOT, 'examples', 'konke.zu.soga'), 'utf8');
+    const expected = fs.readFileSync(path.join(__dirname, 'expected', 'konke.zu.soga.out'), 'utf8');
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'soga-all-'));
     for (const code of languages) {
-      const f = path.join(dir, `konke.${code}.lula`);
+      const f = path.join(dir, `konke.${code}.soga`);
       fs.writeFileSync(f, convert(src, 'zu', code));
       const r = run(['run', f]);
       assert.strictEqual(r.status, 0, `${code}: ${r.stderr}`);
@@ -221,20 +221,20 @@ if (hasGpp) {
   });
   test('round trip zu -> af -> zu keeps the program working', () => {
     const { convert } = require('../src/translator');
-    const src = fs.readFileSync(path.join(ROOT, 'examples', 'konke.zu.lula'), 'utf8');
+    const src = fs.readFileSync(path.join(ROOT, 'examples', 'konke.zu.soga'), 'utf8');
     const back = convert(convert(src, 'zu', 'af'), 'af', 'zu');
-    const f = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'lula-rt-')), 'rt.zu.lula');
+    const f = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'soga-rt-')), 'rt.zu.soga');
     fs.writeFileSync(f, back);
     const r = run(['run', f]);
     assert.strictEqual(r.status, 0, r.stderr);
-    assert.strictEqual(r.stdout, fs.readFileSync(path.join(__dirname, 'expected', 'konke.zu.lula.out'), 'utf8'));
+    assert.strictEqual(r.stdout, fs.readFileSync(path.join(__dirname, 'expected', 'konke.zu.soga.out'), 'utf8'));
   });
-  test('compile errors point at the Lula file and line, in the user language', () => {
-    const f = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'lula-t-')), 'iphutha.zu.lula');
+  test('compile errors point at the Soga file and line, in the user language', () => {
+    const f = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'soga-t-')), 'iphutha.zu.soga');
     fs.writeFileSync(f, 'inombolo okuyinhloko() {\n    inombolo x = 5\n    buyisa x;\n}\n');
     const r = run(['check', f]);
     assert.notStrictEqual(r.status, 0);
-    assert.match(r.stderr, /iphutha\.zu\.lula:3:5: iphutha: kushoda u-',' noma ';' ngaphambi kuka 'buyisa'/);
+    assert.match(r.stderr, /iphutha\.zu\.soga:3:5: iphutha: kushoda u-',' noma ';' ngaphambi kuka 'buyisa'/);
     assert.match(r.stderr, /Emsebenzini 'inombolo okuyinhloko\(\)'/);
     assert.doesNotMatch(r.stderr, /\berror\b|\bexpected\b|\bbefore\b/);
   });

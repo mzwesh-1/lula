@@ -4,5 +4,5 @@
 *.vsix
 examples/*/
 node_modules/
-vscode-lula/LICENSE
-vscode-lula/lib/
+vscode-soga/LICENSE
+vscode-soga/lib/

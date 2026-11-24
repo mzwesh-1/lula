@@ -1,4 +1,4 @@
-# Lula message catalog: compiler errors and warnings, runtime crashes, and Lula's own messages.
+# Soga message catalog: compiler errors and warnings, runtime crashes, and Soga's own messages.
 # Each entry: @id, then one or more `re:` lines (regex on the GCC message text, LC_ALL=C),
 # then the sentence in English and every language. {1} {2} {3} are the regex captures;
 # {kw:else} is the word for a C++ keyword in that language.
@@ -847,7 +847,7 @@ ts: nongonoko wu yimisiwile
 ve: mbekanyamushumo yo imiswa
 af: die program is gestop
 
-# ---- Lula's own messages -----------------------------------------------------------------
+# ---- Soga's own messages -----------------------------------------------------------------
 @cli.not_found
 en: file not found: {1}
 zu: ifayela alitholakalanga: {1}
@@ -901,17 +901,17 @@ ve: a hu na vhukhakhi ho wanalaho
 af: geen foute gevind nie
 
 @cli.arduino_hint
-en: this is an Arduino program (it has {1} and {2}). Build it for a board with: lula arduino {3}
-zu: lolu wuhlelo lwe-Arduino (lunayo {1} no-{2}). Lwakhele ibhodi ngokuthi: lula arduino {3}
-xh: le yinkqubo ye-Arduino (inayo {1} no-{2}). Yakhele ibhodi ngokuthi: lula arduino {3}
-ss: loluhlelo lwe-Arduino (lunayo {1} na-{2}). Lwakhele libhodi ngekutsi: lula arduino {3}
-nr: leli lihlelo le-Arduino (linayo {1} no-{2}). Lakhele ibhodo ngokuthi: lula arduino {3}
-st: lena ke lenaneo la Arduino (le na le {1} le {2}). Le ahele boto ka: lula arduino {3}
-tn: le ke lenaneo la Arduino (le na le {1} le {2}). Le agele boto ka: lula arduino {3}
-nso: le ke lenaneo la Arduino (le na le {1} le {2}). Le agele boto ka: lula arduino {3}
-ts: lowu i nongonoko wa Arduino (wu na {1} na {2}). Wu akela bodo hi: lula arduino {3}
-ve: iyi ndi mbekanyamushumo ya Arduino (i na {1} na {2}). I fhatela bodo nga: lula arduino {3}
-af: dit is 'n Arduino-program (dit het {1} en {2}). Bou dit vir 'n bord met: lula arduino {3}
+en: this is an Arduino program (it has {1} and {2}). Build it for a board with: soga arduino {3}
+zu: lolu wuhlelo lwe-Arduino (lunayo {1} no-{2}). Lwakhele ibhodi ngokuthi: soga arduino {3}
+xh: le yinkqubo ye-Arduino (inayo {1} no-{2}). Yakhele ibhodi ngokuthi: soga arduino {3}
+ss: loluhlelo lwe-Arduino (lunayo {1} na-{2}). Lwakhele libhodi ngekutsi: soga arduino {3}
+nr: leli lihlelo le-Arduino (linayo {1} no-{2}). Lakhele ibhodo ngokuthi: soga arduino {3}
+st: lena ke lenaneo la Arduino (le na le {1} le {2}). Le ahele boto ka: soga arduino {3}
+tn: le ke lenaneo la Arduino (le na le {1} le {2}). Le agele boto ka: soga arduino {3}
+nso: le ke lenaneo la Arduino (le na le {1} le {2}). Le agele boto ka: soga arduino {3}
+ts: lowu i nongonoko wa Arduino (wu na {1} na {2}). Wu akela bodo hi: soga arduino {3}
+ve: iyi ndi mbekanyamushumo ya Arduino (i na {1} na {2}). I fhatela bodo nga: soga arduino {3}
+af: dit is 'n Arduino-program (dit het {1} en {2}). Bou dit vir 'n bord met: soga arduino {3}
 
 @cli.pack_hint
 en: this program uses {1}. {2}
@@ -1007,17 +1007,17 @@ af: 'n beginwaarde
 
 # ---- language server (VS Code) -----------------------------------------------------------
 @lsp.reserved_name
-en: {1} is a Lula word (it means {2}), so it cannot be your own name. Choose another name, for example {3}
-zu: u-{1} ligama le-Lula (lisho {2}), ngakho angeke kube igama lakho. Khetha elinye, isibonelo {3}
-xh: u-{1} ligama le-Lula (lithetha {2}), ngoko alinakuba ligama lakho. Khetha elinye, umzekelo {3}
-ss: {1} libito le-Lula (lisho {2}), ngako angeke kube libito lakho. Khetsa lelinye, sibonelo {3}
-nr: u-{1} libizo le-Lula (litjho {2}), ngalokho angeze kube libizo lakho. Khetha elinye, isibonelo {3}
-st: {1} ke lentswe la Lula (le bolela {2}), ka hona e ke ke ya eba lebitso la hao. Kgetha le leng, mohlala {3}
-tn: {1} ke lefoko la Lula (le kaya {2}), ka jalo e ka se nne leina la gago. Tlhopha le lengwe, sekai {3}
-nso: {1} ke lentšu la Lula (le hlaloša {2}), ka gona e ka se be leina la gago. Kgetha le lengwe, mohlala {3}
-ts: {1} i rito ra Lula (ri vula {2}), hikwalaho a ri nge vi vito ra wena. Hlawula rin'wana, xikombiso {3}
-ve: {1} ndi ipfi la Lula (li amba {2}), nga zwenezwo a li nga vhi dzina ḽaṋu. Nangani ḽiṅwe, tsumbo {3}
-af: {1} is 'n Lula-woord (dit beteken {2}), dus kan dit nie jou eie naam wees nie. Kies 'n ander naam, byvoorbeeld {3}
+en: {1} is a Soga word (it means {2}), so it cannot be your own name. Choose another name, for example {3}
+zu: u-{1} ligama le-Soga (lisho {2}), ngakho angeke kube igama lakho. Khetha elinye, isibonelo {3}
+xh: u-{1} ligama le-Soga (lithetha {2}), ngoko alinakuba ligama lakho. Khetha elinye, umzekelo {3}
+ss: {1} libito le-Soga (lisho {2}), ngako angeke kube libito lakho. Khetsa lelinye, sibonelo {3}
+nr: u-{1} libizo le-Soga (litjho {2}), ngalokho angeze kube libizo lakho. Khetha elinye, isibonelo {3}
+st: {1} ke lentswe la Soga (le bolela {2}), ka hona e ke ke ya eba lebitso la hao. Kgetha le leng, mohlala {3}
+tn: {1} ke lefoko la Soga (le kaya {2}), ka jalo e ka se nne leina la gago. Tlhopha le lengwe, sekai {3}
+nso: {1} ke lentšu la Soga (le hlaloša {2}), ka gona e ka se be leina la gago. Kgetha le lengwe, mohlala {3}
+ts: {1} i rito ra Soga (ri vula {2}), hikwalaho a ri nge vi vito ra wena. Hlawula rin'wana, xikombiso {3}
+ve: {1} ndi ipfi la Soga (li amba {2}), nga zwenezwo a li nga vhi dzina ḽaṋu. Nangani ḽiṅwe, tsumbo {3}
+af: {1} is 'n Soga-woord (dit beteken {2}), dus kan dit nie jou eie naam wees nie. Kies 'n ander naam, byvoorbeeld {3}
 
 @lsp.cannot_rename
 en: only your own names can be renamed
@@ -1033,17 +1033,17 @@ ve: ndi madzina aṋu fhedzi ane a nga ṱhogomelwa hafhu
 af: net jou eie name kan hernoem word
 
 @lsp.rename_reserved
-en: {1} is a Lula word and cannot be used as a name
-zu: u-{1} ligama le-Lula futhi angeke lisetshenziswe njengegama lakho
-xh: u-{1} ligama le-Lula kwaye alinakusetyenziswa njengegama
-ss: {1} libito le-Lula futsi angeke lisetjentiswe njengelibito
-nr: u-{1} libizo le-Lula begodu angeze lisetjenziswe njengebizo
-st: {1} ke lentswe la Lula mme le ke ke la sebediswa e le lebitso
-tn: {1} ke lefoko la Lula mme le ka se dirisiwe jaaka leina
-nso: {1} ke lentšu la Lula gomme le ka se šomišwe bjalo ka leina
-ts: {1} i rito ra Lula naswona a ri nge tirhisiwi tanihi vito
-ve: {1} ndi ipfi la Lula nahone a li nga shumiswi sa dzina
-af: {1} is 'n Lula-woord en kan nie as naam gebruik word nie
+en: {1} is a Soga word and cannot be used as a name
+zu: u-{1} ligama le-Soga futhi angeke lisetshenziswe njengegama lakho
+xh: u-{1} ligama le-Soga kwaye alinakusetyenziswa njengegama
+ss: {1} libito le-Soga futsi angeke lisetjentiswe njengelibito
+nr: u-{1} libizo le-Soga begodu angeze lisetjenziswe njengebizo
+st: {1} ke lentswe la Soga mme le ke ke la sebediswa e le lebitso
+tn: {1} ke lefoko la Soga mme le ka se dirisiwe jaaka leina
+nso: {1} ke lentšu la Soga gomme le ka se šomišwe bjalo ka leina
+ts: {1} i rito ra Soga naswona a ri nge tirhisiwi tanihi vito
+ve: {1} ndi ipfi la Soga nahone a li nga shumiswi sa dzina
+af: {1} is 'n Soga-woord en kan nie as naam gebruik word nie
 
 @lsp.rename_invalid
 en: {1} is not a valid name: use letters, digits and _, and do not start with a digit
@@ -1232,17 +1232,17 @@ ve: Zwishanduki zwi shumisa dzi-byte dza {1} ({2}%) dza memori, hu tshi sala dzi
 af: Veranderlikes gebruik {1} grepe ({2}%) van die geheue, met {3} grepe oor (maksimum {4} grepe).
 
 @cli.core_missing
-en: The board package for {1} is not installed. Install it with: lula boards --install {2}
-zu: Iphakheji yebhodi ye-{1} ayifakiwe. Yifake ngokuthi: lula boards --install {2}
-xh: Ipakethe yebhodi ye-{1} ayifakwanga. Yifake ngokuthi: lula boards --install {2}
-ss: Liphakheji lelibhodi le-{1} alifakiwe. Lifake ngekutsi: lula boards --install {2}
-nr: Iphakheji yebhodo ye-{1} ayikafakwa. Yifake ngokuthi: lula boards --install {2}
-st: Sephutheloana sa boto sa {1} ha se a kenngwa. Se kenye ka: lula boards --install {2}
-tn: Sephuthelwana sa boto sa {1} ga se a tsenngwa. Se tsenye ka: lula boards --install {2}
-nso: Sephuthelwana sa boto sa {1} ga se sa tsenywa. Se tsenye ka: lula boards --install {2}
-ts: Phakeji ya bodo ya {1} a yi nghenisiwanga. Yi nghenise hi: lula boards --install {2}
-ve: Phakhedzhi ya bodo ya {1} a yo ngo dzheniswa. I dzhenisani nga: lula boards --install {2}
-af: Die bordpakket vir {1} is nie geïnstalleer nie. Installeer dit met: lula boards --install {2}
+en: The board package for {1} is not installed. Install it with: soga boards --install {2}
+zu: Iphakheji yebhodi ye-{1} ayifakiwe. Yifake ngokuthi: soga boards --install {2}
+xh: Ipakethe yebhodi ye-{1} ayifakwanga. Yifake ngokuthi: soga boards --install {2}
+ss: Liphakheji lelibhodi le-{1} alifakiwe. Lifake ngekutsi: soga boards --install {2}
+nr: Iphakheji yebhodo ye-{1} ayikafakwa. Yifake ngokuthi: soga boards --install {2}
+st: Sephutheloana sa boto sa {1} ha se a kenngwa. Se kenye ka: soga boards --install {2}
+tn: Sephuthelwana sa boto sa {1} ga se a tsenngwa. Se tsenye ka: soga boards --install {2}
+nso: Sephuthelwana sa boto sa {1} ga se sa tsenywa. Se tsenye ka: soga boards --install {2}
+ts: Phakeji ya bodo ya {1} a yi nghenisiwanga. Yi nghenise hi: soga boards --install {2}
+ve: Phakhedzhi ya bodo ya {1} a yo ngo dzheniswa. I dzhenisani nga: soga boards --install {2}
+af: Die bordpakket vir {1} is nie geïnstalleer nie. Installeer dit met: soga boards --install {2}
 
 @cli.no_arduino_cli
 en: arduino-cli was not found. Install the Arduino IDE 2 (it includes arduino-cli) or arduino-cli, or set ARDUINO_CLI

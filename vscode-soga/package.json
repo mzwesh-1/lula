@@ -1,9 +1,9 @@
 {
-  "name": "lula",
-  "displayName": "Lula - C++ in South African languages",
+  "name": "soga",
+  "displayName": "Soga - C++ in South African languages",
   "description": "Write C++ and Arduino code in all 10 written official South African languages: every Arduino-compatible board (Uno, Nano, Mega, Uno R4, Nano 33, ESP32, Raspberry Pi Pico, STM32, ...), ROS 2, OpenCV, Eigen, CUDA and PyTorch, with error messages in your language and a full language server. Includes a South African Sign Language (SASL) sign-video dictionary.",
   "version": "0.7.0",
-  "publisher": "lula-lang",
+  "publisher": "soga-lang",
   "license": "MIT",
   "engines": {
     "vscode": "^1.82.0"
@@ -14,110 +14,110 @@
   ],
   "main": "./lib/extension.js",
   "activationEvents": [
-    "onLanguage:lula",
+    "onLanguage:soga",
     "onLanguage:cpp",
-    "onCommand:lula.convertFromCpp"
+    "onCommand:soga.convertFromCpp"
   ],
   "contributes": {
     "languages": [
       {
-        "id": "lula",
+        "id": "soga",
         "aliases": [
-          "Lula",
-          "lula"
+          "Soga",
+          "soga"
         ],
         "extensions": [
-          ".lula"
+          ".soga"
         ],
         "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
       {
-        "language": "lula",
-        "scopeName": "source.lula",
-        "path": "./syntaxes/lula.tmLanguage.json"
+        "language": "soga",
+        "scopeName": "source.soga",
+        "path": "./syntaxes/soga.tmLanguage.json"
       }
     ],
     "commands": [
       {
-        "command": "lula.run",
-        "title": "Lula: Qalisa / Run",
+        "command": "soga.run",
+        "title": "Soga: Qalisa / Run",
         "icon": "$(play)"
       },
       {
-        "command": "lula.showCpp",
-        "title": "Lula: Bonisa i-C++ / Show C++",
+        "command": "soga.showCpp",
+        "title": "Soga: Bonisa i-C++ / Show C++",
         "icon": "$(code)"
       },
       {
-        "command": "lula.exportArduino",
-        "title": "Lula: Export for Arduino (.ino)"
+        "command": "soga.exportArduino",
+        "title": "Soga: Export for Arduino (.ino)"
       },
       {
-        "command": "lula.convertFromCpp",
-        "title": "Lula: Convert C++ to Lula (isiZulu, Afrikaans, ...)"
+        "command": "soga.convertFromCpp",
+        "title": "Soga: Convert C++ to Soga (isiZulu, Afrikaans, ...)"
       },
       {
-        "command": "lula.sasl.show",
-        "title": "Lula: Show SASL sign for word under cursor",
+        "command": "soga.sasl.show",
+        "title": "Soga: Show SASL sign for word under cursor",
         "icon": "$(eye)"
       },
       {
-        "command": "lula.sasl.browse",
-        "title": "Lula: Browse SASL sign dictionary"
+        "command": "soga.sasl.browse",
+        "title": "Soga: Browse SASL sign dictionary"
       },
       {
-        "command": "lula.arduino",
-        "title": "Lula: Build / upload to Arduino-compatible board",
+        "command": "soga.arduino",
+        "title": "Soga: Build / upload to Arduino-compatible board",
         "icon": "$(circuit-board)"
       },
       {
-        "command": "lula.chooseBoard",
-        "title": "Lula: Choose Arduino board (Uno, ESP32, Pico, STM32, ...)",
+        "command": "soga.chooseBoard",
+        "title": "Soga: Choose Arduino board (Uno, ESP32, Pico, STM32, ...)",
         "icon": "$(circuit-board)"
       }
     ],
     "menus": {
       "editor/title": [
         {
-          "command": "lula.run",
-          "when": "resourceExtname == .lula",
+          "command": "soga.run",
+          "when": "resourceExtname == .soga",
           "group": "navigation"
         },
         {
-          "command": "lula.showCpp",
-          "when": "resourceExtname == .lula",
+          "command": "soga.showCpp",
+          "when": "resourceExtname == .soga",
           "group": "navigation"
         },
         {
-          "command": "lula.arduino",
-          "when": "resourceExtname == .lula",
+          "command": "soga.arduino",
+          "when": "resourceExtname == .soga",
           "group": "navigation"
         }
       ],
       "editor/context": [
         {
-          "command": "lula.convertFromCpp",
-          "when": "resourceLangId == cpp || resourceLangId == c || resourceLangId == lula",
-          "group": "lula"
+          "command": "soga.convertFromCpp",
+          "when": "resourceLangId == cpp || resourceLangId == c || resourceLangId == soga",
+          "group": "soga"
         },
         {
-          "command": "lula.sasl.show",
-          "when": "resourceLangId == lula",
-          "group": "lula"
+          "command": "soga.sasl.show",
+          "when": "resourceLangId == soga",
+          "group": "soga"
         }
       ]
     },
     "configuration": {
-      "title": "Lula",
+      "title": "Soga",
       "properties": {
-        "lula.compilerPath": {
+        "soga.compilerPath": {
           "type": "string",
           "default": "g++",
           "description": "C++ compiler. For embedded targets use e.g. avr-g++ or arm-none-eabi-g++."
         },
-        "lula.compilerArgs": {
+        "soga.compilerArgs": {
           "type": "array",
           "items": {
             "type": "string"
@@ -125,48 +125,48 @@
           "default": [],
           "description": "Extra compiler flags (e.g. -mmcu=atmega328p)."
         },
-        "lula.defaultLanguage": {
+        "soga.defaultLanguage": {
           "type": "string",
           "default": "zu",
-          "description": "Language used when the file name has no language code (robot.lula instead of robot.zu.lula)."
+          "description": "Language used when the file name has no language code (robot.soga instead of robot.zu.soga)."
         },
-        "lula.sasl.enabled": {
+        "soga.sasl.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Offer South African Sign Language (SASL) sign videos when hovering keywords."
         },
-        "lula.sasl.showMissing": {
+        "soga.sasl.showMissing": {
           "type": "boolean",
           "default": false,
           "description": "Also mention in the hover when no SASL sign has been recorded for a word yet."
         },
-        "lula.sasl.dictionaryPath": {
+        "soga.sasl.dictionaryPath": {
           "type": "string",
           "default": "",
           "description": "Folder with your own SASL dictionary (signs.json + videos/). Empty uses the one built into the extension."
         },
-        "lula.arduinoBoard": {
+        "soga.arduinoBoard": {
           "type": "string",
           "default": "uno",
           "markdownDescription": "Board for Arduino programs: `uno`, `nano`, `mega`, `leonardo`, `uno-r4-minima`, `uno-r4-wifi`, `nano-33-iot`, `nano-33-ble`, `pico`, `pico-w`, `pico-2`, `esp32`, `esp32-s3`, `esp32-c3`, `esp8266`, `stm32-bluepill`, `stm32-blackpill`, `nucleo-f401re`, or any full board name (FQBN) such as `arduino:samd:mkr1000`. Used for building, uploading and for checking errors as you type."
         },
-        "lula.arduinoPort": {
+        "soga.arduinoPort": {
           "type": "string",
           "default": "",
           "description": "Default serial port for uploading to an Arduino (e.g. /dev/ttyUSB0 or COM3)."
         },
-        "lula.diagnostics.onType": {
+        "soga.diagnostics.onType": {
           "type": "boolean",
           "default": true,
           "description": "Check for errors while you type (not only when you save)."
         },
-        "lula.diagnostics.delay": {
+        "soga.diagnostics.delay": {
           "type": "number",
           "default": 600,
           "minimum": 100,
           "description": "How long to wait after you stop typing before checking (milliseconds)."
         },
-        "lula.messageLanguage": {
+        "soga.messageLanguage": {
           "type": "string",
           "default": "auto",
           "enum": [
@@ -185,30 +185,30 @@
           ],
           "description": "Language of error messages. 'auto' uses the file's language."
         },
-        "lula.inlayHints.cppNames": {
+        "soga.inlayHints.cppNames": {
           "type": "boolean",
           "default": false,
-          "description": "Show the C++ meaning next to each Lula word (useful when learning)."
+          "description": "Show the C++ meaning next to each Soga word (useful when learning)."
         }
       }
     },
     "keybindings": [
       {
-        "command": "lula.sasl.show",
+        "command": "soga.sasl.show",
         "key": "ctrl+alt+s",
         "mac": "cmd+alt+s",
-        "when": "editorTextFocus && editorLangId == lula"
+        "when": "editorTextFocus && editorLangId == soga"
       }
     ],
     "semanticTokenScopes": [
       {
-        "language": "lula",
+        "language": "soga",
         "scopes": {
           "property": [
-            "variable.other.property.lula"
+            "variable.other.property.soga"
           ],
           "macro": [
-            "entity.name.function.preprocessor.lula"
+            "entity.name.function.preprocessor.soga"
           ]
         }
       }

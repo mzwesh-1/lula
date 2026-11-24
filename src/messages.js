@@ -1,6 +1,6 @@
 'use strict';
 // Full-sentence messages in every language: compiler errors/warnings (GCC), runtime crashes,
-// and Lula's own messages. The catalog is messages/catalog.txt (see the header of that file).
+// and Soga's own messages. The catalog is messages/catalog.txt (see the header of that file).
 const fs = require('fs');
 const path = require('path');
 const { loadLanguage, localizeMessage } = require('./translator');
@@ -84,7 +84,7 @@ const SEVERITIES = { error: 'sev.error', warning: 'sev.warning', note: 'sev.note
 
 /**
  * Rewrite GCC/ld output into the user's language. Source-code echo lines (`  12 | code`) and
- * caret lines are kept: thanks to #line they already show the user's own Lula code.
+ * caret lines are kept: thanks to #line they already show the user's own Soga code.
  */
 function localizeDiagnostics(text, langCode) {
   if (!text) return text;

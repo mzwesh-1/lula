@@ -1,5 +1,5 @@
 'use strict';
-// Lula translator: turns C++ written with South African language keywords
+// Soga translator: turns C++ written with South African language keywords
 // into standard C++. Only whole tokens are replaced; strings, comments, numbers
 // and header names are left untouched, and line structure is preserved so
 // compiler errors point at the original line.
@@ -12,7 +12,7 @@ const cache = new Map();
 
 function languagesDir() {
   for (const d of LANG_DIRS) if (fs.existsSync(d)) return d;
-  throw new Error('Lula: languages folder not found');
+  throw new Error('Soga: languages folder not found');
 }
 
 function listLanguages() {
@@ -30,14 +30,14 @@ function loadLanguage(code) {
   const file = path.join(languagesDir(), `${code}.json`);
   if (!fs.existsSync(file)) {
     const known = listLanguages().map(l => l.code).join(', ');
-    throw new Error(`Lula: unknown language '${code}'. Available: ${known}`);
+    throw new Error(`Soga: unknown language '${code}'. Available: ${known}`);
   }
   const data = JSON.parse(fs.readFileSync(file, 'utf8'));
   const keywords = new Map();   // local -> C++
   const categoryOf = new Map(); // local -> category
   for (const [category, table] of Object.entries(data.keywords || {})) {
     for (const [local, cpp] of Object.entries(table)) {
-      if (keywords.has(local)) throw new Error(`Lula[${code}]: keyword '${local}' defined twice`);
+      if (keywords.has(local)) throw new Error(`Soga[${code}]: keyword '${local}' defined twice`);
       keywords.set(local, cpp);
       categoryOf.set(local, category);
     }
@@ -45,8 +45,8 @@ function loadLanguage(code) {
   const library = new Map();
   for (const [category, table] of Object.entries(data.library || {})) {
     for (const [local, cpp] of Object.entries(table)) {
-      if (keywords.has(local)) throw new Error(`Lula[${code}]: '${local}' is both a keyword and a library name`);
-      if (library.has(local)) throw new Error(`Lula[${code}]: library name '${local}' defined twice`);
+      if (keywords.has(local)) throw new Error(`Soga[${code}]: '${local}' is both a keyword and a library name`);
+      if (library.has(local)) throw new Error(`Soga[${code}]: library name '${local}' defined twice`);
       library.set(local, cpp);
       categoryOf.set(local, 'library.' + category);
     }
@@ -58,9 +58,9 @@ function loadLanguage(code) {
   return lang;
 }
 
-/** `robot.zu.lula` -> 'zu' */
+/** `robot.zu.soga` -> 'zu' */
 function detectLanguage(fileName) {
-  const m = /\.([a-z]{2,3})\.lula$/i.exec(path.basename(fileName || ''));
+  const m = /\.([a-z]{2,3})\.soga$/i.exec(path.basename(fileName || ''));
   return m ? m[1].toLowerCase() : null;
 }
 
@@ -212,7 +212,7 @@ function contextFor(langCode, toks, opts = {}) {
 }
 
 /**
- * Translate Lula source to C++.
+ * Translate Soga source to C++.
  * @param {string} source
  * @param {string} langCode e.g. 'zu'
  * @param {{fileName?: string, lineDirective?: boolean, packs?: string[], target?: 'arduino'|'host'}} opts
@@ -265,7 +265,7 @@ function reverseMaps(ctx) {
 }
 
 /**
- * Convert standard C++ into Lula in the given language.
+ * Convert standard C++ into Soga in the given language.
  * Strings, comments and your own names are kept; anything that would clash
  * with a reserved word in the target language gets a trailing underscore.
  */

@@ -1,6 +1,6 @@
 // Umbono wekhompyutha nge-OpenCV: thola izinto ezimibalabala esithombeni.
 // Computer vision with OpenCV: find coloured objects in an image.
-//   lula run examples/umbono.zu.lula
+//   soga run examples/umbono.zu.soga
 #faka <umbono>
 #faka <okokufaka_nokukhipha>
 

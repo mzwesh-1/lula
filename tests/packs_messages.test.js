@@ -37,7 +37,7 @@ module.exports = function ({ test, ROOT, CLI }) {
   });
   test('ROS 2, CUDA and PyTorch examples translate to the reviewed C++', () => {
     for (const f of ['irobhothi_ros', 'gpu', 'ukufunda']) {
-      const out = translate(fs.readFileSync(path.join(ROOT, 'examples', `${f}.zu.lula`), 'utf8'), 'zu').cpp;
+      const out = translate(fs.readFileSync(path.join(ROOT, 'examples', `${f}.zu.soga`), 'utf8'), 'zu').cpp;
       assert.strictEqual(out, fs.readFileSync(path.join(__dirname, 'expected', `${f}.zu.cpp`), 'utf8'), f);
     }
   });
@@ -69,9 +69,9 @@ module.exports = function ({ test, ROOT, CLI }) {
   });
   const core = ['/usr/share/arduino/hardware/arduino/avr', process.env.ARDUINO_AVR_CORE].find(d => d && fs.existsSync(path.join(d, 'cores/arduino/Arduino.h')));
   if (has('avr-g++') && core) {
-    for (const [ex, board] of [['irobhothi.zu.lula', 'uno'], ['inzwa.zu.lula', 'uno'], ['inzwa.zu.lula', 'mega']]) {
+    for (const [ex, board] of [['irobhothi.zu.soga', 'uno'], ['inzwa.zu.soga', 'uno'], ['inzwa.zu.soga', 'mega']]) {
       test(`real Arduino build: ${ex} for ${board} produces a .hex`, () => {
-        const hex = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'lula-hex-')), 'out.hex');
+        const hex = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'soga-hex-')), 'out.hex');
         const r = run(['arduino', path.join(ROOT, 'examples', ex), '--board', board, '-o', hex]);
         assert.strictEqual(r.status, 0, r.stderr);
         assert.match(fs.readFileSync(hex, 'utf8'), /^:10000000/);
@@ -87,8 +87,8 @@ module.exports = function ({ test, ROOT, CLI }) {
       ['pico', '.uf2'], ['esp32', '.bin'], ['stm32-bluepill', '.bin']]) {
       if (!cores.has(T.BOARD_ALIASES[alias].core)) { console.log(`  skip ${alias} (board package not installed)`); continue; }
       test(`arduino-cli: isiZulu robot builds for ${T.BOARD_ALIASES[alias].name}`, () => {
-        const out = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'lula-board-')), 'robot' + ext);
-        const r = run(['arduino', path.join(ROOT, 'examples', 'irobhothi.zu.lula'), '--board', alias, '-o', out], { timeout: 600000 });
+        const out = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'soga-board-')), 'robot' + ext);
+        const r = run(['arduino', path.join(ROOT, 'examples', 'irobhothi.zu.soga'), '--board', alias, '-o', out], { timeout: 600000 });
         assert.strictEqual(r.status, 0, r.stderr);
         assert.ok(fs.statSync(out).size > 500);
         assert.match(r.stderr, /Uhlelo lusebenzisa ama-byte angu-\d+/);
@@ -99,19 +99,19 @@ module.exports = function ({ test, ROOT, CLI }) {
   console.log('real libraries');
   const pkg = name => spawnSync('pkg-config', ['--exists', name]).status === 0;
   if (pkg('opencv4')) test('OpenCV example runs against real OpenCV', () => {
-    const r = run(['run', path.join(ROOT, 'examples', 'umbono.zu.lula')]);
+    const r = run(['run', path.join(ROOT, 'examples', 'umbono.zu.soga')]);
     assert.strictEqual(r.status, 0, r.stderr);
     assert.match(r.stdout, /Izinto ezitholakele: 3\nIzinto ezibomvu: 2\n  ibhokisi: 81x81\n  ibhokisi: 41x41/);
     assert.strictEqual(r.stderr, '', 'no warnings from OpenCV headers');
   }); else console.log('  skip OpenCV (not installed)');
   if (pkg('eigen3')) test('Eigen example runs against real Eigen', () => {
-    const r = run(['run', path.join(ROOT, 'examples', 'amamatriki.zu.lula')]);
+    const r = run(['run', path.join(ROOT, 'examples', 'amamatriki.zu.soga')]);
     assert.strictEqual(r.status, 0, r.stderr);
     assert.match(r.stdout, /x = 0\.333333  2\.33333  2\.66667\nisinqumo = 18\nA \* A\^-1 iyi-identity: yebo/);
     assert.match(r.stdout, /isandla = 0 1 0/);
   }); else console.log('  skip Eigen (not installed)');
   if (process.env.LIBTORCH) test('PyTorch example trains against real libtorch', () => {
-    const r = run(['run', path.join(ROOT, 'examples', 'ukufunda.zu.lula')], { timeout: 300000 });
+    const r = run(['run', path.join(ROOT, 'examples', 'ukufunda.zu.soga')], { timeout: 300000 });
     assert.strictEqual(r.status, 0, r.stderr);
     const f = Number(/f\(0\.5\) = ([\d.]+)/.exec(r.stdout)[1]);
     assert.ok(Math.abs(f - 2) < 0.1, `f(0.5) = ${f}`);
@@ -135,27 +135,27 @@ module.exports = function ({ test, ROOT, CLI }) {
   if (has('g++')) {
     const bad = 'int add(int a, int b) { return a + b; }\nvoid hello(int n) { return n; }\nint main() {\n    const int z = 1;\n    z = 2;\n    int w;\n    add(1);\n    else w = 1;\n    break;\n    undefined_thing = 3;\n    return 0\n}\n';
     test('real compiler errors become full sentences in every language', () => {
-      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lula-err-'));
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'soga-err-'));
       for (const code of languages) {
-        const f = path.join(dir, `bad.${code}.lula`);
+        const f = path.join(dir, `bad.${code}.soga`);
         fs.writeFileSync(f, convert(bad, 'cpp', code));
         const r = run(['check', f]);
         assert.notStrictEqual(r.status, 0);
-        const lines = r.stderr.split('\n').filter(l => /\.lula:\d+:\d+: /.test(l));
+        const lines = r.stderr.split('\n').filter(l => /\.soga:\d+:\d+: /.test(l));
         assert.ok(lines.length >= 6, `${code}: ${r.stderr}`);
         for (const l of lines) {
-          const msg = l.replace(/^.*?\.lula:\d+:\d+: /, '').replace(/'[^']*'/g, "''").replace(/\[-W[^\]]+\]|\[-fpermissive\]/g, '');
+          const msg = l.replace(/^.*?\.soga:\d+:\d+: /, '').replace(/'[^']*'/g, "''").replace(/\[-W[^\]]+\]|\[-fpermissive\]/g, '');
           assert.doesNotMatch(msg, /\b(error|warning|note|expected|before|declared|scope|function|argument|value|without|statement)\b/, `${code}: ${l}`);
         }
       }
     });
     test('crashes and uncaught exceptions are explained in the user language', () => {
-      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lula-rt-'));
-      const div = path.join(dir, 'div.zu.lula');
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'soga-rt-'));
+      const div = path.join(dir, 'div.zu.soga');
       fs.writeFileSync(div, 'okuguquguqukayo inombolo zero = 0;\ninombolo okuyinhloko() { buyisa 10 / zero; }\n');
       let r = run(['run', div]);
       assert.match(r.stderr, /uhlelo lwephukile: iphutha lezibalo/);
-      const thr = path.join(dir, 'thr.xh.lula');
+      const thr = path.join(dir, 'thr.xh.soga');
       fs.writeFileSync(thr, '#faka <iimpazamo>\ninani engundoqo() { phosa impazamo_yokusebenza("ingxaki"); }\n');
       r = run(['run', thr]);
       assert.match(r.stderr, /inkqubo imile: impazamo yohlobo 'impazamo_yokusebenza' iphoswe \(phosa\)/);
