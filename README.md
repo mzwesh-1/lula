@@ -100,6 +100,33 @@ Tested here by building for all 17 listed boards (except ESP8266); uploading to 
 **Arduino mode.** A file with `setup`/`loop` and no `main` is an Arduino program. Soga then writes Arduino-style
 C++ (Arduino's own `max`, `abs` and `String`).
 
+## Arduino IDE: write sketches in your home language
+
+Install the **Soga** library in Arduino IDE (download
+[Soga-arduino-library-0.8.0.zip](https://github.com/mzwesh-1/lula/raw/main/releases/Soga-arduino-library-0.8.0.zip),
+then Sketch → Include Library → Add .ZIP Library...). Make your language the first line of the sketch:
+
+```cpp
+#include <isiZulu.h>
+
+ize qala() {
+    setha_iphini(13, OKUPHUMAYO);
+}
+
+ize phindaphinda() {
+    bhala_idijithali(13, PHEZULU);
+    linda(1000);
+    bhala_idijithali(13, PHANSI);
+    linda(1000);
+}
+```
+
+Headers: `isiZulu.h`, `isiXhosa.h`, `siSwati.h`, `isiNdebele.h`, `Sesotho.h`, `Setswana.h`, `Sepedi.h`,
+`Xitsonga.h`, `Tshivenda.h`, `Afrikaans.h`. They work on every board (Uno, Nano, Mega, ESP32, Pico, ...) and build
+exactly the same program as the C++ sketch. Put other libraries (`#include <Servo.h>`) before the language line.
+In Arduino IDE the compiler errors stay in English; for errors in your language, use the VS Code extension.
+The library is generated from the same word lists: `npm run arduino-library`.
+
 ## Error messages in your language
 
 Compiler errors and warnings, crashes and Soga's own messages are **full sentences in your language**,

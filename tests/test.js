@@ -246,6 +246,18 @@ async function testAsync(name, fn) {
   try { await fn(); passed++; console.log(`  ok   ${name}`); }
   catch (e) { console.log(`  FAIL ${name}\n${e.stack}`); process.exitCode = 1; }
 }
+test('Arduino IDE library: every language header defines the Arduino words', () => {
+  const r = spawnSync(process.execPath, [path.join(ROOT, 'scripts', 'build-arduino-library.js')], { encoding: 'utf8' });
+  assert.strictEqual(r.status, 0, r.stderr);
+  const zuH = fs.readFileSync(path.join(ROOT, 'arduino-library', 'Soga', 'src', 'isiZulu.h'), 'utf8');
+  for (const [w, c] of [['qala', 'setup'], ['phindaphinda', 'loop'], ['setha_iphini', 'pinMode'], ['bhala_idijithali', 'digitalWrite'], ['linda', 'delay'], ['ize', 'void'], ['engaguquki', 'const']])
+    assert.match(zuH, new RegExp(`^#define ${w} +${c}$`, 'm'), w);
+  for (const f of ['isiXhosa', 'siSwati', 'isiNdebele', 'Sesotho', 'Setswana', 'Sepedi', 'Xitsonga', 'Tshivenda', 'Afrikaans']) {
+    const h = fs.readFileSync(path.join(ROOT, 'arduino-library', 'Soga', 'src', `${f}.h`), 'utf8');
+    for (const c of ['setup', 'loop', 'pinMode', 'digitalWrite', 'delay', 'HIGH', 'LOW', 'OUTPUT']) assert.match(h, new RegExp(` ${c}$`, 'm'), `${f}: ${c}`);
+  }
+});
+
 (async () => {
 await require('./lsp.test.js')({ testAsync, ROOT });
 
