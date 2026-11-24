@@ -11,7 +11,7 @@
     "build-extension": "node scripts/build-extension.js",
     "docs": "node scripts/gen-docs.js",
     "packs": "node scripts/build-packs.js",
-    "package-extension": "node scripts/build-extension.js && cd vscode-soga && npx -y @vscode/vsce@3.2.1 package --no-dependencies --baseContentUrl https://github.com/mzwesh-1/lula/blob/main/vscode-soga --baseImagesUrl https://raw.githubusercontent.com/mzwesh-1/lula/main/vscode-soga -o ../soga-0.7.1.vsix"
+    "package-extension": "node scripts/build-extension.js && cd vscode-soga && npx -y @vscode/vsce@3.2.1 package --no-dependencies --baseContentUrl https://github.com/mzwesh-1/lula/blob/main/vscode-soga --baseImagesUrl https://raw.githubusercontent.com/mzwesh-1/lula/main/vscode-soga -o ../soga-lang-0.7.1.vsix"
   },
   "engines": {
     "node": ">=18"
