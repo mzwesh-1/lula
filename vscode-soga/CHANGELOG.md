@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.4 (preview)
+- Run, Arduino Build / upload and board installs now show their output in a Soga terminal that stays open after the program ends (before, the output could disappear or not appear at all). Typing input for funda (std::cin) works.
+- Windows: programs are built statically, so they start even when g++'s DLLs are not on PATH (common with winget installs); a clear message if a program cannot start.
+
 ## 0.7.3 (preview)
 - Fixed: the Run button failed with "there is no registered task type 'soga'", and then could not find the Soga program. Tested in VS Code 1.147.
 

@@ -114,6 +114,9 @@ function compile(args, { syntaxOnly = false, outPath } = {}) {
   const { flags: libFlags, notes } = T.packFlags(r.packs);
   for (const [name, how] of notes) process.stderr.write(`Soga: ${M.t('cli.pack_hint', msgLang, name, how)}\n`);
   const flags = args.noDefaults ? [] : ['-std=c++20', '-O2'];
+  // Windows (MinGW): build statically, so the program runs even when g++'s DLLs are not on PATH
+  // (winget only adds a shortcut to g++.exe, not its runtime libraries).
+  if (process.platform === 'win32' && !args.noDefaults && !syntaxOnly && /g\+\+|gcc/i.test(path.basename(cxx))) flags.push('-static');
   const exe = outPath || path.join(tmp.dir, tmp.base + '-' + tmp.hash + (process.platform === 'win32' ? '.exe' : ''));
   const lib = T.splitLibFlags(libFlags);
   const cmd = [...flags, '-fdiagnostics-color=never', ...lib.defines, ...lib.includes, ...args.extra, tmp.cppPath, ...(syntaxOnly ? ['-fsyntax-only'] : ['-o', exe, ...lib.links])];
@@ -135,6 +138,10 @@ function runProgram(exe, lang) {
   });
   child.on('close', (code, signal) => {
     if (buf) process.stderr.write(M.localizeRuntime(buf, lang));
+    // Windows: 0xC0000135 = a DLL the program needs was not found; 0xC0000139 = wrong DLL version
+    if (code === 3221225781 || code === 3221225785 || code === -1073741515 || code === -1073741511) {
+      process.stderr.write('Soga: the program could not start: a library it needs (DLL) was not found. Rebuild it, or add the folder of g++ to PATH.\n');
+    }
     if (signal) {
       const msg = M.signalMessage(signal, lang);
       process.stderr.write(`Soga: ${msg || signal}\n`);

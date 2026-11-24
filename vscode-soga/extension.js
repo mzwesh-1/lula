@@ -47,6 +47,49 @@ function showSign(context, { word, lang }) {
   saslPanel.reveal(vscode.ViewColumn.Beside, true);
 }
 
+
+/**
+ * Run the Soga command-line tool in Soga's own terminal panel. We start the process ourselves and stream
+ * its output into a pseudo-terminal, so the output stays visible after the program ends (a plain terminal
+ * closes as soon as its process exits) and works the same on Windows, macOS and Linux.
+ */
+function runInTerminal(name, args) {
+  const title = `Soga: ${name}`;
+  for (const t of vscode.window.terminals) if (t.name === title) t.dispose();
+  const cp = require('child_process');
+  const writeEmitter = new vscode.EventEmitter();
+  const closeEmitter = new vscode.EventEmitter();
+  let child = null, finished = false;
+  const out = text => writeEmitter.fire(String(text).replace(/\r?\n/g, '\r\n'));
+  const pty = {
+    onDidWrite: writeEmitter.event,
+    onDidClose: closeEmitter.event,
+    open: () => {
+      child = cp.spawn(process.execPath, args, { env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }, cwd: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined });
+      child.stdout.on('data', d => out(d));
+      child.stderr.on('data', d => out(`\x1b[31m${d}\x1b[0m`));
+      child.on('error', e => out(`\r\nSoga: ${e.message}\r\n`));
+      child.on('close', code => {
+        finished = true;
+        out(`\r\n\x1b[2m[Soga: exit code ${code}]\x1b[0m\r\n`);
+      });
+    },
+    close: () => { if (child && !finished) child.kill(); },
+    // Keyboard input goes to the program (for funda / std::cin), echoed so you can see what you type.
+    handleInput: data => {
+      if (finished) { closeEmitter.fire(); return; }
+      if (!child) return;
+      if (data === '\r') { out('\r\n'); child.stdin.write('\n'); }
+      else if (data === '\x7f') { out('\b \b'); }
+      else if (data === '\x03') { child.kill(); }
+      else { out(data); child.stdin.write(data); }
+    },
+  };
+  const term = vscode.window.createTerminal({ name: title, pty });
+  term.show();
+  return term;
+}
+
 let client = null;
 
 /** Start the Soga language server: errors as you type, completion, hover, go to definition, rename, ... */
@@ -102,10 +145,7 @@ function activate(context) {
     const args = [cli, 'run', ed.document.fileName, '--lang', langOf(ed.document), '--cxx', config().get('compilerPath')];
     const extra = config().get('compilerArgs');
     if (extra.length) args.push('--', ...extra);
-    const exec = new vscode.ProcessExecution(process.execPath, args, { env: { ELECTRON_RUN_AS_NODE: '1' } });
-    const task = new vscode.Task({ type: 'soga' }, vscode.TaskScope.Workspace, path.basename(ed.document.fileName), 'soga', exec);
-    task.presentationOptions = { reveal: vscode.TaskRevealKind.Always, focus: true, clear: true };
-    vscode.tasks.executeTask(task);
+    runInTerminal(path.basename(ed.document.fileName), args);
   }));
 
   context.subscriptions.push(vscode.commands.registerCommand('soga.exportArduino', async () => {
@@ -220,10 +260,7 @@ function activate(context) {
     } else if (!pick.installed && cli) {
       const ok = await vscode.window.showInformationMessage(`Install the board package for ${pick.info.name}? (${pick.info.core})`, 'Install');
       if (ok !== 'Install') return null;
-      const exec = new vscode.ProcessExecution(process.execPath, [CLI, 'boards', '--install', board], { env: { ELECTRON_RUN_AS_NODE: '1' } });
-      const task = new vscode.Task({ type: 'soga' }, vscode.TaskScope.Workspace, `Install ${pick.info.name}`, 'soga', exec);
-      task.presentationOptions = { reveal: vscode.TaskRevealKind.Always, clear: true };
-      await vscode.tasks.executeTask(task);
+      runInTerminal(`Install ${pick.info.name}`, [CLI, 'boards', '--install', board]);
     }
     await config().update('arduinoBoard', board, vscode.ConfigurationTarget.Workspace);
     showBoard();
@@ -256,10 +293,7 @@ function activate(context) {
     if (port === 'type') { port = await vscode.window.showInputBox({ prompt: 'Port', value: config().get('arduinoPort') }); if (!port) return; }
     if (port) await config().update('arduinoPort', port, vscode.ConfigurationTarget.Workspace);
     const args = [CLI, 'arduino', ed.document.fileName, '--lang', langOf(ed.document), '--board', board, ...(port ? ['--upload', port] : [])];
-    const exec = new vscode.ProcessExecution(process.execPath, args, { env: { ELECTRON_RUN_AS_NODE: '1' } });
-    const task = new vscode.Task({ type: 'soga' }, vscode.TaskScope.Workspace, `${info ? info.name : board}${port ? ' → ' + port : ''}`, 'soga', exec);
-    task.presentationOptions = { reveal: vscode.TaskRevealKind.Always, clear: true };
-    vscode.tasks.executeTask(task);
+    runInTerminal(`${info ? info.name : board}${port ? ' → ' + port : ''}`, args.slice(0));
   }));
   void runCli;
 }
