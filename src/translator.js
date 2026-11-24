@@ -271,7 +271,7 @@ function reverseMaps(ctx) {
  */
 function fromCpp(cpp, langCode, opts = {}) {
   const toks = tokenize(cpp);
-  const ctx = contextFor(langCode, toks, { ...opts, target: 'host' });
+  const ctx = contextFor(langCode, toks, { target: 'host', ...opts });
   const R = reverseMaps(ctx);
   const out = [];
   const nextSig = (k) => { while (k < toks.length && SKIP.has(toks[k].type)) k++; return k; };

@@ -125,6 +125,11 @@ Headers: `isiZulu.h`, `isiXhosa.h`, `siSwati.h`, `isiNdebele.h`, `Sesotho.h`, `S
 `Xitsonga.h`, `Tshivenda.h`, `Afrikaans.h`. They work on every board (Uno, Nano, Mega, ESP32, Pico, ...) and build
 exactly the same program as the C++ sketch. Put other libraries (`#include <Servo.h>`) before the language line.
 In Arduino IDE the compiler errors stay in English; for errors in your language, use the VS Code extension.
+The library comes with 26 starter-kit sketches in every language (File → Examples → Soga → your language):
+traffic light, SG90 servo, stepper with ULN2003, LCD1602, HC-SR04 ultrasonic, PIR motion, DHT11, MPU-6050,
+RC522 RFID, water level, sound sensor, DS3231 clock, IR remote, joystick, 4x4 keypad, rotary encoder, MAX7219
+matrix, 74HC595 + 7-segment, 4-digit 7-segment, buzzer melody, relay, DC motor with L293D, RGB LED, photoresistor,
+buttons and tilt switch. All 260 build for the Mega 2560. The isiZulu originals are in `arduino-examples/zu/`.
 The library is generated from the same word lists: `npm run arduino-library`.
 
 ## Error messages in your language

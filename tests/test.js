@@ -4,6 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { fromCpp } = require('../src/translator');
 const { translate, listLanguages, loadLanguage, detectLanguage, localizeMessage } = require('../src/translator');
 
 const ROOT = path.join(__dirname, '..');
@@ -255,6 +256,16 @@ test('Arduino IDE library: every language header defines the Arduino words', () 
   for (const f of ['isiXhosa', 'siSwati', 'isiNdebele', 'Sesotho', 'Setswana', 'Sepedi', 'Xitsonga', 'Tshivenda', 'Afrikaans']) {
     const h = fs.readFileSync(path.join(ROOT, 'arduino-library', 'Soga', 'src', `${f}.h`), 'utf8');
     for (const c of ['setup', 'loop', 'pinMode', 'digitalWrite', 'delay', 'HIGH', 'LOW', 'OUTPUT']) assert.match(h, new RegExp(` ${c}$`, 'm'), `${f}: ${c}`);
+  }
+});
+
+test('Arduino IDE library: kit examples mean the same C++ in every language', () => {
+  const { exampleCpp, OPTS } = require('../scripts/build-arduino-library.js');
+  assert.ok(Object.keys(exampleCpp).length >= 26);
+  for (const [name, cpp] of Object.entries(exampleCpp)) {
+    assert.match(cpp, /void setup\(\)/, name);
+    for (const code of ['xh', 'ss', 'nr', 'st', 'tn', 'nso', 'ts', 've', 'af'])
+      assert.strictEqual(translate(fromCpp(cpp, code, OPTS), code, OPTS).cpp, cpp, `${name} (${code})`);
   }
 });
 
