@@ -103,7 +103,7 @@ function tempCpp(file, cpp, ext = '.cpp') {
 function compile(args, { syntaxOnly = false, outPath } = {}) {
   const file = args._[1];
   const r = translateFile(file, args);
-  const cxx = args.cxx || process.env.SOGA_CXX || 'g++';
+  const cxx = args.cxx || process.env.SOGA_CXX || T.defaultCompiler();
   if (r.arduino && args.target !== 'host' && !/avr|arm-none|xtensa|riscv/.test(cxx)) {
     const lang = loadLanguage(r.lang);
     const local = (cpp) => [...lang.libraryMap].find(([, c]) => c === cpp)?.[0] || cpp;
@@ -121,7 +121,7 @@ function compile(args, { syntaxOnly = false, outPath } = {}) {
   const lib = T.splitLibFlags(libFlags);
   const cmd = [...flags, '-fdiagnostics-color=never', ...lib.defines, ...lib.includes, ...args.extra, tmp.cppPath, ...(syntaxOnly ? ['-fsyntax-only'] : ['-o', exe, ...lib.links])];
   const out = spawnSync(cxx, cmd, { encoding: 'utf8', env: T.C_ENV });
-  if (out.error) fail(`Soga: ${M.t('cli.compiler_missing', msgLang, cxx)}`);
+  if (out.error) fail(`Soga: ${M.t('cli.compiler_missing', msgLang, cxx)}\nSoga: ${M.t('cli.install_compiler', msgLang, T.compilerInstallHint())}`);
   if (out.stderr) process.stderr.write(M.localizeDiagnostics(out.stderr, r.lang === msgLang ? r.lang : msgLang));
   if (out.status !== 0) process.exit(out.status || 1);
   return exe;
@@ -133,9 +133,10 @@ function runProgram(exe, lang, attempt = 0) {
   // or block it outright (antivirus, Smart App Control). Retry a few times, then explain.
   const cannotStart = (err) => {
     if (attempt < 4) { setTimeout(() => runProgram(exe, lang, attempt + 1), 700 * (attempt + 1)); return; }
-    process.stderr.write(`Soga: ${M.t('cli.cannot_start', lang, exe)} (${err.code || err.message})\n`);
+    const id = process.platform === 'win32' ? 'cli.cannot_start' : 'cli.cannot_start_unix';
+    process.stderr.write(`Soga: ${M.t(id, lang, exe)} (${err.code || err.message})\n`);
     if (process.platform === 'win32') process.stderr.write(`Soga: ${M.t('cli.try_wsl', lang)}\n`);
-    process.exit(1);
+    process.exit(126); // 126 = could not execute: the editor offers to run in WSL instead
   };
   let child;
   try { child = require('child_process').spawn(exe, [], { stdio: ['inherit', 'inherit', 'pipe'] }); }
@@ -150,6 +151,7 @@ function runProgram(exe, lang, attempt = 0) {
     for (const l of lines) process.stderr.write(M.localizeRuntime(l, lang) + '\n');
   });
   child.on('close', (code, signal) => {
+    if (!started) return; // it never started: the 'error' handler retries or explains
     if (buf) process.stderr.write(M.localizeRuntime(buf, lang));
     // Windows: 0xC0000135 = a DLL the program needs was not found; 0xC0000139 = wrong DLL version
     if (code === 3221225781 || code === 3221225785 || code === -1073741515 || code === -1073741511) {

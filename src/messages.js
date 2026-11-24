@@ -63,7 +63,10 @@ function translateMessageText(msg, langCode) {
       const m = re.exec(msg);
       if (m) {
         const or = keywordWord('or', langCode);
-        const args = m.slice(1).map(c => (c === undefined ? '' : localizeTerms(localizeMessage(c, langCode).replace(/' or '/g, `' ${or} '`), langCode)));
+        // Named groups (?<a1>..)(?<a2>..) let a pattern give the captures in a different order (clang vs GCC wording)
+        const raw = m.groups && Object.keys(m.groups).some(k => /^a\d$/.test(k))
+          ? [1, 2, 3, 4].map(n => m.groups[`a${n}`]) : m.slice(1);
+        const args = raw.map(c => (c === undefined ? '' : localizeTerms(localizeMessage(c, langCode).replace(/' or '/g, `' ${or} '`), langCode)));
         return t(e.id, langCode, ...args) + suffix + flag;
       }
     }

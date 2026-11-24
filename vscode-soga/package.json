@@ -2,7 +2,7 @@
   "name": "soga-lang",
   "displayName": "Soga",
   "description": "Write C++ and Arduino code in all 10 written official South African languages: every Arduino-compatible board (Uno, Nano, Mega, Uno R4, Nano 33, ESP32, Raspberry Pi Pico, STM32, ...), ROS 2, OpenCV, Eigen, CUDA and PyTorch, with error messages in your language and a full language server. Includes a South African Sign Language (SASL) sign-video dictionary.",
-  "version": "0.7.5",
+  "version": "0.8.0",
   "publisher": "mzwandilezulu",
   "license": "MIT",
   "engines": {
@@ -121,7 +121,7 @@
         "soga.compilerPath": {
           "type": "string",
           "default": "g++",
-          "description": "C++ compiler. For embedded targets use e.g. avr-g++ or arm-none-eabi-g++."
+          "description": "C++ compiler for PC programs. Leave as g++ to let Soga use g++, or clang++ when that is what this computer has (macOS). For embedded targets use e.g. avr-g++."
         },
         "soga.compilerArgs": {
           "type": "array",
@@ -199,11 +199,17 @@
         "soga.runIn": {
           "type": "string",
           "enum": [
+            "auto",
             "windows",
             "wsl"
           ],
-          "default": "windows",
-          "markdownDescription": "Where \u25b6 Run builds and runs your program on Windows. Choose `wsl` if Windows **Smart App Control** blocks the programs you build (\"An Application Control policy has blocked this file\"): the program then runs in WSL (Ubuntu), which needs Node.js and g++ installed in WSL (`sudo apt install -y nodejs g++`)."
+          "default": "auto",
+          "enumDescriptions": [
+            "Windows: run programs on Windows; if Smart App Control blocks them, offer to run them in WSL. macOS and Linux: run normally.",
+            "Always run on Windows (never offer WSL).",
+            "Always build and run in WSL (Ubuntu)."
+          ],
+          "markdownDescription": "Where **\u25b6 Run** builds and runs your program on Windows. `auto` (recommended): run on Windows, and if Windows Smart App Control blocks self-built programs, offer to use WSL (Ubuntu) instead. On macOS and Linux programs always run directly."
         }
       }
     },

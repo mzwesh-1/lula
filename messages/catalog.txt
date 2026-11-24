@@ -240,6 +240,8 @@ ve: {1} i khou shaya magumoni a faela
 af: {1} ontbreek aan die einde van die lêer
 
 @e.expected
+re: ^expected ('[^']+') (?:after|at end of) .+$
+re: ^expected (expression|identifier|unqualified-id|statement|declaration)$
 re: ^expected (.+)$
 en: {1} was expected
 zu: bekulindeleke u-{1}
@@ -254,6 +256,7 @@ ve: ho vha hu tshi lavhelelwa {1}
 af: {1} is verwag
 
 @e.not_declared
+re: ^use of undeclared identifier (.+)$
 re: ^(.+?) was not declared in this scope$
 en: {1} has not been declared here
 zu: u-{1} akakamenyezelwa lapha
@@ -268,6 +271,7 @@ ve: {1} a i athu divhadzwa fhano
 af: {1} is nie hier verklaar nie
 
 @e.no_type
+re: ^unknown type name (.+)$
 re: ^(.+?) does not name a type$
 en: {1} is not a type
 zu: u-{1} akulona uhlobo
@@ -310,6 +314,8 @@ ve: {1} a i nga shandukiswi nga u ditita u vha {2}
 af: {1} kan nie outomaties na {2} omgeskakel word nie
 
 @e.cannot_convert
+re: ^cannot initialize a variable of type (?<a2>.+?) with an? (?:lvalue|rvalue) of type (?<a1>.+)$
+re: ^no viable conversion from (.+?) to (.+)$
 re: ^cannot convert (.+?) to (.+?)(?: in .+)?$
 en: {1} cannot be changed into {2}
 zu: u-{1} angeke aguqulwe abe ngu-{2}
@@ -381,6 +387,7 @@ ve: ndeme dzo ṋewaho {1} dzi nnzhi vhukuma
 af: te veel waardes is aan {1} gegee
 
 @e.no_member
+re: ^no member named (?<a2>.+?) in (?:namespace )?(?<a1>.+)$
 re: ^(.+?) has no member named (.+)$
 en: {1} has no member called {2}
 zu: u-{1} akanalo ilungu elibizwa ngokuthi {2}
@@ -451,6 +458,7 @@ ve: mushumo uyu u fanela u vhuisa {1}, fhedzi {kw:return} a i na ndeme
 af: hierdie funksie moet 'n {1} teruggee, maar {kw:return} het geen waarde nie
 
 @e.no_return
+re: ^non-void function does not return a value.*$
 re: ^no return statement in function returning non-void$
 re: ^control reaches end of non-void function$
 en: the function can reach its end without {kw:return} giving back a value
@@ -480,6 +488,8 @@ ve: {1} a i shumiswi na luthihi
 af: {1} word nooit gebruik nie
 
 @e.uninitialized
+re: ^variable (.+?) is uninitialized when used here$
+re: ^variable (.+?) may be uninitialized when used here$
 re: ^(.+?) is used uninitialized$
 re: ^(.+?) may be used uninitialized$
 en: {1} is used before it has been given a value
@@ -551,6 +561,8 @@ ve: {1} a i shanduki ({kw:const}), nga zwenezwo mushumo uyu a u nga i shandukisi
 af: {1} is konstant ({kw:const}), dus mag hierdie funksie dit nie verander nie
 
 @e.read_only
+re: ^cannot assign to variable (.+?) with const-qualified type .+$
+re: ^cannot assign to (?:variable|return value|non-static data member) (.+?) with const-qualified type .+$
 re: ^assignment of read-only (?:variable|location|member|parameter) (.+)$
 en: {1} is constant ({kw:const}) and cannot be changed
 zu: u-{1} akaguquki ({kw:const}) futhi angeke ashintshwe
@@ -594,6 +606,7 @@ ve: {1} i bva kha {2}: engedza #{kw:#include} {3} nṱha ha faela
 af: {1} kom uit {2}: voeg #{kw:#include} {3} bo-aan die lêer by
 
 @e.no_such_file
+re: ^'(.+?)' file not found$
 re: ^(.+?): No such file or directory$
 en: the file {1} was not found
 zu: ifayela {1} alitholakalanga
@@ -636,6 +649,7 @@ ve: {kw:else} hu si na {kw:if} phanda hayo
 af: {kw:else} sonder 'n {kw:if} daarvoor
 
 @e.break_outside
+re: ^'break' statement not in loop or switch statement$
 re: ^break statement not within loop or switch$
 en: {kw:break} can only be used inside a loop or {kw:switch}
 zu: u-{kw:break} angasetshenziswa kuphela ngaphakathi kweluphu noma ku-{kw:switch}
@@ -650,6 +664,7 @@ ve: {kw:break} i nga shumiswa fhedzi ngomu ha lupu kana {kw:switch}
 af: {kw:break} kan net binne 'n lus of {kw:switch} gebruik word
 
 @e.continue_outside
+re: ^'continue' statement not in loop statement$
 re: ^continue statement not within a loop$
 en: {kw:continue} can only be used inside a loop
 zu: u-{kw:continue} angasetshenziswa kuphela ngaphakathi kweluphu
@@ -665,6 +680,7 @@ af: {kw:continue} kan net binne 'n lus gebruik word
 
 @e.missing_terminating
 re: ^missing terminating (.) character$
+re: ^missing terminating (.) character$
 en: a closing {1} is missing
 zu: kushoda u-{1} wokuvala
 xh: kulahleke u-{1} wokuvala
@@ -678,6 +694,7 @@ ve: {1} ya u vala i khou shaya
 af: 'n sluitende {1} ontbreek
 
 @e.private
+re: ^(.+?) is a private member of .+$
 re: ^(.+?) is private within this context$
 en: {1} is {kw:private} and cannot be used from here
 zu: u-{1} ngu-{kw:private} futhi angeke asetshenziswe lapha
@@ -692,6 +709,7 @@ ve: {1} ndi {kw:private} nahone a i nga shumiswi fhano
 af: {1} is {kw:private} en kan nie van hier af gebruik word nie
 
 @e.protected
+re: ^(.+?) is a protected member of .+$
 re: ^(.+?) is protected within this context$
 en: {1} is {kw:protected} and cannot be used from here
 zu: u-{1} ngu-{kw:protected} futhi angeke asetshenziswe lapha
@@ -706,6 +724,9 @@ ve: {1} ndi {kw:protected} nahone a i nga shumiswi fhano
 af: {1} is {kw:protected} en kan nie van hier af gebruik word nie
 
 @e.suggest_parens
+re: ^using the result of an assignment as a condition without parentheses$
+re: ^use '==' to turn this assignment into an equality comparison$
+re: ^place parentheses around the assignment to silence this warning$
 re: ^suggest parentheses around assignment used as truth value$
 en: = changes a value; to compare, use ==
 zu: u-= ushintsha inani; ukuze uqhathanise, sebenzisa ==
@@ -718,6 +739,20 @@ nso: = e fetoša boleng; go bapetša, šomiša ==
 ts: = yi cinca nkoka; ku pimanisa, tirhisa ==
 ve: = i shandukisa ndeme; u vhambedza, shumisa ==
 af: = verander 'n waarde; om te vergelyk, gebruik ==
+
+@e.candidate_count
+re: ^candidate function(?: template)? not viable: requires (?:at least |at most )?(\d+) arguments?, but (\d+) (?:was|were) provided$
+en: this function needs {1} values, but {2} were given
+zu: lo msebenzi udinga amanani angu-{1}, kodwa kunikezwe angu-{2}
+xh: lo msebenzi ufuna amaxabiso angu-{1}, kodwa kunikwe angu-{2}
+ss: lomsebenti udzinga emanani langu-{1}, kodvwa kunikwe langu-{2}
+nr: umsebenzi lo utlhoga amanani angu-{1}, kodwana kunikelwe angu-{2}
+st: mosebetsi ona o hloka boleng bo {1}, empa ho filwe {2}
+tn: tiro e e tlhoka boleng di le {1}, mme go neilwe {2}
+nso: mošomo wo o nyaka boleng bje {1}, eupša go filwe {2}
+ts: ntirho lowu wu lava mimpimo ya {1}, kambe ku nyikiwe {2}
+ve: mushumo uyu u ṱoḓa ndeme dza {1}, fhedzi ho ṋewa {2}
+af: hierdie funksie het {1} waardes nodig, maar {2} is gegee
 
 @e.candidate
 re: ^candidate: (.+)$
@@ -751,6 +786,7 @@ ve: {1} yo divhadzwa lwa u thoma fhano
 af: {1} is eerste hier verklaar
 
 @e.declared_here
+re: ^variable (.+?) declared const here$
 re: ^declared here$
 re: ^(.+?) declared here$
 en: declared here {1}
@@ -1295,3 +1331,151 @@ nso: Ge Smart App Control e bulegile, e thibela mananeo ka moka ao o a agago. Go
 ts: Loko Smart App Control yi pfulekile, yi sivela minongonoko hinkwayo leyi u yi akaka. Eka VS Code, veka "Soga: Run In" yi va wsl ku aka ni ku sungula minongonoko ya wena eka WSL (Ubuntu)
 ve: Arali Smart App Control yo vulwa, i thivhela mbekanyamushumo dzoṱhe dzine na dzi fhaṱa. Kha VS Code, vheani "Soga: Run In" i vhe wsl u fhaṱa na u thoma mbekanyamushumo dzaṋu kha WSL (Ubuntu)
 af: As Smart App Control aan is, blokkeer dit elke program wat jy self bou. Stel in VS Code die instelling "Soga: Run In" op wsl om jou programme eerder in WSL (Ubuntu) te bou en uit te voer
+
+# ---- clang (macOS) wording that needs its own sentence -------------------------------------
+@e.too_few_args_n
+re: ^too few arguments to function call, expected (?:at least )?(\d+), have (\d+)$
+en: too few values: the function needs {1}, but {2} were given
+zu: amanani mancane kakhulu: umsebenzi udinga angu-{1}, kodwa kunikezwe angu-{2}
+xh: amaxabiso mancinci kakhulu: umsebenzi ufuna angu-{1}, kodwa kunikwe angu-{2}
+ss: emanani mancane kakhulu: umsebenti udzinga langu-{1}, kodvwa kunikwe langu-{2}
+nr: amanani ancani khulu: umsebenzi utlhoga angu-{1}, kodwana kunikelwe angu-{2}
+st: boleng bo fokola haholo: mosebetsi o hloka {1}, empa ho filwe {2}
+tn: boleng bo fokotse thata: tiro e tlhoka {1}, mme go neilwe {2}
+nso: boleng bo fokola kudu: mošomo o nyaka {1}, eupša go filwe {2}
+ts: mimpimo yi tsongo ngopfu: ntirho wu lava {1}, kambe ku nyikiwe {2}
+ve: ndeme dzi a fhungudzea: mushumo u ṱoḓa {1}, fhedzi ho ṋewa {2}
+af: te min waardes: die funksie het {1} nodig, maar {2} is gegee
+
+@e.too_many_args_n
+re: ^too many arguments to function call, expected (?:at most )?(\d+), have (\d+)$
+en: too many values: the function needs {1}, but {2} were given
+zu: amanani maningi kakhulu: umsebenzi udinga angu-{1}, kodwa kunikezwe angu-{2}
+xh: amaxabiso maninzi kakhulu: umsebenzi ufuna angu-{1}, kodwa kunikwe angu-{2}
+ss: emanani manyenti kakhulu: umsebenti udzinga langu-{1}, kodvwa kunikwe langu-{2}
+nr: amanani manengi khulu: umsebenzi utlhoga angu-{1}, kodwana kunikelwe angu-{2}
+st: boleng bo bongata haholo: mosebetsi o hloka {1}, empa ho filwe {2}
+tn: boleng bo bontsi thata: tiro e tlhoka {1}, mme go neilwe {2}
+nso: boleng bo bontši kudu: mošomo o nyaka {1}, eupša go filwe {2}
+ts: mimpimo yi tala ngopfu: ntirho wu lava {1}, kambe ku nyikiwe {2}
+ve: ndeme dzi nnzhi vhukuma: mushumo u ṱoḓa {1}, fhedzi ho ṋewa {2}
+af: te veel waardes: die funksie het {1} nodig, maar {2} is gegee
+
+@e.void_return
+re: ^void function (.+?) should not return a value$
+en: {1} gives back nothing ({kw:void}), so {kw:return} must not give a value
+zu: u-{1} akabuyisi lutho ({kw:void}), ngakho u-{kw:return} akumele anikeze inani
+xh: u-{1} akabuyisi nto ({kw:void}), ngoko u-{kw:return} makanganiki xabiso
+ss: {1} akabuyisi lutfo ({kw:void}), ngako {kw:return} akukafaneli kuniketa linani
+nr: u-{1} akabuyisi litho ({kw:void}), ngalokho u-{kw:return} akukafuzi anikele inani
+st: {1} ha e kgutlise letho ({kw:void}), ka hona {kw:return} ha ea lokela ho fana ka boleng
+tn: {1} ga e buse sepe ({kw:void}), ka jalo {kw:return} ga e a tshwanela go naya boleng
+nso: {1} ga e bušetše selo ({kw:void}), ka gona {kw:return} ga se ya swanela go fa boleng
+ts: {1} a yi vuyisi nchumu ({kw:void}), hikwalaho {kw:return} a yi fanelanga ku nyika nkoka
+ve: {1} a i vhuisi tshithu ({kw:void}), nga zwenezwo {kw:return} a i faneli u ṋea ndeme
+af: {1} gee niks terug nie ({kw:void}), dus moet {kw:return} nie 'n waarde gee nie
+
+# ---- running programs on Windows, macOS and Linux --------------------------------------------
+@cli.install_compiler
+en: To install a C++ compiler on this computer, run: {1}
+zu: Ukuze ufake i-compiler ye-C++ kule khompyutha, sebenzisa: {1}
+xh: Ukufaka i-compiler ye-C++ kule khompyutha, sebenzisa: {1}
+ss: Kute ufake i-compiler ye-C++ kulekhompyutha, sebentisa: {1}
+nr: Bona ufake i-compiler ye-C++ kileli khomphyutha, sebenzisa: {1}
+st: Ho kenya compiler ya C++ khomphuthareng ena, sebedisa: {1}
+tn: Go tsenya compiler ya C++ mo khomphiutareng e, dirisa: {1}
+nso: Go tsenya compiler ya C++ khomphuthareng ye, šomiša: {1}
+ts: Ku nghenisa compiler ya C++ eka khompyuta leyi, tirhisa: {1}
+ve: U dzhenisa compiler ya C++ kha khomphyutha iyi, shumisani: {1}
+af: Om 'n C++-samesteller op hierdie rekenaar te installeer, voer uit: {1}
+
+@lsp.blocked_offer
+en: Windows (Smart App Control) blocked the program you built. Soga can build and run it in WSL (Ubuntu) instead.
+zu: IWindows (Smart App Control) ivimbe uhlelo olwakhile. ISoga ingalwakha futhi iluqalise ku-WSL (Ubuntu) esikhundleni salokho.
+xh: IWindows (Smart App Control) ithintele inkqubo oyakhileyo. ISoga inokuyakha kwaye iyiqalise kwi-WSL (Ubuntu) endaweni yoko.
+ss: IWindows (Smart App Control) ivimbe luhlelo lolwakhile. ISoga ingalwakha futsi iluqalise ku-WSL (Ubuntu) esikhundleni saloko.
+nr: IWindows (Smart App Control) ivimbe ihlelo owakhileko. ISoga ingalakha begodu ilithomise ku-WSL (Ubuntu) esikhundleni salokho.
+st: Windows (Smart App Control) e thibetse lenaneo leo o le ahileng. Soga e ka le aha le ho le qala ho WSL (Ubuntu) sebakeng sa moo.
+tn: Windows (Smart App Control) e thibetse lenaneo le o le agileng. Soga e ka le aga le go le simolola mo WSL (Ubuntu) go na le moo.
+nso: Windows (Smart App Control) e thibetše lenaneo leo o le agilego. Soga e ka le aga le go le thoma go WSL (Ubuntu) go e na le moo.
+ts: Windows (Smart App Control) yi sivele nongonoko lowu u wu akeke. Soga yi nga wu aka ni ku wu sungula eka WSL (Ubuntu) ematshan'wini ya sweswo.
+ve: Windows (Smart App Control) yo thivhela mbekanyamushumo ye na i fhaṱa. Soga i nga i fhaṱa na u i thoma kha WSL (Ubuntu) nṱhani ha zwenezwo.
+af: Windows (Smart App Control) het die program wat jy gebou het, geblokkeer. Soga kan dit eerder in WSL (Ubuntu) bou en uitvoer.
+
+@lsp.run_in_wsl
+en: Run in WSL
+zu: Qalisa ku-WSL
+xh: Qalisa kwi-WSL
+ss: Calisa ku-WSL
+nr: Thomisa ku-WSL
+st: Qala ho WSL
+tn: Simolola mo WSL
+nso: Thoma go WSL
+ts: Sungula eka WSL
+ve: Thoma kha WSL
+af: Voer uit in WSL
+
+@lsp.always_wsl
+en: Always use WSL
+zu: Sebenzisa i-WSL njalo
+xh: Sebenzisa i-WSL rhoqo
+ss: Sebentisa i-WSL njalo
+nr: Sebenzisa i-WSL njalo
+st: Sebedisa WSL kamehla
+tn: Dirisa WSL ka metlha
+nso: Šomiša WSL ka mehla
+ts: Tirhisa WSL minkarhi hinkwayo
+ve: Shumisani WSL tshifhinga tshoṱhe
+af: Gebruik altyd WSL
+
+@lsp.wsl_missing
+en: WSL (Ubuntu) is not installed. Install it with: wsl --install (in PowerShell as administrator), then restart the computer.
+zu: I-WSL (Ubuntu) ayifakiwe. Yifake ngokuthi: wsl --install (ku-PowerShell njengomphathi), bese uqala kabusha ikhompyutha.
+xh: I-WSL (Ubuntu) ayifakwanga. Yifake ngokuthi: wsl --install (kwi-PowerShell njengomlawuli), uze uqalise kwakhona ikhompyutha.
+ss: I-WSL (Ubuntu) ayikafakwa. Yifake ngekutsi: wsl --install (ku-PowerShell njengemphatsi), bese ucalisa kabusha ikhompyutha.
+nr: I-WSL (Ubuntu) ayikafakwa. Yifake ngokuthi: wsl --install (ku-PowerShell njengomphathi), bese uthomisa butjha ikhomphyutha.
+st: WSL (Ubuntu) ha e a kenngwa. E kenye ka: wsl --install (ho PowerShell e le motsamaisi), ebe o qala khomphutha botjha.
+tn: WSL (Ubuntu) ga e a tsenngwa. E tsenye ka: wsl --install (mo PowerShell jaaka motsamaisi), morago o simolole khomphiutara sešwa.
+nso: WSL (Ubuntu) ga se ya tsenywa. E tsenye ka: wsl --install (go PowerShell bjalo ka molaodi), ke moka o thome khomphuthara lefsa.
+ts: WSL (Ubuntu) a yi nghenisiwanga. Yi nghenise hi: wsl --install (eka PowerShell tanihi mufambisi), kutani u sungula khompyuta nakambe.
+ve: WSL (Ubuntu) a yo ngo dzheniswa. I dzhenisani nga: wsl --install (kha PowerShell sa mulanguli), ni dovhe ni thome khomphyutha hafhu.
+af: WSL (Ubuntu) is nie geïnstalleer nie. Installeer dit met: wsl --install (in PowerShell as administrateur), en herbegin dan die rekenaar.
+
+@lsp.wsl_tools_missing
+en: WSL needs Node.js and g++ to run Soga programs. Install them now? (Ubuntu will ask for your WSL password.)
+zu: I-WSL idinga i-Node.js ne-g++ ukuze iqalise izinhlelo ze-Soga. Uyafuna ukuzifaka manje? (I-Ubuntu izocela iphasiwedi yakho ye-WSL.)
+xh: I-WSL ifuna i-Node.js ne-g++ ukuze iqalise iinkqubo ze-Soga. Ufuna ukuzifaka ngoku? (I-Ubuntu iza kucela iphasiwedi yakho ye-WSL.)
+ss: I-WSL idzinga i-Node.js ne-g++ kute icalise tinhlelo te-Soga. Ufuna kutifaka nyalo? (I-Ubuntu itawucela liphasiwedi lakho le-WSL.)
+nr: I-WSL itlhoga i-Node.js ne-g++ bona ithomise amahlelo we-Soga. Ufuna ukuzifaka nje? (I-Ubuntu izokubawa iphasiwedi yakho ye-WSL.)
+st: WSL e hloka Node.js le g++ ho qala mananeo a Soga. O batla ho di kenya hona jwale? (Ubuntu e tla kopa phasewete ya hao ya WSL.)
+tn: WSL e tlhoka Node.js le g++ go simolola mananeo a Soga. A o batla go di tsenya jaanong? (Ubuntu e tla kopa lefoko la sephiri la gago la WSL.)
+nso: WSL e nyaka Node.js le g++ go thoma mananeo a Soga. Na o nyaka go di tsenya bjale? (Ubuntu e tla kgopela phasewete ya gago ya WSL.)
+ts: WSL yi lava Node.js na g++ ku sungula minongonoko ya Soga. Xana u lava ku swi nghenisa sweswi? (Ubuntu yi ta kombela phasiwedi ya wena ya WSL.)
+ve: WSL i ṱoḓa Node.js na g++ u thoma mbekanyamushumo dza Soga. Ni khou ṱoḓa u dzi dzhenisa zwino? (Ubuntu i ḓo humbela phasiwede yaṋu ya WSL.)
+af: WSL het Node.js en g++ nodig om Soga-programme uit te voer. Installeer hulle nou? (Ubuntu sal jou WSL-wagwoord vra.)
+
+@lsp.install_now
+en: Install now
+zu: Faka manje
+xh: Faka ngoku
+ss: Faka nyalo
+nr: Faka nje
+st: Kenya hona jwale
+tn: Tsenya jaanong
+nso: Tsenya bjale
+ts: Nghenisa sweswi
+ve: Dzhenisani zwino
+af: Installeer nou
+
+@cli.cannot_start_unix
+en: The computer did not allow the program {1} to start. Check that the folder allows running programs (permissions), then run it again
+zu: Ikhompyutha ayivumelanga uhlelo {1} ukuthi luqale. Hlola ukuthi ifolda iyavumela yini ukuqalisa izinhlelo (izimvume), bese uluqalisa futhi
+xh: Ikhompyutha ayivumelanga inkqubo {1} ukuba iqale. Jonga ukuba ifolda iyavumela na ukuqalisa iinkqubo (iimvume), uze uyiqalise kwakhona
+ss: Ikhompyutha ayikavumeli luhlelo {1} kutsi lucale. Hlola kutsi lifolda liyavumela yini kucalisa tinhlelo (timvumo), bese uyalucalisa futsi
+nr: Ikhomphyutha ayikavumeli ihlelo {1} bona lithome. Hlola bona ifolda iyavumela na ukuthomisa amahlelo (iimvumo), bese ulithomisa godu
+st: Khomphutha ha e a dumella lenaneo {1} ho qala. Hlahloba hore foldara e dumella ho qala mananeo (ditumello), ebe o le qala hape
+tn: Khomphiutara ga e a letla lenaneo {1} go simolola. Tlhatlhoba gore foldara e letla go simolola mananeo (ditetlelelo), morago o le simolole gape
+nso: Khomphuthara ga se ya dumelela lenaneo {1} go thoma. Lekola gore foldara e dumelela go thoma mananeo (ditumelelo), ke moka o le thome gape
+ts: Khompyuta a yi pfumelelanga nongonoko {1} ku sungula. Kambela leswaku folidara yi pfumelela ku sungula minongonoko (mpfumelelo), kutani u wu sungula nakambe
+ve: Khomphyutha a yo ngo tendela mbekanyamushumo {1} u thoma. Sedzani uri folodara i tendela u thoma mbekanyamushumo (thendelo), ni dovhe ni i thome hafhu
+af: Die rekenaar het nie toegelaat dat die program {1} begin nie. Kyk of die gids toelaat dat programme loop (toestemmings), en voer dit weer uit

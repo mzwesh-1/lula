@@ -53,7 +53,7 @@ function showSign(context, { word, lang }) {
  * its output into a pseudo-terminal, so the output stays visible after the program ends (a plain terminal
  * closes as soon as its process exits) and works the same on Windows, macOS and Linux.
  */
-function runInTerminal(name, args, command = process.execPath) {
+function runInTerminal(name, args, command = process.execPath, onExit = null) {
   const title = `Soga: ${name}`;
   for (const t of vscode.window.terminals) if (t.name === title) t.dispose();
   const cp = require('child_process');
@@ -72,6 +72,7 @@ function runInTerminal(name, args, command = process.execPath) {
       child.on('close', code => {
         finished = true;
         out(`\r\n\x1b[2m[Soga: exit code ${code}]\x1b[0m\r\n`);
+        if (onExit) onExit(code);
       });
     },
     close: () => { if (child && !finished) child.kill(); },
@@ -137,21 +138,54 @@ function activate(context) {
     vscode.window.showTextDocument(doc, { viewColumn: vscode.ViewColumn.Beside, preview: true, preserveFocus: true });
   }));
 
+  // ---- Run: Windows, macOS and Linux. On Windows, WSL when Smart App Control blocks self-built programs ----
+  const M = require('./lib/messages');
+  const cp = require('child_process');
+  const toWsl = p => p.replace(/^([A-Za-z]):[\\/]/, (_, d) => `/mnt/${d.toLowerCase()}/`).replace(/\\/g, '/');
+  /** 'ready' | 'no-wsl' | 'no-tools' */
+  const wslStatus = () => new Promise(res => cp.execFile('wsl.exe', ['-e', 'sh', '-lc', 'command -v node >/dev/null && command -v g++ >/dev/null && echo SOGA_OK'],
+    { timeout: 30000, windowsHide: true }, (err, stdout) => res(/SOGA_OK/.test(stdout || '') ? 'ready' : (err && (err.code === 'ENOENT' || /no installed distributions|not installed/i.test(String(err.message) + stdout)) ? 'no-wsl' : 'no-tools'))));
+
+  async function runInWsl(doc) {
+    const lang = langOf(doc);
+    const state = await wslStatus();
+    if (state === 'no-wsl') {
+      const how = await vscode.window.showWarningMessage(M.t('lsp.wsl_missing', lang), 'WSL');
+      if (how) vscode.env.openExternal(vscode.Uri.parse('https://learn.microsoft.com/windows/wsl/install'));
+      return;
+    }
+    if (state === 'no-tools') {
+      const ok = await vscode.window.showWarningMessage(M.t('lsp.wsl_tools_missing', lang), M.t('lsp.install_now', lang));
+      if (ok) {
+        // A real terminal, so sudo can ask for the password without showing it
+        const t = vscode.window.createTerminal({ name: 'Soga: WSL setup', shellPath: 'wsl.exe', shellArgs: ['-e', 'bash', '-lc', 'sudo apt-get update && sudo apt-get install -y nodejs g++ && echo && echo "OK - press Run again"; exec bash'] });
+        t.show();
+      }
+      return;
+    }
+    runInTerminal(`${path.basename(doc.fileName)} (WSL)`, ['-e', 'node', toWsl(CLI), 'run', toWsl(doc.fileName), '--lang', lang], 'wsl.exe');
+  }
+
   context.subscriptions.push(vscode.commands.registerCommand('soga.run', async () => {
     const ed = vscode.window.activeTextEditor;
     if (!ed || ed.document.languageId !== 'soga') return;
     await ed.document.save();
-    const cli = CLI;
-    // Windows with Smart App Control blocks programs you build yourself: run them in WSL (Ubuntu) instead.
-    if (process.platform === 'win32' && config().get('runIn') === 'wsl') {
-      const toWsl = p => p.replace(/^([A-Za-z]):[\\/]/, (_, d) => `/mnt/${d.toLowerCase()}/`).replace(/\\/g, '/');
-      runInTerminal(`${path.basename(ed.document.fileName)} (WSL)`, ['-e', 'node', toWsl(cli), 'run', toWsl(ed.document.fileName), '--lang', langOf(ed.document)], 'wsl.exe');
-      return;
-    }
-    const args = [cli, 'run', ed.document.fileName, '--lang', langOf(ed.document), '--cxx', config().get('compilerPath')];
+    const doc = ed.document, lang = langOf(doc);
+    const runIn = config().get('runIn');
+    if (process.platform === 'win32' && runIn === 'wsl') return runInWsl(doc);
+    const args = [CLI, 'run', doc.fileName, '--lang', lang];
+    const cxx = config().get('compilerPath');
+    if (cxx && cxx !== 'g++') args.push('--cxx', cxx); // default: g++, or clang++ when that is what this computer has
     const extra = config().get('compilerArgs');
     if (extra.length) args.push('--', ...extra);
-    runInTerminal(path.basename(ed.document.fileName), args);
+    runInTerminal(path.basename(doc.fileName), args, process.execPath, async code => {
+      // 126: Windows refused to start the program (Smart App Control / antivirus)
+      if (code !== 126 || process.platform !== 'win32' || runIn === 'windows') return;
+      const run = M.t('lsp.run_in_wsl', lang), always = M.t('lsp.always_wsl', lang);
+      const pick = await vscode.window.showWarningMessage(M.t('lsp.blocked_offer', lang), run, always);
+      if (pick === always) await config().update('runIn', 'wsl', vscode.ConfigurationTarget.Global);
+      if (pick) runInWsl(doc);
+    });
   }));
 
   context.subscriptions.push(vscode.commands.registerCommand('soga.exportArduino', async () => {

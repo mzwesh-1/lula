@@ -237,5 +237,22 @@ function arduinoSyntaxCommand(cli, fqbn, sketchDir, buildPath) {
   return { cmd: argv[0], args: out, cwd: entry.directory };
 }
 
-module.exports = { arduinoSyntaxCommand, C_ENV, EXE, packFlags, splitLibFlags, BOARDS, arduino15, findArduinoCore, findTool, arduinoSetup,
+/** The C++ compiler to use when none is configured: g++, else clang++ (macOS, some Linux), else c++. */
+let defaultCxx;
+function defaultCompiler() {
+  if (defaultCxx) return defaultCxx;
+  for (const c of ['g++', 'clang++', 'c++']) if (!spawnSync(c, ['--version']).error) return (defaultCxx = c);
+  return (defaultCxx = 'g++');
+}
+/** How to install a C++ compiler on this operating system. */
+function compilerInstallHint() {
+  if (process.platform === 'darwin') return 'xcode-select --install';
+  if (process.platform === 'win32') return 'winget install BrechtSanders.WinLibs.POSIX.UCRT   (or use WSL)';
+  if (!spawnSync('apt-get', ['--version']).error) return 'sudo apt install g++';
+  if (!spawnSync('dnf', ['--version']).error) return 'sudo dnf install gcc-c++';
+  if (!spawnSync('pacman', ['--version']).error) return 'sudo pacman -S gcc';
+  return 'install g++ or clang++ with your package manager';
+}
+
+module.exports = { defaultCompiler, compilerInstallHint, arduinoSyntaxCommand, C_ENV, EXE, packFlags, splitLibFlags, BOARDS, arduino15, findArduinoCore, findTool, arduinoSetup,
   BOARD_ALIASES, CORE_URLS, boardInfo, findArduinoCli, installedCores, connectedBoards, writeSketch, mapSketchPaths, cliJson };

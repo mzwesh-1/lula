@@ -244,7 +244,7 @@ async function validate(doc) {
         severity: DiagnosticSeverity.Information, source: 'soga', message: M.t('cli.pack_hint', msgLang, name, how) });
     }
     fs.writeFileSync(tmp, tr.cpp);
-    cmd = settings.compilerPath || 'g++';
+    cmd = !settings.compilerPath || settings.compilerPath === 'g++' ? T.defaultCompiler() : settings.compilerPath;
     args = ['-std=c++20', '-fsyntax-only', '-fdiagnostics-color=never', ...lib.defines, ...lib.includes, ...(settings.compilerArgs || []), tmp];
   }
   const prevChild = running.get(uri);
@@ -266,7 +266,7 @@ async function validate(doc) {
   if (stderr.error) {
     if (!toolNotes.has(cmd)) toolNotes.add(cmd);
     info.push({ range: { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } }, severity: DiagnosticSeverity.Information, source: 'soga',
-      message: M.t('cli.compiler_missing', msgLang, cmd) });
+      message: `${M.t('cli.compiler_missing', msgLang, cmd)}\n${M.t('cli.install_compiler', msgLang, T.compilerInstallHint())}` });
     connection.sendDiagnostics({ uri, version, diagnostics: [...own, ...info] });
     return;
   }

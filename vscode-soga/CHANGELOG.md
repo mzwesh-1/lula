@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.0 (preview)
+- Windows: when Smart App Control blocks a program you built, Soga offers "Run in WSL" or "Always use WSL", checks that WSL has Node.js and g++, and offers to install them. New default for "Soga: Run In": auto.
+- macOS: uses clang++ automatically when g++ is not installed, and clang's error messages are now translated into all ten languages.
+- Linux, macOS, Windows: if no C++ compiler is installed, the message gives the install command for your system.
+
 ## 0.7.5 (preview)
 - Windows: the built program is kept next to your file (in .soga-build) instead of the Temp folder, and Soga retries if Windows holds it for a virus scan. If Windows blocks it, Soga explains how to allow it.
 - New setting "Soga: Run In" (soga.runIn): set it to wsl to build and run programs in WSL (Ubuntu), for Windows PCs where Smart App Control blocks self-built programs.
