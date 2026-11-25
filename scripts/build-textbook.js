@@ -27,10 +27,12 @@ function wordTable(code) {
   const ctx = T.contextFor(code, [], OPTS);
   const m = new Map();
   for (const [local, cpp] of ctx.keywordMap) if (!m.has(cpp)) m.set(cpp, local);
+  // Arduino names first: `map` is Arduino's map() (linganisa_kabusha), not std::map (imephu)
+  for (const [local, cpp] of ctx.libraryMap) if (!cpp.startsWith('std::') && !m.has(cpp)) m.set(cpp, local);
   for (const [local, cpp] of ctx.libraryMap) {
-    const bare = cpp.replace(/^std::/, '');
+    if (!cpp.startsWith('std::')) continue;
     if (!m.has(cpp)) m.set(cpp, local);
-    if (!m.has(bare)) m.set(bare, local);
+    if (!m.has(cpp.slice(5))) m.set(cpp.slice(5), local);
   }
   return m;
 }
@@ -55,6 +57,12 @@ for (const e of entries) {
     item.words[code] = e.words.map(w => {
       const local = tables[code].get(w);
       return local ? ascii(local) : w;
+    });
+    // The table must show the very word the example uses
+    const idents = src => new Set(T.tokenize(src).filter(t => t.type === 'ident').map(t => t.text));
+    const inCpp = idents(e.example), inLocal = idents(body);
+    e.words.forEach((w, k) => {
+      if (inCpp.has(w) && !inLocal.has(item.words[code][k])) problems.push(`${e.id} (${code}): table says ${item.words[code][k]} for ${w}, the example does not use it`);
     });
     if (sketches) {
       const d = path.join(sketches, code, `x_${e.id}`);
@@ -87,6 +95,22 @@ for (const w of arduinoWords) {
 }
 out.wordlist.sort((a, b) => (a.entry ? 0 : 1) - (b.entry ? 0 : 1) || a.cpp.localeCompare(b.cpp));
 
+// Translated explanations (docs/textbook/i18n/<code>.js): every lesson must be covered
+out.i18n = {};
+const I18N = path.join(DIR, 'i18n');
+if (fs.existsSync(I18N)) for (const f of fs.readdirSync(I18N).filter(f => f.endsWith('.js'))) {
+  const code = f.replace(/\.js$/, '');
+  const L = require(path.join(I18N, f));
+  for (const e of entries) {
+    const x = L.entries[e.id];
+    if (!x || !x.desc) problems.push(`i18n/${f}: no explanation for '${e.id}'`);
+    else if ((e.params || []).length && (x.params || []).length !== e.params.length) problems.push(`i18n/${f}: '${e.id}' needs ${e.params.length} inputs`);
+    else if (e.returns && !x.returns) problems.push(`i18n/${f}: '${e.id}' needs 'returns'`);
+    if (!e.words.length && !x.title) problems.push(`i18n/${f}: '${e.id}' needs a title`);
+  }
+  for (const c of new Set(entries.map(e => e.cat))) if (!L.cats[c]) problems.push(`i18n/${f}: no name for chapter '${c}'`);
+  out.i18n[code] = { ui: L.ui, cats: L.cats, entries: L.entries };
+}
 if (problems.length) { console.error(problems.join('\n')); process.exit(1); }
 fs.writeFileSync(path.join(DIR, 'data.json'), JSON.stringify(out));
 console.log(`textbook: ${out.entries.length} entries x ${LANGS.length + 1} languages, ${out.wordlist.length} words -> docs/textbook/data.json (${Math.round(fs.statSync(path.join(DIR, 'data.json')).size / 1024)} KB)`);
