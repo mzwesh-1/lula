@@ -1,0 +1,16 @@
+{
+  "title": "Soga: C++ and Arduino programming in the written languages of South Africa",
+  "upload_type": "software",
+  "version": "0.9.0",
+  "publication_date": "2026-11-25",
+  "description": "<p>Soga is C++ with its vocabulary in the ten written official languages of South Africa: isiZulu, isiXhosa, siSwati, isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenḓa and Afrikaans. It translates source code to standard C++, so programs build into the same machine code as the C++ they stand for and run at the same speed, on computers and on every Arduino-compatible board.</p><p>This release includes the translator and command-line tool, a language server, a Visual Studio Code extension, an Arduino IDE library, compiler messages in all ten languages, a 103-lesson Arduino textbook, and the technical report SOGA-TR-2026-01 (docs/report/soga-technical-report.pdf), which describes the design and how correctness was shown.</p><p>The vocabulary is a first draft that has not yet been reviewed by native-speaker panels.</p>",
+  "creators": [
+    { "name": "Zulu, Mzwandile", "affiliation": "Creative Minds Technologies / CMT Robotic Industries" }
+  ],
+  "license": "MIT",
+  "keywords": ["programming languages", "localization", "mother-tongue education", "South African languages", "isiZulu", "C++", "Arduino", "embedded systems", "computing education"],
+  "related_identifiers": [
+    { "identifier": "https://github.com/mzwesh-1/soga-arduino", "relation": "hasPart", "resource_type": "software" },
+    { "identifier": "https://marketplace.visualstudio.com/items?itemName=mzwandilezulu.soga-lang", "relation": "isSupplementedBy", "resource_type": "software" }
+  ]
+}

@@ -229,6 +229,27 @@ Copy `languages/zu.json` to e.g. `languages/xh.json`, translate the left-hand wo
 
 Every local word must be **one token** (use `_` instead of spaces) and must not clash with common identifiers.
 
+## Technical report and how to cite
+
+The design, the vocabulary and how correctness was shown are described in the technical report
+[SOGA-TR-2026-01](docs/report/soga-technical-report.pdf) ([Markdown](docs/report/soga-technical-report.md)).
+GitHub's **Cite this repository** button (from [`CITATION.cff`](CITATION.cff)) gives APA and BibTeX.
+
+> Zulu, M. (2026). *Soga: C++ and Arduino Programming in the Written Languages of South Africa*
+> (Technical Report SOGA-TR-2026-01, version 0.9.0). Creative Minds Technologies. https://github.com/mzwesh-1/lula
+
+```bibtex
+@techreport{zulu2026soga,
+  author      = {Zulu, Mzwandile},
+  title       = {Soga: {C++} and {Arduino} Programming in the Written Languages of {South Africa}},
+  institution = {Creative Minds Technologies},
+  number      = {SOGA-TR-2026-01},
+  year        = {2026},
+  note        = {Version 0.9.0},
+  url         = {https://github.com/mzwesh-1/lula}
+}
+```
+
 ## Status
 
 All the word tables are **drafts** that need review by native speakers and educators, so the words feel natural and consistent. Tshivenḓa words are currently written without the ḓ ḽ ṅ ṋ ṱ marks, so they're easier to type on ordinary keyboards.

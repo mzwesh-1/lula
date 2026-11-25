@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use Soga in your research or teaching, please cite it as below."
+type: software
+title: "Soga: C++ and Arduino programming in the written languages of South Africa"
+abstract: >-
+  Soga is C++ with its vocabulary in the ten written official languages of South Africa
+  (isiZulu, isiXhosa, siSwati, isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenda and Afrikaans).
+  It is a source-to-source translator to standard C++, so programs build into the same machine code as the
+  C++ they stand for. It includes a command-line tool, a language server, a Visual Studio Code extension,
+  an Arduino IDE library, compiler messages in all ten languages, and a 103-lesson Arduino textbook.
+authors:
+  - family-names: Zulu
+    given-names: Mzwandile
+    affiliation: "Creative Minds Technologies / CMT Robotic Industries"
+version: 0.9.0
+date-released: "2026-11-25"
+license: MIT
+repository-code: "https://github.com/mzwesh-1/lula"
+url: "https://marketplace.visualstudio.com/items?itemName=mzwandilezulu.soga-lang"
+keywords:
+  - programming languages
+  - localization
+  - mother-tongue education
+  - South African languages
+  - isiZulu
+  - C++
+  - Arduino
+  - embedded systems
+  - computing education
+references:
+  - type: report
+    title: "Soga: C++ and Arduino Programming in the Written Languages of South Africa"
+    authors:
+      - family-names: Zulu
+        given-names: Mzwandile
+    institution:
+      name: "Creative Minds Technologies"
+    number: "SOGA-TR-2026-01"
+    year: 2026
+    url: "https://github.com/mzwesh-1/lula/blob/main/docs/report/soga-technical-report.pdf"
+  - type: software
+    title: "Soga Arduino library"
+    authors:
+      - family-names: Zulu
+        given-names: Mzwandile
+    repository-code: "https://github.com/mzwesh-1/soga-arduino"
+    version: 0.9.0
