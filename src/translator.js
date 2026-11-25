@@ -289,7 +289,10 @@ function fromCpp(cpp, langCode, opts = {}) {
   const declared = new Set();
   for (let k = 1; k + 1 < sig.length; k++) {
     const before = sig[k - 1], after = sig[k + 1];
-    if (sig[k].type === 'ident' && (before.type === 'ident' || ['*', '&', '&&', '>'].includes(before.text))
+    // `int *p`, `Point& o`, `vector<int>& v` declare a name; `cout << *max_element(...)` does not:
+    // a * or & only marks a declaration when a type (a name or the > of a template) comes before it.
+    const typeBefore = ['*', '&', '&&'].includes(before.text) ? (k >= 2 && (sig[k - 2].type === 'ident' || sig[k - 2].text === '>')) : true;
+    if (sig[k].type === 'ident' && typeBefore && (before.type === 'ident' || ['*', '&', '&&', '>'].includes(before.text))
         && ['=', ';', '(', ',', '[', '{', ')', ':'].includes(after.text)
         && !['return', 'case', 'goto', 'throw', 'delete', 'new', 'co_return', 'co_yield', 'co_await'].includes(before.text)) declared.add(sig[k].text);
   }

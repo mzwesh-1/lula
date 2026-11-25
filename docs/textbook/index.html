@@ -227,6 +227,7 @@ mark { background: var(--mark); color: inherit; border-radius: 3px; }
     set(k, v) { try { localStorage.setItem(k, v); } catch {} },
   };
   let D = null, lang = store.get('soga-lang') || 'zu', exTab = 'lang', explEn = store.get('soga-expl') === 'en';
+  const CARD = '#include <{header}>';   // the language cards before the lessons load (the C++ book replaces this)
   const known = {};   // lang -> Set of Soga words, for highlighting
 
   // ---------- English page text; a language in data.i18n replaces it ----------
@@ -242,6 +243,7 @@ mark { background: var(--mark); color: inherit; border-radius: 3px; }
     no_match: 'No word matches “{q}”.', arduino_cpp: 'Arduino C++', how_to_write: 'How to write it', inputs: 'Inputs', gives_back: 'Gives back',
     example: 'Example', copy_code: 'Copy code',
     needs_library: 'This example needs the library header {h}, included before your language line.',
+    stdin_title: 'What was typed while it ran',
     serial_title: 'What you will see in the Serial Monitor',
     serial_note: 'Recorded by running this example in a simulated Arduino Mega 2560 (simavr), at 9600 baud.',
     copy_note: 'Copy the example into Arduino IDE and upload it to an Arduino Mega 2560. The C++ tab shows the same program in standard Arduino code; both build to exactly the same program.',
@@ -260,7 +262,8 @@ mark { background: var(--mark); color: inherit; border-radius: 3px; }
   const tr = () => (D && D.i18n && D.i18n[lang] && !explEn ? D.i18n[lang] : null);
   function t(key, vars = {}) {
     const L = tr();
-    let s = (L && L.ui[key]) || EN[key] || key;
+    const M = D && D.meta && D.meta.ui;
+    let s = (L && L.ui[key]) || (M && M[key]) || EN[key] || key;
     for (const [k, v] of Object.entries(vars)) s = s.split(`{${k}}`).join(v);
     return s;
   }
@@ -280,13 +283,18 @@ mark { background: var(--mark); color: inherit; border-radius: 3px; }
     try { navigator.clipboard.writeText(b.dataset.copy).then(done, fallback); } catch { fallback(); }
   });
 
+  // What a language card shows: the Arduino header, or (C++ book) the file name
+  function card(l) {
+    const f = (D && D.meta && D.meta.card) || CARD;
+    return f.replace('{code}', l.code).replace('{header}', l.header);
+  }
   function langName(code) { return code === 'cpp' ? 'C++' : (D.langs.find(l => l.code === code) || {}).name; }
   function headerOf(code) { return (D.langs.find(l => l.code === code) || {}).header; }
 
   // ---------- code highlighting: Soga words, strings, numbers, comments, #include ----------
   function highlight(src, code) {
     const words = code === 'cpp' ? known.cpp : known[code];
-    return src.replace(/(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|(^#include\s*<[^>]+>)|(\b\d+(?:\.\d+)?\b|\b0x[0-9A-Fa-f]+\b)|([A-Za-z_][A-Za-z0-9_]*)|([&<>])/gm,
+    return src.replace(/(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|(^#[A-Za-z_]+\s*<[^>]+>)|(\b\d+(?:\.\d+)?\b|\b0x[0-9A-Fa-f]+\b)|([A-Za-z_][A-Za-z0-9_]*)|([&<>])/gm,
       (m, com, str, inc, num, id, ch) => {
         if (com) return `<span class="c">${esc(com)}</span>`;
         if (str) return `<span class="s">${esc(str)}</span>`;
@@ -320,7 +328,7 @@ mark { background: var(--mark); color: inherit; border-radius: 3px; }
   }
   function renderCoverLangs() {
     $('#cover-langs').innerHTML = D.langs.map(l =>
-      `<button class="lang-btn" type="button" data-lang="${l.code}" aria-pressed="${l.code === lang}"><b>${esc(l.name)}</b><code>#include &lt;${esc(l.header)}&gt;</code></button>`).join('');
+      `<button class="lang-btn" type="button" data-lang="${l.code}" aria-pressed="${l.code === lang}"><b>${esc(l.name)}</b><code>${esc(card(l))}</code></button>`).join('');
   }
   function setLang(code) {
     lang = code; store.set('soga-lang', code);
@@ -365,7 +373,7 @@ mark { background: var(--mark); color: inherit; border-radius: 3px; }
     const cpp = e.words.cpp.length ? e.words.cpp.join(', ') : '';
     const label = y => (y.words[lang] && y.words[lang].length ? y.words[lang].join(', ') : text(y).title);
     const tabCode = exTab === 'cpp' ? 'cpp' : lang;
-    const hdr = `<code class="mono">#include &lt;${esc(headerOf(lang))}&gt;</code>`;
+    const hdr = `<code class="mono">${esc(card(D.langs.find(l => l.code === lang)))}</code>`;
     $('#page').innerHTML = `
       <div class="crumb">${esc(cat(e.cat))}</div>
       <h1>${esc(local)}${cpp ? `<span class="cppname">${esc(t('arduino_cpp'))}: ${esc(cpp)}</span>` : ''}</h1>
@@ -387,6 +395,7 @@ mark { background: var(--mark); color: inherit; border-radius: 3px; }
         </div>
         <pre class="code"><code>${highlight(e.code[tabCode], tabCode)}</code></pre>
       </div>
+      ${e.stdin ? `<h2>${esc(t('stdin_title'))}</h2><pre class="syntax serial">${esc(e.stdin.replace(/\n$/, ''))}</pre>` : ''}
       ${e.output ? `<h2>${esc(t('serial_title'))}</h2><pre class="syntax serial">${esc(e.output)}</pre><p class="note">${esc(t('serial_note'))}</p>` : ''}
       <p class="note">${esc(t('copy_note'))}</p>
       <nav class="pager">

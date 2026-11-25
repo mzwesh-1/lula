@@ -280,6 +280,13 @@ test('Arduino errors quote the user\'s own line, with the caret on the same word
     `${f}:2:23: error: no\n    2 |     isikrini.setha_ikhesa(0, 1, 2);\n      |     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~`);
 });
 
+test('fromCpp: a * or & after an operator is not a declaration (cout << *max_element(...))', () => {
+  const cpp = '#include <algorithm>\nusing namespace std;\nint main() { int* p = nullptr; cout << *max_element(v.begin(), v.end()) << *p; return 0; }\n';
+  const zu = fromCpp(cpp, 'zu');
+  assert.match(zu, /\*into_enkulu\(/);
+  assert.match(zu, /inombolo\* p = lutho/);
+});
+
 (async () => {
 await require('./lsp.test.js')({ testAsync, ROOT });
 

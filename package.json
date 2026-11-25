@@ -16,7 +16,8 @@
     "textbook": "node scripts/build-textbook.js",
     "prove-textbook": "bash scripts/prove-textbook.sh",
     "site": "node scripts/build-site.js",
-    "deploy-site": "bash scripts/deploy-site.sh"
+    "deploy-site": "bash scripts/deploy-site.sh",
+    "prove-cpp-textbook": "bash scripts/prove-cpp-textbook.sh"
   },
   "engines": {
     "node": ">=18"
