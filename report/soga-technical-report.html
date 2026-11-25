@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Mzwandile Zulu · Creative Minds Technologies / CMT Robotic Industries" />
+  <meta name="dcterms.date" content="2026-11-25" />
+  <title>Soga: C++ and Arduino Programming in the Written Languages of South Africa</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+  <style type="text/css">@page { size: A4; }
+body { font-family: "DejaVu Serif", "Noto Serif", Georgia, serif; font-size: 10.5pt; line-height: 1.45; color: #111; max-width: none; margin: 0; }
+header#title-block-header { text-align: center; margin-bottom: 18pt; border-bottom: 1px solid #999; padding-bottom: 12pt; }
+h1.title { font-size: 19pt; line-height: 1.2; margin: 0 0 6pt; }
+p.subtitle { font-size: 11pt; margin: 0 0 8pt; color: #333; }
+p.author, p.date { margin: 2pt 0; font-size: 10.5pt; }
+h2 { font-size: 13pt; margin: 16pt 0 6pt; break-after: avoid; }
+h3 { font-size: 11pt; margin: 12pt 0 4pt; break-after: avoid; }
+p { margin: 0 0 7pt; text-align: justify; hyphens: auto; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.8pt; }
+pre { background: #f4f5f4; padding: 8pt 10pt; border-radius: 3pt; break-inside: avoid; }
+pre code { font-size: 8.8pt; }
+table { border-collapse: collapse; width: 100%; margin: 6pt 0 4pt; font-size: 9pt; break-inside: avoid; }
+th, td { border-bottom: 1px solid #bbb; padding: 3pt 5pt; text-align: left; vertical-align: top; }
+th { border-bottom: 1.5px solid #333; }
+blockquote { margin: 6pt 0; padding: 6pt 10pt; background: #f4f5f4; border-left: 3px solid #00838a; }
+ul, ol { margin: 0 0 7pt; padding-left: 18pt; }
+li { margin-bottom: 3pt; }
+a { color: #00686e; text-decoration: none; }
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Soga: C++ and Arduino Programming in the Written
+Languages of South Africa</h1>
+<p class="subtitle">Technical Report SOGA-TR-2026-01 · Version 0.9.0 ·
+DOI 10.5281/zenodo.24535986</p>
+<p class="author">Mzwandile Zulu · Creative Minds Technologies / CMT
+Robotic Industries</p>
+<p class="date">25 November 2026</p>
+</header>
+<h2 id="abstract">Abstract</h2>
+<p>Almost every widely used programming language takes its keywords,
+library names and error messages from English. For many learners in
+South Africa, English is a second or third language, so learning to
+program also means learning a technical vocabulary in a language that is
+not their own. This report describes <strong>Soga</strong>, a
+programming language that is C++ with its vocabulary in the ten written
+official languages of South Africa: isiZulu, isiXhosa, siSwati,
+isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenḓa and
+Afrikaans. Soga is a source-to-source translator, so it inherits the
+whole of C++ and every C++ compiler. Programs run at exactly the speed
+of C++ because they <em>are</em> C++ after translation. Soga targets
+desktop programs and every Arduino-compatible board, and comes with an
+editor extension for Visual Studio Code, an Arduino IDE library, and
+compiler error messages translated into all ten languages. We describe
+the design and the vocabulary, and how we showed that a Soga program
+builds into exactly the same machine code as the C++ it stands for. All
+1 133 builds of a 103-lesson Arduino textbook (C++ and ten languages)
+compile for the ATmega2560. Every language version is byte-for-byte
+identical to its C++ original, apart from one lesson that embeds its own
+compile time. Thirty-seven lessons with fixed output gave the expected
+output when run in the simavr microcontroller simulator. We also state
+plainly what has not yet been done: the vocabulary has not been reviewed
+by native-speaker panels, and testing on real hardware has so far been
+limited to one board.</p>
+<h2 id="introduction">1. Introduction</h2>
+<p>South Africa has twelve official languages: eleven spoken languages
+and South African Sign Language, which became official in 2023
+(Constitution Eighteenth Amendment Act, 2023). Programming languages,
+however, speak English. Research on non-native English speakers learning
+to program describes the extra load this creates: learners must decode
+English keywords, English documentation and English error messages at
+the same time as the new concepts (Guo, 2018). Studies of programming
+environments translated into learners&#39; own languages report benefits for
+learners who are not fluent in English (Dasgupta &amp; Hill, 2017).</p>
+<p>Soga&#39;s goal is narrow and practical. It keeps <strong>all</strong> of
+C++, a language used across embedded systems, robotics, computer vision
+and scientific computing, and changes only the words. A learner in
+Durban can write</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;isiZulu.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ize qala<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    setha_iphini<span class="op">(</span><span class="dv">13</span><span class="op">,</span> OKUPHUMAYO<span class="op">);</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>ize phindaphinda<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    bhala_idijithali<span class="op">(</span><span class="dv">13</span><span class="op">,</span> PHEZULU<span class="op">);</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    linda<span class="op">(</span><span class="dv">1000</span><span class="op">);</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    bhala_idijithali<span class="op">(</span><span class="dv">13</span><span class="op">,</span> PHANSI<span class="op">);</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    linda<span class="op">(</span><span class="dv">1000</span><span class="op">);</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>and upload it to an Arduino. The program is exactly the standard
+Arduino &quot;Blink&quot; sketch: <code>void setup()</code>,
+<code>pinMode(13, OUTPUT)</code>, <code>digitalWrite</code>,
+<code>delay</code>, <code>HIGH</code>, <code>LOW</code>.</p>
+<p><strong>Contributions.</strong></p>
+<ol type="1">
+<li>A complete mapping of C++ keywords, preprocessor directives,
+standard headers, common standard-library names and the Arduino API into
+ten languages, with optional vocabularies for ROS 2, OpenCV, Eigen,
+CUDA, PyTorch&#39;s C++ API and an Arduino starter kit (Section 3).</li>
+<li>A translator that keeps strings, comments and the programmer&#39;s own
+names unchanged, maps errors back to the original lines, and converts
+existing C++ into any of the ten languages (Section 4).</li>
+<li>Three ways to use it: a command-line tool and language server, a
+Visual Studio Code extension, and an Arduino IDE library that needs only
+one <code>#include</code> line (Section 5).</li>
+<li>A method for showing that the translation is correct, by
+machine-code identity and simulation, applied to a 103-lesson Arduino
+textbook (Section 6).</li>
+</ol>
+<h2 id="related-work">2. Related work</h2>
+<p>Several projects have put programming into languages other than
+English. <em>Hedy</em> is a gradual programming language for teaching.
+Its keywords are available in many natural languages, and it has been
+studied in classrooms (Hermans, 2020). <em>قلب</em> (Qalb) is a
+programming language written entirely in Arabic, made to question
+English as the default language of code (Nasser, 2012). Scratch, a
+block-based environment, has been translated into many languages, and
+its translations have been studied for their effect on learning
+(Dasgupta &amp; Hill, 2017).</p>
+<p>Soga differs from these projects in three ways. It is a full systems
+language (C++) rather than a teaching language. It runs on
+microcontrollers as well as computers. And it adds no runtime of its
+own: the output is ordinary C++ for ordinary compilers. To our
+knowledge, Soga is the first C++ or Arduino toolchain that covers all
+ten written official languages of South Africa.</p>
+<h2 id="vocabulary">3. Vocabulary</h2>
+<p>Each language is described in one data file
+(<code>languages/&lt;code&gt;.json</code>). Every language has the same
+coverage:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Part of the language</th>
+<th>Words per language</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>C++ keywords (<code>if</code>, <code>for</code>, <code>class</code>,
+<code>template</code>, <code>co_await</code>, ...)</td>
+<td>96</td>
+</tr>
+<tr class="even">
+<td>Preprocessor directives (<code>#include</code>,
+<code>#define</code>, ...)</td>
+<td>15</td>
+</tr>
+<tr class="odd">
+<td>Standard headers (<code>&lt;iostream&gt;</code>,
+<code>&lt;vector&gt;</code>, ...)</td>
+<td>39</td>
+</tr>
+<tr class="even">
+<td>Standard library and Arduino core names</td>
+<td>188</td>
+</tr>
+<tr class="odd">
+<td>Library packs: Arduino (39), Arduino libraries (14), Arduino starter
+kit (58), ROS 2 (32), OpenCV (51), Eigen (27), CUDA (20), PyTorch (40),
+other (1)</td>
+<td>282</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 1. Vocabulary in each of the ten languages (version
+0.9.0).</em></p>
+<p>A <strong>library pack</strong>
+(<code>packs/src/&lt;id&gt;.txt</code>) gives one line per C++ name with
+its word in all ten languages, in a fixed order. A pack is switched on
+when the program includes one of its headers. The pack builder rejects a
+pack if any language has a missing word, a word that is not a single
+identifier, a word that means two different things in the same language,
+or a word that is also an English C++ name.</p>
+<p><strong>Word formation.</strong> Words were chosen to be descriptive
+rather than borrowed where a clear phrase exists, for example isiZulu
+<code>setha_iphini</code> for <code>pinMode</code>,
+<code>bhala_idijithali</code> for <code>digitalWrite</code> and
+<code>linda</code> (wait) for <code>delay</code>. Where an established
+loanword is clearer, it is used (<code>Iservo</code>,
+<code>ibhayithi</code>). Chip and brand names (<code>DHT11</code>,
+<code>MFRC522</code>, <code>A0</code>) are not translated. Tshivenḓa
+words are written without the ḓ ḽ ṅ ṋ ṱ marks so they are easy to type.
+Words in Sepedi and Afrikaans that carry accents (š, ê) are also
+accepted without the accents, because the AVR compiler (GCC 7) does not
+accept UTF-8 identifiers (Section 5.3).</p>
+<p><strong>Status.</strong> The vocabulary is a first draft. It has
+<strong>not</strong> been reviewed by native-speaker panels or by the
+language boards, and it should be treated as a proposal (Section 8).</p>
+<h2 id="the-translator">4. The translator</h2>
+<h3 id="source-to-source-translation">4.1 Source-to-source
+translation</h3>
+<p>Soga translates at the level of <strong>tokens</strong>. A lexer
+splits the source into identifiers, numbers, string and character
+literals (including raw strings), comments, preprocessor directives,
+punctuation and white space. Only identifiers and directive names are
+looked up. Everything else, including every space and line break, is
+copied unchanged. Strings and comments are therefore never translated,
+and a word inside <code>&quot;...&quot;</code> stays as written. After
+<code>.</code>, <code>-&gt;</code> or <code>::</code>, the short form of
+a library name is used, so <code>isisekelo::iqoqo</code> becomes
+<code>std::vector</code> and <code>v.ubukhulu()</code> becomes
+<code>v.size()</code>.</p>
+<p>Because translation is one token for one token, a translated line has
+exactly as many tokens as the original. Two features rely on this:</p>
+<ul>
+<li><strong>Error positions.</strong> A <code>#line</code> directive at
+the top of the translated file makes the compiler report the user&#39;s file
+and line numbers. For Arduino builds, which compile a copy of the
+sketch, the line the compiler quotes is replaced with the user&#39;s own
+line, and the caret (<code>^</code>) and range (<code>~~~</code>) are
+moved to the matching token. The language server applies the same token
+mapping to error columns.</li>
+<li><strong>Reverse translation.</strong> <code>fromCpp</code> turns
+existing C++ into any of the ten languages. A programmer&#39;s own names
+that would collide with a reserved word get a trailing underscore.</li>
+</ul>
+<h3 id="arduino-mode">4.2 Arduino mode</h3>
+<p>A file with <code>setup</code> and <code>loop</code> and no
+<code>main</code> is treated as an Arduino sketch. Arduino boards have
+no C++ standard library, so in this mode names such as
+<code>std::abs</code> become the Arduino globals (<code>abs</code>), and
+<code>std::string</code> becomes <code>String</code>.</p>
+<h3 id="error-messages">4.3 Error messages</h3>
+<p>Compiler messages from GCC and Clang are translated through a catalog
+of 107 entries, each with regular expressions and a sentence in English
+and the ten languages. Of these, 48 are compiler-error patterns.
+Captured code fragments are translated back into the user&#39;s words, and
+English grammar terms (such as &quot;identifier&quot;) are replaced with their
+translations. Runtime failures (uncaught exceptions, segmentation
+faults, division by zero) are reported in the user&#39;s language too.</p>
+<h2 id="tools">5. Tools</h2>
+<h3 id="command-line-and-language-server">5.1 Command line and language
+server</h3>
+<p><code>soga</code> translates, builds, runs, checks and converts
+programs, and builds and uploads Arduino sketches through
+<code>arduino-cli</code>. It defines 19 board names, from the Uno, Nano
+and Mega to the Uno R4, Nano 33, Raspberry Pi Pico, ESP32 family,
+ESP8266 and STM32. A Language Server Protocol server gives errors as you
+type, hover explanations, completion, go-to-definition, rename and quick
+fixes in the user&#39;s language.</p>
+<h3 id="visual-studio-code">5.2 Visual Studio Code</h3>
+<p>The extension (published on the Visual Studio Marketplace as
+<code>mzwandilezulu.soga-lang</code>) adds syntax colouring, the
+language server, Run, and board selection with upload. On Windows PCs
+where Smart App Control blocks newly built programs, it offers to run
+the program in the Windows Subsystem for Linux instead.</p>
+<h3 id="arduino-ide-library">5.3 Arduino IDE library</h3>
+<p>Arduino IDE cannot run a translator, so Soga also ships as an Arduino
+library (<code>Soga</code>, in the Arduino Library Manager). Each
+language has a header, such as <code>isiZulu.h</code>, that maps every
+word to its C++ name with the preprocessor
+(<code>#define qala setup</code>). A sketch needs one line,
+<code>#include &lt;isiZulu.h&gt;</code>, and the rest can be written in
+the language. Words with accents are defined both with and without the
+accents, because GCC 7 (AVR) rejects UTF-8 identifiers. Two limits
+follow from this approach. Other libraries must be included before the
+language header, because the macros would otherwise rename words inside
+them. And error messages in Arduino IDE stay in English, because the IDE
+shows the compiler&#39;s text directly.</p>
+<h2 id="evaluation-is-the-translation-correct">6. Evaluation: is the
+translation correct?</h2>
+<p>The central claim is that a Soga program <strong>is</strong> its C++
+program. We tested this on the 103-lesson Arduino textbook that
+accompanies Soga. The lessons cover 210 Arduino words, from data types
+and control structures to interrupts, I2C, SPI, EEPROM, servo and
+stepper motors, the LCD1602, DHT11, RC522 RFID, the DS3231 real-time
+clock, infrared remotes, keypads, the MAX7219 and 7-segment displays.
+Each lesson has one complete example written in C++. The example in each
+language is produced by Soga itself (<code>fromCpp</code>). The
+procedure is in <code>scripts/prove-textbook.sh</code> and can be run
+again by anyone.</p>
+<ol type="1">
+<li><strong>Round trip.</strong> Each language version is translated
+back to C++ and must equal the original text exactly. This held for 1
+030 of 1 030 language versions. Each word shown in a lesson&#39;s word table
+must also appear in that language&#39;s example. This check found and fixed
+a table error (<code>map</code> was shown with the word for
+<code>std::map</code>).</li>
+<li><strong>Compilation.</strong> All 1 133 sketches (103 × C++ and ten
+languages) were compiled with <code>arduino-cli</code> for the Arduino
+Mega 2560 (ATmega2560, avr-gcc 7.3.0). All of them compiled.</li>
+<li><strong>Machine-code identity.</strong> For each language version,
+the <code>.hex</code> program file was compared with that of the C++
+original. 1 020 of 1 030 were byte-for-byte identical. The other 10 were
+all versions of the one lesson that stores its compile time
+(<code>__TIME__</code>). Comparing the disassembly showed that the only
+difference was the time string, for example <code>13:03:01</code>
+against <code>13:04:14</code>.</li>
+<li><strong>Behaviour in simulation.</strong> Each program was run for
+four seconds in simavr, simulating the ATmega2560 at 16 MHz, and its
+serial output was recorded. Thirty-seven lessons have output that does
+not depend on sensors. All 37 printed exactly the expected output, for
+example <code>42</code> for a function that doubles 21, and
+<code>255</code>, <code>FF</code> and <code>11111111</code> for the
+number-format lesson. The simulation corrected one of our own
+expectations: <code>round(2.5)</code> prints <code>3</code>, not
+<code>3.00</code>, because the Arduino AVR core defines
+<code>round</code> as a macro that returns a <code>long</code>.</li>
+</ol>
+<p>Earlier checks in the same project support this result:</p>
+<ul>
+<li>The 26 starter-kit sketches were built in all ten languages through
+the Arduino IDE headers. All 260 builds had the same program size as
+their isiZulu original.</li>
+<li>An isiZulu traffic-light sketch was built for 18 of the 19 board
+names, covering the AVR, Renesas (Uno R4), SAMD, mbed (Nano 33 BLE),
+RP2040, ESP32 and STM32 cores. ESP8266 was not tested because its board
+package could not be downloaded in the test environment.</li>
+<li>The automated test suite has 130 tests, including tests of the
+language server inside a real copy of Visual Studio Code.</li>
+</ul>
+<p><strong>Performance.</strong> Since the machine code is identical, a
+Soga program has no cost at run time compared with C++: the same size,
+the same speed and the same memory use.</p>
+<p><strong>Real hardware.</strong> The isiZulu traffic-light sketch was
+uploaded through Arduino IDE to an Arduino Mega 2560 and worked as
+intended (green 10 s, yellow 3 s, red 5 s). This is the only test on
+physical hardware so far.</p>
+<h2 id="example-one-program-ten-languages">7. Example: one program, ten
+languages</h2>
+<p>The same Arduino statement in each language
+(<code>pinMode(10, OUTPUT); digitalWrite(10, HIGH); delay(5000);</code>):</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Language</th>
+<th>Code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>isiZulu</td>
+<td><code>setha_iphini(10, OKUPHUMAYO); bhala_idijithali(10, PHEZULU); linda(5000);</code></td>
+</tr>
+<tr class="even">
+<td>isiXhosa</td>
+<td><code>misela_iphini(10, OKUPHUMAYO); bhala_idijithali(10, PHEZULU); linda(5000);</code></td>
+</tr>
+<tr class="odd">
+<td>Sesotho</td>
+<td><code>beha_phini(10, TSE_TSWANG); ngola_dijithale(10, HODIMO); ema(5000);</code></td>
+</tr>
+<tr class="even">
+<td>Tshivenḓa</td>
+<td><code>vhea_phini(10, ZWI_BVAHO); nwala_didzhithala(10, NTHA); lindela(5000);</code></td>
+</tr>
+<tr class="odd">
+<td>C++</td>
+<td><code>pinMode(10, OUTPUT); digitalWrite(10, HIGH); delay(5000);</code></td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 2. The same statement in four of the languages and in C++.
+All ten languages are in the textbook.</em></p>
+<h2 id="limitations">8. Limitations</h2>
+<ul>
+<li><strong>The vocabulary has not been validated.</strong> The words
+were written by the project team as a first draft and have not been
+reviewed by native-speaker panels, teachers or the national language
+bodies. Some words may be unnatural, ambiguous or inconsistent with
+existing technical terminology.</li>
+<li><strong>There is no learning study yet.</strong> This report shows
+that the translation is correct. It does not show that learners learn
+better in Soga. That needs a controlled study (Section 9).</li>
+<li><strong>Hardware testing is limited.</strong> One sketch has been
+tested on one physical board. Other results come from compilation,
+machine-code comparison and simulation, which cannot reveal wiring or
+timing problems.</li>
+<li><strong>Macros in Arduino IDE.</strong> The Arduino IDE headers
+reserve every Soga word in that language, so a learner&#39;s own variable
+named, for example, <code>isikhathi</code> (time) becomes a library
+name. The Soga translator and editor warn about this; Arduino IDE does
+not.</li>
+<li><strong>English remains in places.</strong> <code>#include</code>
+lines, the names of chips and libraries, compiler errors in Arduino IDE,
+and the explanations in the textbook (English and isiZulu only, so far)
+are not yet in every language.</li>
+<li><strong>South African Sign Language.</strong> The project includes a
+structure for a SASL sign-video dictionary, but it holds no signs yet.
+Signs must be recorded by Deaf signers with their consent; they will not
+be generated.</li>
+<li><strong>Maturity.</strong> Soga 0.9.0 is a preview maintained by one
+author. Interfaces may change.</li>
+</ul>
+<h2 id="future-work">9. Future work</h2>
+<ol type="1">
+<li>Native-speaker review of all ten vocabularies, with teachers and the
+national language bodies, and a published change log of decisions.</li>
+<li>A controlled classroom study comparing learners who program in their
+home language with learners who program in English. The programs can be
+provably identical, so the language of the code can be the only
+difference.</li>
+<li>Systematic testing on physical boards for every supported board
+family.</li>
+<li>Translating the textbook explanations into the other nine languages,
+and an advanced track (registers, timers, real-time behaviour, ROS 2,
+OpenCV).</li>
+<li>Recording the SASL sign-video dictionary with Deaf signers.</li>
+</ol>
+<h2 id="availability">10. Availability</h2>
+<ul>
+<li>Archived release (Zenodo): <a href="https://doi.org/10.5281/zenodo.24535986" class="uri">https://doi.org/10.5281/zenodo.24535986</a> (all versions:
+<a href="https://doi.org/10.5281/zenodo.24535985" class="uri">https://doi.org/10.5281/zenodo.24535985</a>)</li>
+<li>Source code (MIT licence): <a href="https://github.com/mzwesh-1/lula" class="uri">https://github.com/mzwesh-1/lula</a></li>
+<li>Arduino library: <a href="https://github.com/mzwesh-1/soga-arduino" class="uri">https://github.com/mzwesh-1/soga-arduino</a> (Arduino
+Library Manager: &quot;Soga&quot;)</li>
+<li>Visual Studio Code extension: <a href="https://marketplace.visualstudio.com/items?itemName=mzwandilezulu.soga-lang" class="uri">https://marketplace.visualstudio.com/items?itemName=mzwandilezulu.soga-lang</a></li>
+<li>Proof procedure: <code>npm run prove-textbook</code> (needs
+<code>arduino-cli</code> with the <code>arduino:avr</code> core and
+<code>simavr</code>)</li>
+</ul>
+<h2 id="how-to-cite">How to cite</h2>
+<blockquote>
+<p>Zulu, M. (2026). <em>Soga: C++ and Arduino Programming in the Written
+Languages of South Africa</em> (Technical Report SOGA-TR-2026-01,
+version 0.9.0). Creative Minds Technologies.
+https://doi.org/10.5281/zenodo.24535986</p>
+</blockquote>
+<p>To cite Soga in general rather than this version, use the concept DOI
+10.5281/zenodo.24535985, which always points to the latest version.</p>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>Soga was designed and directed by the author. Much of the
+implementation, the draft vocabulary, the textbook and this report were
+produced with the help of an AI coding assistant (Claude, by Anthropic),
+under the author&#39;s direction and with the author&#39;s testing. All results
+in Section 6 come from scripts in the repository and can be
+reproduced.</p>
+<h2 id="references">References</h2>
+<p>Constitution Eighteenth Amendment Act, 2023 (Republic of South
+Africa). Recognises South African Sign Language as an official
+language.</p>
+<p>Dasgupta, S., &amp; Hill, B. M. (2017). Learning to code in localized
+programming languages. In <em>Proceedings of the Fourth ACM Conference
+on Learning @ Scale (L@S &#39;17)</em>. ACM.</p>
+<p>Guo, P. J. (2018). Non-native English speakers learning computer
+programming: Barriers, desires, and design opportunities. In
+<em>Proceedings of the 2018 CHI Conference on Human Factors in Computing
+Systems (CHI &#39;18)</em>. ACM.</p>
+<p>Hermans, F. (2020). Hedy: A gradual language for programming
+education. In <em>Proceedings of the 2020 ACM Conference on
+International Computing Education Research (ICER &#39;20)</em>. ACM.</p>
+<p>Nasser, R. (2012). <em>قلب: لغة برمجة</em> [Qalb: a programming
+language, written entirely in Arabic]. Software, MIT licence. <a href="https://github.com/nasser/---" class="uri">https://github.com/nasser/---</a></p>
+<p>Arduino. <em>Arduino Language Reference</em>. <a href="https://docs.arduino.cc/language-reference/" class="uri">https://docs.arduino.cc/language-reference/</a></p>
+<p>Microsoft. <em>Language Server Protocol Specification</em>. <a href="https://microsoft.github.io/language-server-protocol/" class="uri">https://microsoft.github.io/language-server-protocol/</a></p>
+<p>simavr: a lean, mean and hackable AVR simulator. <a href="https://github.com/buserror/simavr" class="uri">https://github.com/buserror/simavr</a></p>
+</body>
+</html>
