@@ -1,0 +1,412 @@
+<title>Soga Arduino Textbook</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a cover page (logo, author, contact, choose your language), then a W3Schools-style reference:
+   sticky bar on top, chapter list on the left, one word per page on the right with its example. */
+:root {
+  --paper: #f7f8f6;        /* page */
+  --sheet: #ffffff;        /* reading surface */
+  --ink: #111513;          /* text and logo */
+  --muted: #5b655f;
+  --line: #dde2de;
+  --accent: #00838a;       /* Arduino-board teal */
+  --accent-soft: #e3f2f1;
+  --accent-ink: #00686e;
+  --code-bg: #f1f4f2;
+  --kw: #00727a;           /* Soga words in code */
+  --str: #8a4b00;
+  --num: #6a3fb5;
+  --com: #7b857f;
+  --mark: #fff1b8;
+  --font-display: "Lexend", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-code: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1312; --sheet: #161b1a; --ink: #eef2f0; --muted: #9aa6a0; --line: #2a3331;
+    --accent: #3cc2c2; --accent-soft: #123534; --accent-ink: #7fdada; --code-bg: #1d2423;
+    --kw: #5fd3d0; --str: #f0b76a; --num: #b9a2f0; --com: #7f8b86; --mark: #4a4120; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1312; --sheet: #161b1a; --ink: #eef2f0; --muted: #9aa6a0; --line: #2a3331;
+  --accent: #3cc2c2; --accent-soft: #123534; --accent-ink: #7fdada; --code-bg: #1d2423;
+  --kw: #5fd3d0; --str: #f0b76a; --num: #b9a2f0; --com: #7f8b86; --mark: #4a4120; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font: 17px/1.6 var(--font-body); }
+a { color: var(--accent-ink); }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.logo { display: block; height: auto; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .logo { filter: invert(1); } }
+:root[data-theme="dark"] .logo { filter: invert(1); }
+
+/* ---------- Cover ---------- */
+.cover { padding-block: 48px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.cover-inner { max-width: 980px; margin: 0 auto; display: grid; gap: 36px; }
+.cover .logo { width: min(560px, 100%); margin: 8px auto 0; }
+.cover h1 { font: 800 clamp(30px, 5vw, 48px)/1.1 var(--font-display); letter-spacing: -0.01em; text-align: center; margin: 0; text-wrap: balance; }
+.cover .lede { text-align: center; color: var(--muted); max-width: 62ch; margin: -18px auto 0; font-size: 19px; text-wrap: balance; }
+.author { display: grid; gap: 10px; justify-items: center; text-align: center; padding: 20px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.author .by { font: 600 13px/1 var(--font-display); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.author .name { font: 700 24px/1.2 var(--font-display); }
+.author .org { color: var(--muted); }
+.contact { display: flex; flex-wrap: wrap; gap: 10px 22px; justify-content: center; align-items: center; }
+.contact span.label { color: var(--muted); }
+.contact > span { max-width: 100%; min-width: 0; }
+.contact .val { font: 600 17px/1.3 var(--font-code); user-select: all; overflow-wrap: anywhere; }
+.cover-inner > * { min-width: 0; }
+@media (max-width: 480px) { .contact .val { font-size: 15px; } .langs { grid-template-columns: 1fr 1fr; } }
+.copy { border: 1px solid var(--line); background: var(--sheet); border-radius: 6px; padding: 2px 10px; font-size: 14px; cursor: pointer; }
+.copy:hover { border-color: var(--accent); }
+.pick h2 { font: 700 15px/1 var(--font-display); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: center; margin: 0 0 16px; }
+.langs { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.lang-btn { text-align: left; border: 1px solid var(--line); background: var(--sheet); border-radius: 10px; padding: 12px 14px; cursor: pointer; display: grid; gap: 2px; }
+.lang-btn:hover { border-color: var(--accent); }
+.lang-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.lang-btn b { font: 700 18px/1.2 var(--font-display); }
+.lang-btn code { font: 13px/1.3 var(--font-code); color: var(--muted); }
+.start { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.btn { display: inline-block; border: 0; border-radius: 10px; padding: 12px 20px; font: 600 17px/1 var(--font-display); cursor: pointer; text-decoration: none; }
+.btn.primary { background: var(--accent); color: var(--sheet); }
+:root[data-theme="dark"] .btn.primary { color: #071312; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #071312; } }
+.btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+.facts div { border-left: 3px solid var(--accent); padding: 2px 0 2px 14px; }
+.facts b { display: block; font: 700 17px/1.3 var(--font-display); }
+.facts span { color: var(--muted); font-size: 16px; }
+
+/* ---------- Reference ---------- */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--sheet); border-bottom: 1px solid var(--line);
+  padding-block: 8px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--sheet); }
+.bar-inner { max-width: 1280px; margin: 0 auto; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.bar .logo { width: 92px; cursor: pointer; }
+.bar .spacer { flex: 1; }
+.bar select, .bar input { border: 1px solid var(--line); background: var(--paper); border-radius: 8px; padding: 6px 10px; }
+.bar input { width: min(260px, 100%); }
+.bar a.nav { font: 600 15px/1 var(--font-display); text-decoration: none; padding: 8px 10px; border-radius: 8px; }
+.bar a.nav:hover { background: var(--accent-soft); }
+.ref { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 58px); align-self: start; max-height: calc(100vh - 70px); overflow-y: auto; padding: 18px 18px 40px 0; border-right: 1px solid var(--line); }
+.side h3 { font: 700 12px/1.2 var(--font-display); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 18px 0 6px; }
+.side h3:first-child { margin-top: 0; }
+.side a { display: block; text-decoration: none; color: var(--ink); padding: 3px 10px; border-radius: 6px; font-size: 15px; line-height: 1.35; }
+.side a small { display: block; color: var(--muted); font: 12px/1.3 var(--font-code); }
+.side a:hover { background: var(--accent-soft); }
+.side a[aria-current="page"] { background: var(--accent); color: var(--sheet); }
+.side a[aria-current="page"] small { color: var(--sheet); opacity: 0.85; }
+.side-toggle { display: none; }
+.main { padding: 28px 0 64px 36px; min-width: 0; }
+.page { max-width: 860px; display: grid; gap: 22px; }
+.crumb { font: 600 13px/1 var(--font-display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-ink); }
+.page h1 { font: 800 clamp(26px, 4vw, 38px)/1.15 var(--font-display); margin: -10px 0 0; overflow-wrap: anywhere; text-wrap: balance; }
+.page h1 .cppname { display: block; font: 400 17px/1.4 var(--font-code); color: var(--muted); margin-top: 6px; }
+.page h2 { font: 700 20px/1.3 var(--font-display); margin: 8px 0 -8px; }
+.desc { font-size: 18px; max-width: 68ch; margin: 0; }
+.note { font-size: 15px; color: var(--muted); margin: 0; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font: 600 13px/1.2 var(--font-display); color: var(--muted); background: var(--code-bg); position: sticky; top: 0; }
+td code, .mono { font-family: var(--font-code); font-size: 14px; }
+tr:last-child td { border-bottom: 0; }
+td.mine, th.mine { background: var(--accent-soft); }
+td.mine code { color: var(--accent-ink); font-weight: 600; }
+.serial { max-height: 220px; overflow-y: auto; }
+.syntax { font: 15px/1.6 var(--font-code); background: var(--code-bg); border-radius: 10px; padding: 12px 16px; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+ul.params { margin: 0; padding-left: 20px; }
+.example { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--sheet); }
+.ex-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--code-bg); }
+.tab { border: 1px solid transparent; background: transparent; border-radius: 7px; padding: 4px 10px; cursor: pointer; font: 600 14px/1.2 var(--font-display); color: var(--muted); }
+.tab[aria-selected="true"] { background: var(--sheet); border-color: var(--line); color: var(--ink); }
+.ex-head .spacer { flex: 1; }
+pre.code { margin: 0; padding: 16px 18px; overflow-x: auto; font: 14.5px/1.6 var(--font-code); tab-size: 2; }
+.k { color: var(--kw); font-weight: 600; }
+.s { color: var(--str); }
+.n { color: var(--num); }
+.c { color: var(--com); font-style: italic; }
+.d { color: var(--accent-ink); }
+.pager { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--line); }
+.pager a { text-decoration: none; display: grid; gap: 2px; max-width: 48%; }
+.pager a small { color: var(--muted); font-size: 13px; }
+.pager a b { font: 600 16px/1.3 var(--font-display); overflow-wrap: anywhere; }
+.pager a.next { text-align: right; margin-left: auto; }
+.howto { display: grid; gap: 8px; padding: 14px 18px; border-radius: 10px; background: var(--accent-soft); font-size: 16px; }
+.howto ol { margin: 0; padding-left: 20px; }
+.words-filter { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.words-filter input { border: 1px solid var(--line); background: var(--sheet); border-radius: 8px; padding: 8px 12px; width: min(340px, 100%); }
+.wordtable { max-height: 70vh; }
+.wordtable td a { text-decoration: none; }
+mark { background: var(--mark); color: inherit; border-radius: 3px; }
+.foot { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 4px; }
+.empty { color: var(--muted); padding: 40px 0; }
+
+@media (max-width: 860px) {
+  .ref { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--line); padding: 12px 0; }
+  .side[data-open="false"] .side-list { display: none; }
+  .side-toggle { display: block; width: 100%; text-align: left; border: 1px solid var(--line); background: var(--sheet); border-radius: 8px; padding: 8px 12px; font: 600 15px/1.2 var(--font-display); cursor: pointer; }
+  .main { padding: 20px 0 48px 0; }
+  .bar .logo { width: 72px; }
+  .bar input { width: 100%; order: 5; }
+}
+@media (prefers-reduced-motion: no-preference) { .lang-btn, .side a, .tab { transition: background-color .15s, border-color .15s; } }
+</style>
+
+<section class="cover" id="cover-view">
+  <div class="cover-inner">
+    <img class="logo" src="soga-logo.png" alt="Soga" width="760" height="274">
+    <h1>Arduino in your home language</h1>
+    <p class="lede">A textbook of every Arduino keyword and function, each with a working example, in isiZulu, isiXhosa, siSwati, isiNdebele, Sesotho, Setswana, Sepedi, Xitsonga, Tshivenḓa and Afrikaans.</p>
+
+    <div class="author">
+      <span class="by">Written by</span>
+      <span class="name">Mzwandile Zulu</span>
+      <span class="org">Creative Minds Technologies · CMT Robotic Industries</span>
+      <span class="by" style="margin-top:8px">For any assistance</span>
+      <div class="contact">
+        <span><span class="label">Call </span><span class="val" id="phone">067 489 5678</span> <button class="copy" data-copy="067 489 5678" type="button">Copy</button></span>
+        <span><span class="label">Email </span><span class="val" id="email">creativemindstechnologies56@gmail.com</span> <button class="copy" data-copy="creativemindstechnologies56@gmail.com" type="button">Copy</button></span>
+      </div>
+    </div>
+
+    <div class="pick">
+      <h2>Choose your language</h2>
+      <div class="langs" id="cover-langs"></div>
+    </div>
+    <div class="start">
+      <a class="btn primary" href="#header" id="start-btn">Start learning</a>
+      <a class="btn ghost" href="#words">All words in all languages</a>
+    </div>
+
+    <div class="facts" id="facts">
+      <div><b>103 lessons</b><span>From setup and loop to servos, LCDs, RFID and the real-time clock.</span></div>
+      <div><b>Every example compiles</b><span>Each example is built for the Arduino Mega 2560 in all ten languages.</span></div>
+      <div><b>One line to start</b><span>Install the Soga library in Arduino IDE, then begin your sketch with your language's header.</span></div>
+    </div>
+  </div>
+</section>
+
+<div id="ref-view" hidden>
+  <header class="bar">
+    <div class="bar-inner">
+      <img class="logo" src="soga-logo.png" alt="Soga: back to the cover" width="760" height="274" id="bar-logo" role="link" tabindex="0">
+      <a class="nav" href="#words">Word list</a>
+      <span class="spacer"></span>
+      <label class="note" for="lang-select">Language</label>
+      <select id="lang-select"></select>
+      <input id="search" type="search" placeholder="Search a word (any language)" autocomplete="off">
+    </div>
+  </header>
+  <div class="ref">
+    <nav class="side" id="side" data-open="false" aria-label="Lessons">
+      <button class="side-toggle" id="side-toggle" type="button" aria-expanded="false">Lessons</button>
+      <div class="side-list" id="side-list"></div>
+    </nav>
+    <main class="main"><div class="page" id="page"></div></main>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  let D = null, lang = store.get('soga-lang') || 'zu', exTab = 'lang';
+  const known = {};   // lang -> Set of Soga words, for highlighting
+
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.copy');
+    if (!b) return;
+    const text = b.dataset.copy;
+    const done = () => { const t = b.textContent; b.textContent = 'Copied'; setTimeout(() => (b.textContent = t), 1400); };
+    const fallback = () => {
+      const el = b.previousElementSibling && b.previousElementSibling.tagName ? b.previousElementSibling : null;
+      if (el) { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch { fallback(); }
+  });
+
+  function langName(code) { return code === 'cpp' ? 'C++' : (D.langs.find(l => l.code === code) || {}).name; }
+  function headerOf(code) { return (D.langs.find(l => l.code === code) || {}).header; }
+
+  // ---------- code highlighting: Soga words, strings, numbers, comments, #include ----------
+  function highlight(src, code) {
+    const words = code === 'cpp' ? known.cpp : known[code];
+    return src.replace(/(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|(^#include\s*<[^>]+>)|(\b\d+(?:\.\d+)?\b|\b0x[0-9A-Fa-f]+\b)|([A-Za-z_][A-Za-z0-9_]*)|([&<>])/gm,
+      (m, com, str, inc, num, id, ch) => {
+        if (com) return `<span class="c">${esc(com)}</span>`;
+        if (str) return `<span class="s">${esc(str)}</span>`;
+        if (inc) return `<span class="d">${esc(inc)}</span>`;
+        if (num) return `<span class="n">${num}</span>`;
+        if (id) return words.has(id) ? `<span class="k">${id}</span>` : id;
+        return esc(ch);
+      });
+  }
+
+  // ---------- views ----------
+  function showCover() {
+    $('#cover-view').hidden = false; $('#ref-view').hidden = true;
+    renderCoverLangs();
+    window.scrollTo(0, 0);
+  }
+  function renderCoverLangs() {
+    $('#cover-langs').innerHTML = D.langs.map(l =>
+      `<button class="lang-btn" type="button" data-lang="${l.code}" aria-pressed="${l.code === lang}"><b>${esc(l.name)}</b><code>#include &lt;${esc(l.header)}&gt;</code></button>`).join('');
+  }
+  function setLang(code) {
+    lang = code; store.set('soga-lang', code);
+    $('#lang-select').value = code;
+    route();
+  }
+
+  function renderSide(current) {
+    const q = $('#search').value.trim().toLowerCase();
+    let html = '', cat = null, n = 0;
+    for (const e of D.entries) {
+      if (q) {
+        const hay = [e.title, e.id, ...Object.values(e.words).flat()].join(' ').toLowerCase();
+        if (!hay.includes(q)) continue;
+      }
+      if (e.cat !== cat) { cat = e.cat; html += `<h3>${esc(cat)}</h3>`; }
+      const local = e.words[lang] && e.words[lang].length ? e.words[lang].join(', ') : e.title;
+      const cpp = e.words.cpp.length ? e.words.cpp.join(', ') : '';
+      html += `<a href="#${e.id}" ${e.id === current ? 'aria-current="page"' : ''}>${esc(local)}${cpp ? `<small>${esc(cpp)}</small>` : ''}</a>`;
+      n++;
+    }
+    $('#side-list').innerHTML = n ? html : `<p class="note">No word matches “${esc(q)}”.</p>`;
+    const cur = $('#side-list a[aria-current="page"]');
+    if (cur && !q && matchMedia('(min-width: 861px)').matches) cur.scrollIntoView({ block: 'nearest' });
+  }
+
+  function wordTable(e) {
+    if (!e.words.cpp.length) return '';
+    const cols = D.langs.map(l => l.code);
+    const order = [lang, ...cols.filter(c => c !== lang)];
+    let h = `<div class="tablewrap"><table><thead><tr><th>Arduino (C++)</th>${order.map(c => `<th class="${c === lang ? 'mine' : ''}">${esc(langName(c))}</th>`).join('')}</tr></thead><tbody>`;
+    e.words.cpp.forEach((w, i) => {
+      h += `<tr><td><code>${esc(w)}</code></td>${order.map(c => `<td class="${c === lang ? 'mine' : ''}"><code>${esc(e.words[c][i])}</code></td>`).join('')}</tr>`;
+    });
+    return h + '</tbody></table></div>';
+  }
+
+  function renderEntry(e) {
+    const i = D.entries.indexOf(e), prev = D.entries[i - 1], next = D.entries[i + 1];
+    const local = e.words[lang] && e.words[lang].length ? e.words[lang].join(', ') : e.title;
+    const cpp = e.words.cpp.length ? e.words.cpp.join(', ') : '';
+    const label = x => (x.words[lang] && x.words[lang].length ? x.words[lang].join(', ') : x.title);
+    const tabCode = exTab === 'cpp' ? 'cpp' : lang;
+    $('#page').innerHTML = `
+      <div class="crumb">${esc(e.cat)}</div>
+      <h1>${esc(local)}${cpp ? `<span class="cppname">Arduino C++: ${esc(cpp)}</span>` : ''}</h1>
+      ${e.id === 'header' ? `<div class="howto"><b>Start a sketch in ${esc(langName(lang))}</b><ol>
+        <li>In Arduino IDE open <b>Tools → Manage Libraries…</b>, search <b>Soga</b> and click <b>Install</b>.</li>
+        <li>Make <code class="mono">#include &lt;${esc(headerOf(lang))}&gt;</code> the first line of your sketch.</li>
+        <li>Choose <b>Tools → Board</b> and <b>Port</b>, then click <b>Upload</b>.</li></ol></div>` : ''}
+      <p class="desc">${esc(e.desc)}</p>
+      ${wordTable(e)}
+      ${e.syntax[lang] ? `<h2>How to write it</h2><pre class="syntax">${highlight(e.syntax[lang], lang)}</pre>` : ''}
+      ${e.params.length ? `<h2>Inputs</h2><ul class="params">${e.params.map(p => `<li>${esc(p)}</li>`).join('')}</ul>` : ''}
+      ${e.returns ? `<h2>Gives back</h2><p class="desc">${esc(e.returns)}</p>` : ''}
+      ${e.include.length ? `<p class="note">This example needs the library header${e.include.length > 1 ? 's' : ''} ${e.include.map(h => `<code class="mono">&lt;${esc(h)}&gt;</code>`).join(' and ')}, included before your language line.</p>` : ''}
+      <h2>Example</h2>
+      <div class="example">
+        <div class="ex-head" role="tablist">
+          <button class="tab" role="tab" type="button" data-tab="lang" aria-selected="${tabCode !== 'cpp'}">${esc(langName(lang))}</button>
+          <button class="tab" role="tab" type="button" data-tab="cpp" aria-selected="${tabCode === 'cpp'}">C++</button>
+          <span class="spacer"></span>
+          <button class="copy" type="button" data-copy="${esc(e.code[tabCode])}">Copy code</button>
+        </div>
+        <pre class="code"><code>${highlight(e.code[tabCode], tabCode)}</code></pre>
+      </div>
+      ${e.output ? `<h2>What you will see in the Serial Monitor</h2><pre class="syntax serial">${esc(e.output)}</pre><p class="note">Recorded by running this example in a simulated Arduino Mega 2560 (simavr), at 9600 baud.</p>` : ''}
+      <p class="note">Copy the example into Arduino IDE and upload it to an Arduino Mega 2560. The C++ tab shows the same program in standard Arduino code; both build to exactly the same program.</p>
+      <nav class="pager">
+        ${prev ? `<a href="#${prev.id}"><small>← Previous</small><b>${esc(label(prev))}</b></a>` : '<span></span>'}
+        ${next ? `<a class="next" href="#${next.id}"><small>Next →</small><b>${esc(label(next))}</b></a>` : ''}
+      </nav>
+      ${footer()}`;
+    $('#page').querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { exTab = t.dataset.tab; renderEntry(e); }));
+  }
+
+  function renderWords() {
+    const order = [lang, ...D.langs.map(l => l.code).filter(c => c !== lang)];
+    $('#page').innerHTML = `
+      <div class="crumb">Reference</div>
+      <h1>All words in all languages<span class="cppname">${D.wordlist.length} Arduino words · ${D.langs.length} languages</span></h1>
+      <p class="desc">Every Arduino word Soga knows. Click a word that has a lesson to open it. Words not in the list (A0, PI, DHT11, chip names) are written the same in every language.</p>
+      <div class="words-filter"><label class="note" for="wfilter">Filter</label><input id="wfilter" type="search" placeholder="Type a word in any language" autocomplete="off"></div>
+      <div class="tablewrap wordtable"><table><thead><tr><th>Arduino (C++)</th>${order.map(c => `<th class="${c === lang ? 'mine' : ''}">${esc(langName(c))}</th>`).join('')}</tr></thead><tbody id="wbody"></tbody></table></div>
+      ${footer()}`;
+    const fill = () => {
+      const q = $('#wfilter').value.trim().toLowerCase();
+      const rows = D.wordlist.filter(r => !q || [r.cpp, ...order.map(c => r[c])].some(w => w.toLowerCase().includes(q)));
+      const mk = w => (q && w.toLowerCase().includes(q) ? esc(w).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), m => `<mark>${m}</mark>`) : esc(w));
+      $('#wbody').innerHTML = rows.map(r => `<tr><td><code>${r.entry ? `<a href="#${r.entry}">${mk(r.cpp)}</a>` : mk(r.cpp)}</code></td>${order.map(c => `<td class="${c === lang ? 'mine' : ''}"><code>${mk(r[c])}</code></td>`).join('')}</tr>`).join('')
+        || `<tr><td colspan="${order.length + 1}" class="empty">No word matches “${esc(q)}”.</td></tr>`;
+    };
+    $('#wfilter').addEventListener('input', fill);
+    fill();
+  }
+
+  function footer() {
+    return `<div class="foot"><span>Soga Arduino Textbook · written by Mzwandile Zulu · Creative Minds Technologies</span>
+      <span>For any assistance: call 067 489 5678 or email creativemindstechnologies56@gmail.com</span>
+      <span>Explanations are in English for now; the words and every example are in all ten languages. The words are a first draft that native speakers are reviewing.</span></div>`;
+  }
+
+  function route() {
+    if (!D) return;
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id || id === 'cover') { showCover(); return; }
+    $('#cover-view').hidden = true; $('#ref-view').hidden = false;
+    const e = D.entries.find(x => x.id === id);
+    renderSide(e ? e.id : null);
+    if (id === 'words') renderWords();
+    else if (e) renderEntry(e);
+    else $('#page').innerHTML = `<p class="empty">This lesson does not exist. <a href="#header">Go to the first lesson</a>.</p>`;
+    if (matchMedia('(max-width: 860px)').matches) { $('#side').dataset.open = 'false'; $('#side-toggle').setAttribute('aria-expanded', 'false'); }
+    window.scrollTo(0, 0);
+  }
+
+  function boot(data) {
+    D = data;
+    if (!D.langs.some(l => l.code === lang)) lang = 'zu';
+    known.cpp = new Set(D.wordlist.map(r => r.cpp));
+    for (const l of D.langs) known[l.code] = new Set(D.wordlist.map(r => r[l.code]));
+    $('#lang-select').innerHTML = D.langs.map(l => `<option value="${l.code}">${esc(l.name)}</option>`).join('');
+    $('#lang-select').value = lang;
+    $('#lang-select').addEventListener('change', e => setLang(e.target.value));
+    $('#cover-langs').addEventListener('click', e => { const b = e.target.closest('.lang-btn'); if (b) { lang = b.dataset.lang; store.set('soga-lang', lang); $('#lang-select').value = lang; renderCoverLangs(); } });
+    $('#search').addEventListener('input', () => renderSide((D.entries.find(x => '#' + x.id === location.hash) || {}).id));
+    const toCover = () => { location.hash = 'cover'; };
+    $('#bar-logo').addEventListener('click', toCover);
+    $('#bar-logo').addEventListener('keydown', e => { if (e.key === 'Enter') toCover(); });
+    $('#side-toggle').addEventListener('click', () => { const s = $('#side'); const open = s.dataset.open !== 'true'; s.dataset.open = String(open); $('#side-toggle').setAttribute('aria-expanded', String(open)); });
+    $('#facts b').textContent = `${D.entries.length} lessons`;
+    window.addEventListener('hashchange', route);
+    route();
+  }
+
+  renderFallbackLangs();
+  function renderFallbackLangs() {
+    const L = [['zu','isiZulu','isiZulu.h'],['xh','isiXhosa','isiXhosa.h'],['ss','siSwati','siSwati.h'],['nr','isiNdebele','isiNdebele.h'],['st','Sesotho','Sesotho.h'],['tn','Setswana','Setswana.h'],['nso','Sepedi','Sepedi.h'],['ts','Xitsonga','Xitsonga.h'],['ve','Tshivenḓa','Tshivenda.h'],['af','Afrikaans','Afrikaans.h']];
+    D = { langs: L.map(([code, name, header]) => ({ code, name, header })) };
+    renderCoverLangs();
+    D = null;
+  }
+  fetch('data.json').then(r => r.json()).then(boot).catch(() => {
+    $('#facts').insertAdjacentHTML('beforeend', '<div><b>Lessons could not load</b><span>Refresh the page to try again.</span></div>');
+  });
+})();
+</script>
