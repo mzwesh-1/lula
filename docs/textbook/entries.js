@@ -1110,7 +1110,8 @@ void loop() {
 void setup() {
   Serial.begin(9600);
   Serial.write(65);
-  Serial.write('\\n');
+  Serial.write(66);
+  Serial.println();
 }
 
 void loop() {
