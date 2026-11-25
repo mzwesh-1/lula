@@ -1,6 +1,6 @@
 ---
 title: "Soga: C++ and Arduino Programming in the Written Languages of South Africa"
-subtitle: "Technical Report SOGA-TR-2026-01 · Version 0.9.0"
+subtitle: "Technical Report SOGA-TR-2026-01 · Version 0.9.0 · DOI 10.5281/zenodo.24535986"
 author: "Mzwandile Zulu · Creative Minds Technologies / CMT Robotic Industries"
 date: "25 November 2026"
 ---
@@ -253,6 +253,7 @@ The same Arduino statement in each language (`pinMode(10, OUTPUT); digitalWrite(
 
 ## 10. Availability
 
+* Archived release (Zenodo): <https://doi.org/10.5281/zenodo.24535986> (all versions: <https://doi.org/10.5281/zenodo.24535985>)
 * Source code (MIT licence): <https://github.com/mzwesh-1/lula>
 * Arduino library: <https://github.com/mzwesh-1/soga-arduino> (Arduino Library Manager: "Soga")
 * Visual Studio Code extension: <https://marketplace.visualstudio.com/items?itemName=mzwandilezulu.soga-lang>
@@ -261,9 +262,10 @@ The same Arduino statement in each language (`pinMode(10, OUTPUT); digitalWrite(
 ## How to cite
 
 > Zulu, M. (2026). *Soga: C++ and Arduino Programming in the Written Languages of South Africa* (Technical Report
-> SOGA-TR-2026-01, version 0.9.0). Creative Minds Technologies. https://github.com/mzwesh-1/lula
+> SOGA-TR-2026-01, version 0.9.0). Creative Minds Technologies. https://doi.org/10.5281/zenodo.24535986
 
-A DOI for this release will be listed in the repository's `CITATION.cff` once it has been archived.
+To cite Soga in general rather than this version, use the concept DOI 10.5281/zenodo.24535985, which always
+points to the latest version.
 
 ## Acknowledgements
 

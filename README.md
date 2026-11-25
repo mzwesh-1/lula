@@ -1,5 +1,7 @@
 # Soga ✨
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24535986.svg)](https://doi.org/10.5281/zenodo.24535986)
+
 **C++ in South African languages.** Write programs for robots, Arduino, embedded systems and PCs in **all ten written official South African languages**, with the full speed of C++.
 
 ```
@@ -233,10 +235,11 @@ Every local word must be **one token** (use `_` instead of spaces) and must not 
 
 The design, the vocabulary and how correctness was shown are described in the technical report
 [SOGA-TR-2026-01](docs/report/soga-technical-report.pdf) ([Markdown](docs/report/soga-technical-report.md)).
-GitHub's **Cite this repository** button (from [`CITATION.cff`](CITATION.cff)) gives APA and BibTeX.
+Archived on Zenodo: [10.5281/zenodo.24535986](https://doi.org/10.5281/zenodo.24535986) (this version) ·
+[10.5281/zenodo.24535985](https://doi.org/10.5281/zenodo.24535985) (all versions). GitHub's **Cite this repository** button (from [`CITATION.cff`](CITATION.cff)) gives APA and BibTeX.
 
 > Zulu, M. (2026). *Soga: C++ and Arduino Programming in the Written Languages of South Africa*
-> (Technical Report SOGA-TR-2026-01, version 0.9.0). Creative Minds Technologies. https://github.com/mzwesh-1/lula
+> (Technical Report SOGA-TR-2026-01, version 0.9.0). Creative Minds Technologies. https://doi.org/10.5281/zenodo.24535986
 
 ```bibtex
 @techreport{zulu2026soga,
@@ -246,7 +249,8 @@ GitHub's **Cite this repository** button (from [`CITATION.cff`](CITATION.cff)) g
   number      = {SOGA-TR-2026-01},
   year        = {2026},
   note        = {Version 0.9.0},
-  url         = {https://github.com/mzwesh-1/lula}
+  doi         = {10.5281/zenodo.24535986},
+  url         = {https://doi.org/10.5281/zenodo.24535986}
 }
 ```
 

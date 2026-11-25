@@ -12,6 +12,14 @@ authors:
   - family-names: Zulu
     given-names: Mzwandile
     affiliation: "Creative Minds Technologies / CMT Robotic Industries"
+doi: 10.5281/zenodo.24535986
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24535986
+    description: "This version (0.9.0)"
+  - type: doi
+    value: 10.5281/zenodo.24535985
+    description: "All versions (always resolves to the latest)"
 version: 0.9.0
 date-released: "2026-11-25"
 license: MIT
@@ -36,6 +44,7 @@ references:
     institution:
       name: "Creative Minds Technologies"
     number: "SOGA-TR-2026-01"
+    doi: 10.5281/zenodo.24535986
     year: 2026
     url: "https://github.com/mzwesh-1/lula/blob/main/docs/report/soga-technical-report.pdf"
   - type: software
