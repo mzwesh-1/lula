@@ -1201,7 +1201,8 @@ int main() {
   }
   try {
     string s = "abc";
-    s.at(10);
+    char c = s.at(10);
+    cout << c << endl;
   } catch (const out_of_range& e) {
     cout << "Out of range" << endl;
   }

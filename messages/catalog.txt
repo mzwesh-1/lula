@@ -754,6 +754,21 @@ ts: ntirho lowu wu lava mimpimo ya {1}, kambe ku nyikiwe {2}
 ve: mushumo uyu u ṱoḓa ndeme dza {1}, fhedzi ho ṋewa {2}
 af: hierdie funksie het {1} waardes nodig, maar {2} is gegee
 
+@e.nodiscard
+re: ^ignoring return value of (.+), declared with attribute '?nodiscard'?.*$
+re: ^ignoring return value of function declared with '?nodiscard'? attribute.*$
+en: the value given back by {1} is thrown away, but it should be used ([[nodiscard]])
+zu: inani elibuyiswa ngu-{1} liyalahlwa, kodwa kufanele lisetshenziswe ([[nodiscard]])
+xh: ixabiso elibuyiswa ngu-{1} liyalahlwa, kodwa kufuneka lisetyenziswe ([[nodiscard]])
+ss: linani lelibuyiswa ngu-{1} liyalahlwa, kodvwa kufanele lisetjentiswe ([[nodiscard]])
+nr: inani elibuyiswa ngu-{1} liyalahlwa, kodwana kufanele lisetjenziswe ([[nodiscard]])
+st: boleng bo kgutliswang ke {1} bo a lahlwa, empa bo tlameha ho sebediswa ([[nodiscard]])
+tn: boleng jo bo busiwang ke {1} bo a latlhiwa, mme bo tshwanetse go dirisiwa ([[nodiscard]])
+nso: boleng bjo bo bušwago ke {1} bo a lahlwa, eupša bo swanetše go šomišwa ([[nodiscard]])
+ts: nkoka lowu vuyisiwaka hi {1} wa cukumetiwa, kambe wu fanele ku tirhisiwa ([[nodiscard]])
+ve: ndeme ine ya vhuiswa nga {1} i a laṱwa, fhedzi i fanela u shumiswa ([[nodiscard]])
+af: die waarde wat {1} teruggee, word weggegooi, maar moet gebruik word ([[nodiscard]])
+
 @e.candidates_n
 re: ^there (?:is|are) (\d+) candidates?$
 en: possible matches: {1}
