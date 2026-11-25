@@ -7,3 +7,4 @@ examples/*/
 node_modules/
 vscode-soga/LICENSE
 vscode-soga/lib/
+site/
